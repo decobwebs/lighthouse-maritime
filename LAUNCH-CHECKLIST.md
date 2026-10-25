@@ -7,3 +7,6 @@ Things that must be done before the site goes live. Tick each one off when it is
 
 ## Content
 - [ ] Every placeholder in `PLACEHOLDERS.md` is filled or deliberately kept
+- [ ] Port call checklist PDF added to `public/` and `CHECKLIST_PDF` set in `src/data/site.ts` (the download buttons stay disabled until then)
+- [ ] `/privacy` and `/terms` reviewed by a lawyer; then remove the "Draft for legal review" notice in `src/components/LegalPage.astro`
+- [ ] Team names and photos supplied, then build with `SHOW_TEAM=true` (About "03 — Our team")

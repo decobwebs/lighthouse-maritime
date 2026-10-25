@@ -1,0 +1,74 @@
+---
+// DRAFT privacy policy (CONTENT.md "Legal"): covers the Nigeria Data Protection Act 2023.
+// Must be reviewed by a lawyer before launch (LAUNCH-CHECKLIST.md). [retention period] is a placeholder.
+import LegalPage from '../components/LegalPage.astro';
+import { SITE } from '../data/site';
+---
+<LegalPage
+  title="Privacy policy | Lighthouse Maritime Agency"
+  description="How Lighthouse Maritime Agency collects, uses and protects the personal data you send through this website."
+  heading="Privacy policy"
+  updated="October 2026"
+>
+  <h2>Who we are</h2>
+  <p>
+    This website is run by {SITE.legalName} ({SITE.rc}), {SITE.address.short}, Nigeria. We are the data
+    controller for the personal data you send us through it. This policy is written to meet the Nigeria Data
+    Protection Act 2023.
+  </p>
+
+  <h2>What we collect</h2>
+  <p>We only collect what you choose to send us through our forms:</p>
+  <ul>
+    <li><strong>PDA request form:</strong> your name, company, role, work email and phone or WhatsApp number, together with the vessel and port call details you enter.</li>
+    <li><strong>Contact form:</strong> your name, company, work email, phone number, enquiry type, message and any file you attach.</li>
+  </ul>
+  <p>
+    We do not use advertising or tracking cookies. To protect the forms from spam we use Cloudflare Turnstile,
+    which checks that a form is being sent by a person and may process technical data such as your IP address
+    for that purpose.
+  </p>
+
+  <h2>Why we use it</h2>
+  <p>
+    We use your details only to answer your enquiry or PDA request, to contact you about it and to keep a
+    record of it. Our lawful basis is your consent when you send a form, and our legitimate interest in
+    responding to requests for our services.
+  </p>
+
+  <h2>Where it is stored</h2>
+  <ul>
+    <li><strong>Email:</strong> form submissions are sent to our operations or administration inbox using Resend, an email delivery service.</li>
+    <li><strong>Database:</strong> a copy of each submission, and any attachment, is stored in Supabase as a backup record.</li>
+    <li><strong>Hosting:</strong> the website is hosted by Vercel.</li>
+  </ul>
+  <p>
+    Some of these providers may store data outside Nigeria. Where they do, we rely on the safeguards required by
+    the Nigeria Data Protection Act 2023.
+  </p>
+
+  <h2>Google Maps</h2>
+  <p>
+    The map on our Contact page is not loaded until you select "Show map". Once you do, Google receives
+    information from your browser under its own privacy policy.
+  </p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep form submissions for [retention period], then delete them, unless the law requires us to keep them longer.</p>
+
+  <h2>Your rights</h2>
+  <p>Under the Nigeria Data Protection Act 2023 you have the right to:</p>
+  <ul>
+    <li>ask for a copy of the personal data we hold about you;</li>
+    <li>ask us to correct or delete it;</li>
+    <li>withdraw your consent or object to how we use it;</li>
+    <li>ask us to move it to another organisation; and</li>
+    <li>complain to the Nigeria Data Protection Commission.</li>
+  </ul>
+
+  <h2>Contact us</h2>
+  <p>
+    For any question about your data or to use your rights, email
+    <a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a> or write to us at {SITE.address.short}, Nigeria.
+  </p>
+</LegalPage>

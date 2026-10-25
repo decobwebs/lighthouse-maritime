@@ -7,13 +7,19 @@ const rows = [
   { name: 'NCDMB · NOGIC JQS', sub: 'Oil and gas vendor', badge: 'Certified' },
   { name: 'Corporate Affairs Commission', sub: 'RC 7964161 · Incorporated 2024', badge: 'Registered' },
 ];
+
+interface Props {
+  /** Green tick column (Home). About shows the rows without it. */
+  ticks?: boolean;
+}
+const { ticks = true } = Astro.props;
 ---
-<ul role="list" class="certs">
+<ul role="list" class:list={['certs', { 'certs--plain': !ticks }]}>
   {rows.map((r) => (
     <li class="certs__row">
-      <span class="certs__tick" aria-hidden="true">
+      {ticks && <span class="certs__tick" aria-hidden="true">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10" /></svg>
-      </span>
+      </span>}
       <div>
         <p class="t-h4 certs__name">{r.name}</p>
         <p class="t-small certs__sub">{r.sub}</p>
@@ -33,6 +39,8 @@ const rows = [
     padding-block: 26px;
     border-bottom: 1px solid var(--line);
   }
+  .certs--plain .certs__row { grid-template-columns: 1fr auto; padding-block: 24px; }
+  .certs--plain .certs__sub { margin-top: 2px; }
   .certs__tick {
     width: 40px;
     height: 40px;
@@ -54,7 +62,8 @@ const rows = [
   }
 
   @media (max-width: 599px) {
-    .certs__row { grid-template-columns: 1fr auto; gap: 12px; padding-block: 18px; }
+    .certs__row,
+    .certs--plain .certs__row { grid-template-columns: 1fr auto; gap: 12px; padding-block: 18px; }
     .certs__tick { display: none; }
     .certs__name { font-size: 17px; }
     .certs__sub { font-size: 14px; }

@@ -17,10 +17,13 @@ interface Props {
   image?: ImageMetadata;
   alt?: string;
   position?: string;
+  /** No bottom padding, for heroes followed by more masthead content (Contact). */
+  flush?: boolean;
 }
-const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center' } = Astro.props;
+const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center', flush = false } = Astro.props;
+const hasAside = Astro.slots.has('aside');
 ---
-<section class:list={['ph', 'on-dark', { 'ph--photo': image }]} aria-labelledby="page-title">
+<section class:list={['ph', 'on-dark', { 'ph--photo': image, 'ph--flush': flush }]} aria-labelledby="page-title">
   {image && (
     <>
       <Picture
@@ -39,7 +42,8 @@ const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center' 
       <div class="ph__shade" aria-hidden="true"></div>
     </>
   )}
-  <div class="container ph__body">
+  <div class:list={['container', 'ph__body', { 'ph__body--split': hasAside }]}>
+    <div class="ph__main">
     <nav aria-label="Breadcrumb">
       <ol role="list" class="t-micro ph__crumbs">
         {crumbs.map((c) => (
@@ -55,6 +59,8 @@ const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center' 
     </h1>
     {lead && <p class="t-lead ph__lead">{lead}</p>}
     {Astro.slots.has('default') && <div class="ph__actions"><slot /></div>}
+    </div>
+    {hasAside && <div class="ph__aside"><slot name="aside" /></div>}
   </div>
 </section>
 
@@ -86,8 +92,19 @@ const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center' 
   }
   .ph__crumbs a:hover { color: var(--on-dark); text-decoration: underline; }
 
+  .ph--flush .ph__body { padding-bottom: 0; }
+  .ph__body--split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 40px 80px;
+  }
+  .ph__body--split .ph__main { flex: 1 1 620px; max-width: 800px; min-width: 0; }
+  .ph__aside { flex: 0 1 300px; }
+
   .ph__eyebrow { margin-top: 40px; color: var(--red-soft); }
-  .ph__title { margin-top: 20px; max-width: 760px; }
+  .ph__title { margin-top: 28px; max-width: 760px; }
   .ph__eyebrow + .ph__title { margin-top: 16px; }
   .ph__lead { margin-top: 24px; max-width: 600px; color: var(--on-dark-soft); }
   .ph__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
@@ -100,6 +117,8 @@ const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center' 
       background: linear-gradient(180deg, rgba(6, 18, 36, 0.78) 0%, rgba(6, 18, 36, 0.6) 40%, rgba(6, 18, 36, 0.92) 100%);
     }
     .ph__body { padding-block: 48px 56px; }
+    .ph--flush .ph__body { padding-bottom: 0; }
+    .ph__aside { flex-basis: 100%; }
     .ph--photo .ph__body { padding-block: 120px 56px; }
     .ph__eyebrow { margin-top: 28px; }
     .ph__title { line-height: 1.06; letter-spacing: -0.03em; }

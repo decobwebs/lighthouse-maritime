@@ -1,0 +1,57 @@
+---
+// Port call checklist download. Renders disabled (no link) while CHECKLIST_PDF is null.
+import { CHECKLIST_PDF } from '../data/site';
+
+interface Props {
+  variant?: 'glass' | 'secondary-light';
+  class?: string;
+}
+const { variant = 'glass', class: className } = Astro.props;
+const classes = ['dl', `dl--${variant}`, className];
+---
+{CHECKLIST_PDF ? (
+  <a href={CHECKLIST_PDF} class:list={classes} download>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
+    <slot />
+  </a>
+) : (
+  /* TODO(checklist-pdf): the PDF is not supplied yet; see PLACEHOLDERS.md. */
+  <span class:list={[...classes, 'dl--off']} aria-disabled="true">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
+    <slot />
+  </span>
+)}
+
+<style>
+  .dl {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    border-radius: var(--r-btn);
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 200ms, color 200ms;
+  }
+  .dl--glass {
+    padding: 12px 18px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--on-dark);
+    font-size: 14.5px;
+  }
+  a.dl--glass:hover { background: rgba(255, 255, 255, 0.2); color: var(--on-dark); }
+  .dl--secondary-light {
+    min-height: 48px;
+    padding: 16px 26px;
+    border: 1px solid var(--navy);
+    background: var(--surface);
+    color: var(--navy);
+    font-size: 16px;
+  }
+  a.dl--secondary-light:hover { background: var(--navy); color: var(--on-dark); }
+  .dl--off { opacity: 0.55; cursor: not-allowed; }
+</style>

@@ -1,0 +1,207 @@
+---
+// About: docs/design-reference/06-about.html; copy from CONTENT.md "About".
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import StatBar from '../components/StatBar.astro';
+import SectionHeading from '../components/SectionHeading.astro';
+import CertifiedList from '../components/CertifiedList.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import { SHOW_TEAM } from '../data/site';
+import svcSupply from '../assets/images/svc-supply.jpg';
+
+const facts = [
+  { value: '2024', label: 'Incorporated in Nigeria' },
+  { value: 'Apapa', label: 'Head office, Lagos' },
+  { value: '9', accent: '+', label: 'Ports and terminals covered' },
+  { value: '24/7', label: 'Operations desk' },
+];
+
+const principles = [
+  { title: 'Professionalism', text: 'Documents filed correctly the first time, and a named officer on every call.' },
+  { title: 'Reliability', text: 'A 24/7 desk and a PDA within [X hours], every time.' },
+  { title: 'Transparency', text: 'Itemised PDAs and FDAs reconciled line by line, with receipts.' },
+  { title: 'Safety', text: 'Respect for health, safety and environmental rules at every terminal we work.' },
+  { title: 'Customer focus', text: 'Updates at every stage, so you never have to chase us.' },
+];
+
+// Shown only when SHOW_TEAM=true; names and photos are still placeholders (PLACEHOLDERS.md).
+const team = [
+  { name: '[Name]', role: 'Managing Director' },
+  { name: '[Name]', role: 'Head of Operations' },
+  { name: '[Name]', role: 'Client Relations' },
+];
+---
+<BaseLayout
+  title="About us | Lighthouse Maritime Agency"
+  description="A maritime agency headquartered in Apapa, Lagos, certified by NPA, NIMASA and NCDMB NOGIC JQS."
+  header="overlay"
+>
+  <PageHero
+    slot="hero"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'About' }]}
+    eyebrow="About Lighthouse"
+    title="Guiding vessels"
+    dim="safely through every Nigerian port."
+    lead="A maritime agency headquartered in Apapa, Lagos, built to make port calls clear, accountable and predictable."
+    image={svcSupply}
+    alt="A product tanker at sea at dawn"
+    position="60% 50%"
+  />
+
+  <StatBar stats={facts} />
+
+  <!-- 01 — Our story -->
+  <section class="section bg-glow" aria-labelledby="story-label">
+    <div class="container story">
+      <div class="story__label">
+        <h2 class="t-eyebrow eyebrow" id="story-label">01 — Our story</h2>
+      </div>
+      <div class="story__body">
+        <p class="t-quote">
+          Owners and operators calling at Nigerian ports often struggle with unclear costs and long silences.
+          <span class="dim">Lighthouse was founded to change that.</span>
+        </p>
+        <p class="t-body story__text">
+          Incorporated in September 2024 and based at 5 Bornu Crescent, Apapa, we provide maritime agency,
+          vessel coordination, procurement and logistics support across the country's ports. Like the light our
+          name comes from, our job is to guide each vessel in safely and make every step visible to the people
+          responsible for it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Vision and mission -->
+  <section class="vm bg-rings on-dark" aria-label="Vision and mission">
+    <div class="container vm__grid">
+      <div class="vm__col">
+        <h2 class="t-eyebrow vm__label">Our vision</h2>
+        <p class="t-quote vm__text">To be the leading maritime agency recognised for reliability and innovation.</p>
+      </div>
+      <div class="vm__col">
+        <h2 class="t-eyebrow vm__label">Our mission</h2>
+        <p class="t-quote vm__text">To deliver reliable maritime, logistics and procurement solutions with integrity and efficiency.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — How we work -->
+  <section class="section" aria-labelledby="principles-title">
+    <div class="container">
+      <SectionHeading id="principles-title" eyebrow="02 — How we work" title="Five principles," dim="each tied to a practice.">
+        <p class="t-body">Values only matter when you can see them in the work. This is what each one means on a port call.</p>
+      </SectionHeading>
+      <ol role="list" class="values">
+        {principles.map((p, i) => (
+          <li class="values__row">
+            <span class="values__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="t-h4">{p.title}</h3>
+            <p class="t-body values__text">{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 03 — Our team: hidden until real names and photos are supplied -->
+  {SHOW_TEAM && (
+    <section class="section bg-lines" aria-labelledby="team-title">
+      <div class="container">
+        <SectionHeading id="team-title" eyebrow="03 — Our team" title="The people" dim="behind your port call." />
+        <ul role="list" class="team">
+          {team.map((m) => (
+            <li class="team__card">
+              <div class="team__photo" aria-hidden="true"></div>
+              <div class="team__body">
+                <p class="t-h5">{m.name}</p>
+                <p class="t-small team__role">{m.role}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- 04 — Compliance -->
+  <section id="compliance" class="section" aria-labelledby="compliance-title">
+    <div class="container compliance">
+      <div class="compliance__copy">
+        <SectionHeading id="compliance-title" eyebrow="04 — Compliance" title="Certified" dim="and registered." />
+        <p class="t-body compliance__text">Certificates are shared with clients and procurement teams on request.</p>
+      </div>
+      <div class="compliance__list">
+        <CertifiedList ticks={false} />
+      </div>
+    </div>
+  </section>
+
+  <CtaBand eyebrow="Work with us" title="Let's prepare your next port call.">
+    <Button href="/request-a-pda">Request a PDA</Button>
+    <Button href="/contact" variant="secondary-dark">Contact us</Button>
+  </CtaBand>
+</BaseLayout>
+
+<style>
+  .eyebrow { color: var(--red); }
+
+  /* ---------- Story ---------- */
+  .story { display: flex; flex-wrap: wrap; gap: 48px 96px; }
+  .story__label { flex: 1 1 320px; }
+  .story__body { flex: 2.4 1 600px; min-width: 0; }
+  .story__text { margin-top: 32px; color: var(--muted); }
+
+  /* ---------- Vision and mission ---------- */
+  .vm { border-bottom: 1px solid var(--deep); }
+  .vm__grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .vm__col { padding: 112px 56px 112px 0; }
+  .vm__col + .vm__col { padding: 112px 0 112px 56px; border-left: 1px solid var(--on-dark-line); }
+  .vm__label { color: var(--red-soft); }
+  .vm__text { margin-top: 22px; }
+
+  /* ---------- Principles ---------- */
+  .values { margin-top: 56px; border-top: 2px solid var(--navy); }
+  .values__row {
+    display: grid;
+    grid-template-columns: 72px minmax(180px, 1fr) minmax(260px, 2fr);
+    gap: 12px 32px;
+    align-items: baseline;
+    padding-block: 30px;
+    border-bottom: 1px solid var(--line);
+  }
+  .values__num { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--red); }
+  .values__text { color: var(--muted); }
+
+  /* ---------- Team (hidden by default) ---------- */
+  .team { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 56px; }
+  .team__card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+  .team__photo { aspect-ratio: 4 / 3; background: var(--surface-alt); }
+  .team__body { padding: 24px; }
+  .team__role { margin-top: 4px; color: var(--muted); }
+
+  /* ---------- Compliance ---------- */
+  .compliance { display: flex; flex-wrap: wrap; gap: 48px 96px; }
+  .compliance__copy { flex: 1 1 380px; min-width: 0; }
+  .compliance__text { margin-top: 22px; color: var(--muted); }
+  .compliance__list { flex: 1.3 1 520px; min-width: 0; }
+
+  @media (max-width: 959px) {
+    .vm__grid { grid-template-columns: 1fr; }
+    .vm__col,
+    .vm__col + .vm__col { padding: 72px 0; border-left: 0; }
+    .vm__col + .vm__col { border-top: 1px solid var(--on-dark-line); }
+    .team { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .values__row { grid-template-columns: 1fr; gap: 6px; padding-block: 22px; }
+  }
+  @media (max-width: 599px) {
+    .story { gap: 20px; }
+    .story__text { margin-top: 24px; }
+    .vm__col,
+    .vm__col + .vm__col { padding: 56px 0; }
+    .values { margin-top: 32px; }
+    .compliance { gap: 24px; }
+  }
+</style>

@@ -1,0 +1,60 @@
+---
+// DRAFT terms of use (CONTENT.md "Legal"). Must be reviewed by a lawyer before launch.
+import LegalPage from '../components/LegalPage.astro';
+import { SITE } from '../data/site';
+---
+<LegalPage
+  title="Terms of use | Lighthouse Maritime Agency"
+  description="The terms that apply when you use the Lighthouse Maritime Agency website."
+  heading="Terms of use"
+  updated="October 2026"
+>
+  <h2>About these terms</h2>
+  <p>
+    This website is run by {SITE.legalName} ({SITE.rc}), {SITE.address.short}, Nigeria. By using it you accept
+    these terms. If you do not accept them, please do not use the site.
+  </p>
+
+  <h2>Information on this site</h2>
+  <p>
+    We work to keep the information on this site accurate, but it is provided for general information only.
+    The port call guide in particular describes how port calls usually work in Nigeria; requirements can
+    change, so confirm them with our operations desk before your vessel arrives.
+  </p>
+
+  <h2>Estimates and services</h2>
+  <p>
+    A PDA request sent through this site is a request for an estimate, not a contract. Any services we provide
+    are governed by the agreement made with you for that port call.
+  </p>
+
+  <h2>Using the site</h2>
+  <ul>
+    <li>Do not misuse the site, try to gain unauthorised access to it, or interfere with how it works.</li>
+    <li>Do not send false, unlawful or harmful content through our forms.</li>
+  </ul>
+
+  <h2>Intellectual property</h2>
+  <p>
+    The content, design and logo on this site belong to {SITE.legalName} or its licensors. You may view and
+    print pages for your own use, but not copy or reuse them for any other purpose without our permission.
+  </p>
+
+  <h2>Links to other sites</h2>
+  <p>We are not responsible for the content of other websites we link to, such as Google Maps.</p>
+
+  <h2>Liability</h2>
+  <p>
+    To the extent the law allows, we are not liable for any loss arising from your use of, or reliance on,
+    information on this site.
+  </p>
+
+  <h2>Privacy</h2>
+  <p>How we handle your personal data is explained in our <a href="/privacy">privacy policy</a>.</p>
+
+  <h2>Governing law</h2>
+  <p>These terms are governed by the laws of the Federal Republic of Nigeria.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about these terms: <a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a>.</p>
+</LegalPage>

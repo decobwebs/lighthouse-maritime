@@ -1,0 +1,33 @@
+---
+// Port coverage: not separately designed. Built from Home section 04 + the service-page patterns
+// (CONTENT.md "Port coverage").
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import PortColumns from '../components/PortColumns.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Button from '../components/Button.astro';
+import { SITE } from '../data/site';
+---
+<BaseLayout
+  title="Port coverage | Lighthouse Maritime Agency"
+  description="From our Apapa head office, one operations desk manages your call wherever the vessel berths."
+>
+  <PageHero
+    slot="hero"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Port coverage' }]}
+    title="Every Nigerian port,"
+    dim="one point of contact."
+    lead="From our Apapa head office, one operations desk manages your call wherever the vessel berths."
+  />
+
+  <section class="section" aria-label="Ports by region">
+    <div class="container">
+      <PortColumns />
+    </div>
+  </section>
+
+  <CtaBand title="Request a PDA for your port">
+    <Button href="/request-a-pda">Request a PDA</Button>
+    <Button href={SITE.ops.tel} variant="secondary-dark">{SITE.ops.phone}</Button>
+  </CtaBand>
+</BaseLayout>

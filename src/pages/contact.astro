@@ -1,0 +1,357 @@
+---
+// Contact: docs/design-reference/07-contact.html; copy from CONTENT.md "Contact".
+// The form posts to /api/contact (built in Stage 6). The Google map loads only after "Show map".
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE } from '../data/site';
+
+const address = '5 Bornu Crescent, Apapa, Lagos, Nigeria';
+const q = encodeURIComponent(address);
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
+const embedUrl = `https://www.google.com/maps?q=${q}&output=embed`;
+const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
+
+const enquiryTypes = [
+  { value: 'general', label: 'General question' },
+  { value: 'tender', label: 'Tender or vendor registration' },
+  { value: 'partnership', label: 'Partnership' },
+  { value: 'company-profile', label: 'Request company profile' },
+  { value: 'careers', label: 'Careers' },
+];
+---
+<BaseLayout
+  title="Contact | Lighthouse Maritime Agency"
+  description="24/7 operations desk +234 806 118 9106. Head office: 5 Bornu Crescent, Apapa, Lagos."
+  localBusiness
+>
+  <div slot="hero">
+    <PageHero
+      flush
+      crumbs={[{ label: 'Home', href: '/' }, { label: 'Contact' }]}
+      title="Talk to us,"
+      dim="day or night."
+      lead="Our operations desk is open 24 hours a day. For anything else, our administration team replies within one business day."
+    />
+    <div class="container desks on-dark">
+      <section class="desk" aria-labelledby="desk-ops">
+        <p class="t-micro desk__status desk__status--open"><span class="desk__dot" aria-hidden="true"></span>Open now · 24/7</p>
+        <h2 class="t-h3 desk__title" id="desk-ops">Operations desk</h2>
+        <p class="t-small desk__note">Vessel calls, PDAs, urgent requests.</p>
+        <p class="t-body desk__lines">
+          <a href={SITE.ops.tel}>{SITE.ops.phone}</a><br />
+          <a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a>
+        </p>
+      </section>
+      <section class="desk" aria-labelledby="desk-admin">
+        <p class="t-micro desk__status">Mon–Fri · Business hours</p>
+        <h2 class="t-h3 desk__title" id="desk-admin">Administration</h2>
+        <p class="t-small desk__note">Tenders, vendor registration, accounts.</p>
+        <p class="t-body desk__lines">
+          <a href={SITE.admin.tel}>{SITE.admin.phone}</a><br />
+          <a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a>
+        </p>
+      </section>
+      <section class="desk" aria-labelledby="desk-visit">
+        <p class="t-micro desk__status">Head office</p>
+        <h2 class="t-h3 desk__title" id="desk-visit">Visit us</h2>
+        <p class="t-small desk__note">By appointment.</p>
+        <address class="t-body desk__lines">5 Bornu Crescent<br />Apapa, Lagos, Nigeria</address>
+      </section>
+    </div>
+  </div>
+
+  <!-- General enquiry -->
+  <section class="section enquiry-section" aria-labelledby="enquiry-title">
+    <div class="container enquiry">
+      <div class="enquiry__intro">
+        <p class="t-eyebrow eyebrow">General enquiry</p>
+        <h2 class="enquiry__title" id="enquiry-title">Send us a message.</h2>
+        <p class="t-body enquiry__text">
+          For a port cost estimate, use the PDA form instead. It asks for exactly what we need and goes straight to
+          the operations desk.
+        </p>
+        <a href="/request-a-pda" class="pda-link">Go to the PDA form <span aria-hidden="true">→</span></a>
+      </div>
+
+      <form class="form" action="/api/contact" method="post" enctype="multipart/form-data">
+        <label class="fld">
+          Full name
+          <input type="text" name="name" autocomplete="name" required />
+        </label>
+        <label class="fld">
+          Company
+          <input type="text" name="company" autocomplete="organization" />
+        </label>
+        <label class="fld">
+          Work email
+          <input type="email" name="email" autocomplete="email" required />
+        </label>
+        <label class="fld">
+          Phone
+          <input type="tel" name="phone" autocomplete="tel" />
+        </label>
+        <label class="fld fld--wide">
+          Enquiry type
+          <select name="enquiry" id="enquiry-type">
+            {enquiryTypes.map((t) => <option value={t.value}>{t.label}</option>)}
+          </select>
+        </label>
+        <label class="fld fld--wide">
+          Message
+          <textarea name="message" rows="5" required></textarea>
+        </label>
+        <div class="form__foot">
+          <label class="fld fld--file">
+            Attachment
+            <input type="file" name="attachment" accept=".pdf,.docx,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" aria-describedby="attachment-hint" />
+            <span class="hint" id="attachment-hint">PDF, DOCX, JPG or PNG, up to 10 MB</span>
+          </label>
+          <button type="submit" class="submit">Send message</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Map: Google content loads only after the visitor asks for it -->
+  <section class="map-section bg-lines" aria-label="Map of our head office">
+    <div class="container">
+      <div class="map" data-map data-embed={embedUrl}>
+        <svg class="map__art" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M0 120 H1200 M0 300 H1200 M220 0 V460 M560 0 V460 M900 0 V460" />
+            <path d="M0 380 C300 360 500 400 760 370 C960 350 1100 380 1200 360" stroke-width="40" stroke-opacity="0.5" />
+          </g>
+        </svg>
+        <div class="map__pin">
+          <div class="map__card">
+            <p class="t-h4 map__name">Lighthouse Maritime Agency</p>
+            <p class="t-micro map__addr">5 Bornu Crescent, Apapa</p>
+          </div>
+          <svg width="28" height="36" viewBox="0 0 24 32" aria-hidden="true">
+            <path d="M12 0C5.4 0 0 5.4 0 12c0 9 12 20 12 20s12-11 12-20C24 5.4 18.6 0 12 0z" fill="var(--red)" />
+            <circle cx="12" cy="12" r="4.5" fill="#FFFFFF" />
+          </svg>
+        </div>
+        <div class="map__actions">
+          <a href={mapsUrl} class="map__btn map__btn--light" data-show-map target="_blank" rel="noopener">Show map</a>
+          <a href={directionsUrl} class="map__btn" target="_blank" rel="noopener">Get directions</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  // Preselect the enquiry type from ?enquiry= (e.g. "Request company profile" links).
+  const select = document.getElementById('enquiry-type') as HTMLSelectElement | null;
+  const wanted = new URLSearchParams(window.location.search).get('enquiry');
+  if (select && wanted && [...select.options].some((o) => o.value === wanted)) select.value = wanted;
+
+  // Swap the drawing for the real Google map only on request.
+  document.querySelectorAll<HTMLElement>('[data-map]').forEach((map) => {
+    const trigger = map.querySelector<HTMLAnchorElement>('[data-show-map]');
+    trigger?.addEventListener('click', (event) => {
+      event.preventDefault();
+      const frame = document.createElement('iframe');
+      frame.src = map.dataset.embed ?? '';
+      frame.title = 'Map: 5 Bornu Crescent, Apapa, Lagos';
+      frame.loading = 'lazy';
+      frame.referrerPolicy = 'no-referrer-when-downgrade';
+      frame.className = 'map__frame';
+      map.classList.add('map--live');
+      map.prepend(frame);
+      trigger.remove();
+      frame.focus();
+    });
+  });
+</script>
+
+<style>
+  .eyebrow { color: var(--red); }
+
+  /* ---------- Desks (inside the dark masthead) ---------- */
+  .desks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-top: 64px;
+  }
+  .desk { padding: 36px 36px 56px; border-top: 1px solid var(--on-dark-line); }
+  .desk:first-child { padding-left: 0; }
+  .desk:last-child { padding-right: 0; }
+  .desk + .desk { border-left: 1px solid var(--on-dark-line); }
+  .desk__status { display: inline-flex; align-items: center; gap: 8px; color: var(--on-dark-muted); }
+  .desk__status--open { color: var(--ok-on-dark); }
+  .desk__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--ok-dot); }
+  .desk__title { margin-top: 14px; }
+  .desk__note { margin-top: 10px; color: var(--on-dark-muted); }
+  .desk__lines { margin-top: 22px; line-height: 2; font-style: normal; overflow-wrap: anywhere; }
+  .desk__lines a { color: var(--on-dark); text-decoration: none; }
+  .desk__lines a:hover { text-decoration: underline; }
+
+  /* ---------- Enquiry ---------- */
+  .enquiry-section { padding-block: 112px; }
+  .enquiry { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 56px 80px; }
+  .enquiry__intro { flex: 1 1 340px; min-width: 0; }
+  .enquiry__title {
+    margin-top: 18px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 3.6vw, 46px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .enquiry__text { margin-top: 20px; color: var(--muted); }
+  .pda-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 48px;
+    margin-top: 28px;
+    padding: 14px 22px;
+    border: 1px solid var(--navy);
+    border-radius: var(--r-btn);
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 200ms, color 200ms;
+  }
+  .pda-link:hover { background: var(--navy); color: var(--on-dark); }
+
+  .form {
+    flex: 1.5 1 540px;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 24px;
+  }
+  .fld {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .fld--wide { grid-column: 1 / -1; }
+  .fld input,
+  .fld select,
+  .fld textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-input);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .fld input:focus-visible,
+  .fld select:focus-visible,
+  .fld textarea:focus-visible {
+    outline: none;
+    border-color: var(--navy);
+    box-shadow: 0 0 0 3px rgba(11, 42, 82, 0.18);
+  }
+  .fld--file input { padding: 10px 12px; font-size: 14px; }
+  .hint { font-size: 13px; font-weight: 400; color: var(--label); }
+
+  .form__foot {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 8px;
+  }
+  .fld--file { flex: 1 1 280px; }
+  .submit {
+    min-height: 48px;
+    padding: 17px 30px;
+    border: 0;
+    border-radius: var(--r-input);
+    background: var(--navy);
+    color: var(--on-dark);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    transition: background-color 200ms;
+  }
+  .submit:hover { background: var(--deep); }
+
+  /* ---------- Map ---------- */
+  .map-section { padding-block: 96px; border-bottom: 1px solid var(--line); }
+  .map {
+    position: relative;
+    aspect-ratio: 21 / 8;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-card-lg);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--navy) 6%, var(--surface));
+    color: var(--line-strong);
+  }
+  .map__art { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .map__pin {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translate(-50%, -100%);
+  }
+  .map__card {
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: var(--shadow-float);
+    text-align: center;
+    color: var(--ink);
+  }
+  .map__name { font-size: 17px; }
+  .map__addr { margin-top: 4px; color: var(--muted); }
+  .map__pin svg { margin-top: 8px; }
+
+  .map__actions { position: absolute; right: 20px; bottom: 16px; display: flex; gap: 10px; }
+  .map__btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 12px 18px;
+    border-radius: var(--r-btn);
+    background: var(--navy);
+    color: var(--on-dark);
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 200ms;
+  }
+  .map__btn:hover { background: var(--deep); color: var(--on-dark); }
+  .map__btn--light { background: var(--surface); color: var(--navy); border: 1px solid var(--navy); }
+  .map__btn--light:hover { background: var(--navy); color: var(--on-dark); }
+
+  .map :global(.map__frame) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .map:global(.map--live) .map__art,
+  .map:global(.map--live) .map__pin { display: none; }
+
+  @media (max-width: 959px) {
+    .desks { grid-template-columns: 1fr; padding-top: 40px; }
+    .desk,
+    .desk:first-child,
+    .desk:last-child { padding: 28px 0 32px; }
+    .desk + .desk { border-left: 0; }
+    .map { aspect-ratio: 4 / 3; }
+  }
+  @media (max-width: 599px) {
+    .enquiry-section { padding-block: 64px; }
+    .enquiry { gap: 32px; }
+    .form { grid-template-columns: 1fr; gap: 16px; }
+    .submit { width: 100%; }
+    .map-section { padding-block: 48px; }
+    .map { aspect-ratio: 3 / 4; border-radius: 14px; }
+    .map__actions { left: 16px; right: 16px; bottom: 16px; flex-direction: column; }
+    .map__btn { justify-content: center; }
+  }
+</style>

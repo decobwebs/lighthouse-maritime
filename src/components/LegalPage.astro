@@ -1,0 +1,58 @@
+---
+// Shared shell for /privacy and /terms: solid hero, "draft for legal review" notice, readable prose column.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from './PageHero.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  updated: string;
+}
+const { title, description, heading, updated } = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  <PageHero slot="hero" crumbs={[{ label: 'Home', href: '/' }, { label: heading }]} title={heading} />
+
+  <section class="section">
+    <div class="container legal">
+      <p class="legal__draft" role="note">
+        <strong>Draft for legal review.</strong> This text has not yet been reviewed by a lawyer and may change before launch.
+      </p>
+      <p class="t-micro legal__updated">Last updated: {updated}</p>
+      <div class="legal__body">
+        <slot />
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal { max-width: calc(760px + var(--gutter) * 2); }
+  .legal__draft {
+    padding: 16px 20px;
+    border: 1px solid var(--red);
+    border-left-width: 4px;
+    border-radius: var(--r-input);
+    background: var(--red-tint);
+    color: var(--ink);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+  .legal__updated { margin-top: 24px; color: var(--label); }
+
+  .legal__body { margin-top: 32px; color: var(--ink); }
+  .legal__body :global(h2) {
+    margin-top: 48px;
+    font-size: var(--fs-h4);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .legal__body :global(h2:first-child) { margin-top: 0; }
+  .legal__body :global(p),
+  .legal__body :global(ul) { margin-top: 16px; font-size: var(--fs-body); line-height: 1.7; color: var(--muted); }
+  .legal__body :global(ul) { padding-left: 1.25em; }
+  .legal__body :global(li + li) { margin-top: 6px; }
+  .legal__body :global(strong) { color: var(--ink); font-weight: 600; }
+</style>

@@ -27,6 +27,12 @@ export const SITE = {
   whatsapp: '[WhatsApp number]',
 } as const;
 
+/** Port call checklist PDF (in /public). null until the client supplies it: the download buttons render disabled. */
+export const CHECKLIST_PDF: string | null = null;
+
+/** About "Our team" section. Off until real names and photos are supplied (set SHOW_TEAM=true at build). */
+export const SHOW_TEAM = import.meta.env.SHOW_TEAM === 'true';
+
 /** WhatsApp link, or the Contact page while the number is still a placeholder. */
 export function whatsappHref(): string {
   // TODO(whatsapp): the number is not supplied yet; this falls back to /contact.

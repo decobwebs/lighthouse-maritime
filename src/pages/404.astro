@@ -1,0 +1,34 @@
+---
+// 404 (CONTENT.md "Legal"): solid header masthead with the message and two actions.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+---
+<BaseLayout
+  title="Page not found | Lighthouse Maritime Agency"
+  description="This page has drifted off course."
+  noindex
+>
+  <section slot="hero" class="container nf" aria-labelledby="nf-title">
+    <p class="t-eyebrow nf__code">404</p>
+    <h1 class="t-h1 nf__title" id="nf-title">This page has drifted off course.</h1>
+    <div class="nf__actions">
+      <Button href="/" variant="dark" class="nf__home">Back to home</Button>
+      <Button href="/request-a-pda">Request a PDA</Button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { padding-block: 120px 144px; }
+  .nf__code { color: var(--red-soft); }
+  .nf__title { margin-top: 16px; max-width: 760px; }
+  .nf__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
+  /* Navy on the dark masthead needs a visible edge. */
+  .nf__actions :global(.nf__home) { border-color: rgba(255, 255, 255, 0.35); }
+
+  @media (max-width: 599px) {
+    .nf { padding-block: 64px 80px; }
+    .nf__actions { flex-direction: column; gap: 10px; }
+    .nf__actions :global(.btn) { width: 100%; border-radius: var(--r-input); }
+  }
+</style>

@@ -1,7 +1,7 @@
 ---
 // Full-width CTA band on .bg-rings (service pages, /services): copy left, buttons right.
 interface Props {
-  eyebrow: string;
+  eyebrow?: string;
   title: string;
   lead?: string;
 }
@@ -10,7 +10,7 @@ const { eyebrow, title, lead } = Astro.props;
 <section class="band bg-rings on-dark">
   <div class="container band__inner">
     <div class="band__copy">
-      <p class="t-eyebrow band__eyebrow">{eyebrow}</p>
+      {eyebrow && <p class="t-eyebrow band__eyebrow">{eyebrow}</p>}
       <h2 class="t-h2 band__title">{title}</h2>
       {lead && <p class="t-lead band__lead">{lead}</p>}
     </div>
@@ -29,13 +29,13 @@ const { eyebrow, title, lead } = Astro.props;
   }
   .band__copy { max-width: 640px; }
   .band__eyebrow { color: var(--red-soft); }
-  .band__title { margin-top: 16px; }
+  .band__eyebrow + .band__title { margin-top: 16px; }
   .band__lead { margin-top: 18px; color: var(--on-dark-soft); }
   .band__actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
   @media (max-width: 599px) {
     .band__inner { padding-block: 64px; gap: 28px; }
-    .band__title { margin-top: 12px; }
+    .band__eyebrow + .band__title { margin-top: 12px; }
     .band__actions { flex-direction: column; width: 100%; gap: 10px; }
     .band__actions :global(.btn) { width: 100%; border-radius: var(--r-input); }
   }
