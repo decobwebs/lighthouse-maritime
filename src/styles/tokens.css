@@ -1,0 +1,112 @@
+/* Lighthouse Maritime Agency — design tokens
+   Source of truth for colour, type, spacing, radius and backgrounds.
+   Every component must use these variables. Do not hard-code new values. */
+
+:root {
+  /* ---------- Colour ---------- */
+  --navy:        #0B2A52;  /* brand, headings on light, dark buttons */
+  --deep:        #071A33;  /* dark sections, footer */
+  --red:         #C2342B;  /* primary action ONLY (Request a PDA), eyebrows on light */
+  --red-hover:   #A82A22;
+  --red-soft:    #F08A80;  /* eyebrows on dark */
+  --red-tint:    #FCEBEA;
+  --logo-red:    #E0493E;  /* logo wave only */
+  --lamp:        #FFE9B8;  /* logo lantern only */
+
+  --ink:         #0F1B2D;  /* body text on light */
+  --muted:       #52637A;  /* secondary text on light (6.1:1 on white) */
+  --label:       #5E6E84;  /* labels, grey heading halves (4.9:1 on white) */
+  --line:        #E2E7EE;  /* section dividers, card borders */
+  --line-strong: #C9D3DF;  /* input borders, chips */
+  --surface:     #FFFFFF;
+  --surface-alt: #F6F8FB;
+
+  --on-dark:       #FFFFFF;
+  --on-dark-soft:  #C5D0DD; /* body on dark */
+  --on-dark-muted: #A9B8CA; /* captions on dark */
+  --on-dark-grey:  #9FB1C8; /* grey heading halves on dark */
+  --on-dark-line:  rgba(255,255,255,0.14);
+
+  --ok:        #1E7A53;  /* "Certified" badge text */
+  --ok-bg:     #E7F6EF;
+  --ok-dot:    #34C38F;  /* live / "desk open" dot */
+  --ok-on-dark:#7FD3B0;  /* "You receive" lines on dark */
+
+  /* ---------- Type ---------- */
+  --font-display: 'Manrope', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+
+  --fs-display: clamp(44px, 6vw, 80px);   /* lh 1.02, ls -0.035em, 700 */
+  --fs-h1:      clamp(42px, 5.4vw, 72px); /* inner page hero, lh 1.03, ls -0.033em, 700 */
+  --fs-h2:      clamp(34px, 4vw, 54px);   /* section title, lh 1.08, ls -0.025em, 700 */
+  --fs-h3:      clamp(26px, 2.4vw, 34px); /* feature card / phase, lh 1.15, ls -0.02em, 700 */
+  --fs-quote:   clamp(26px, 2.8vw, 36px); /* pull quote, lh 1.3, 600 */
+  --fs-h4:      22px;                     /* card title, lh 1.3, 600 */
+  --fs-h5:      18px;                     /* step / list title, lh 1.35, 600 */
+  --fs-stat:    clamp(44px, 4.6vw, 64px); /* lh 1, ls -0.035em, 700 */
+  --fs-lead:    20px;                     /* lh 1.6 */
+  --fs-body:    17px;                     /* lh 1.7 */
+  --fs-small:   15px;                     /* lh 1.6 */
+  --fs-eyebrow: 13px;                     /* 600, uppercase, ls 0.14em */
+  --fs-micro:   12.5px;                   /* 500 */
+
+  /* ---------- Layout & spacing ---------- */
+  --container: 1240px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --section-y: 128px;      /* desktop; 64px on phone */
+  --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-7: 32px; --space-8: 40px;
+  --space-9: 48px; --space-10: 56px; --space-11: 64px; --space-12: 88px;
+
+  /* ---------- Radius ---------- */
+  --r-btn: 6px;
+  --r-input: 8px;
+  --r-card: 16px;
+  --r-card-lg: 18px;
+  --r-banner: 20px;
+  --r-pill: 999px;
+
+  /* ---------- Shadow (use sparingly) ---------- */
+  --shadow-float: 0 24px 48px rgba(11,42,82,0.14);
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(.2,.7,.2,1);
+}
+
+/* ---------- Signature backgrounds ---------- */
+
+/* Dark sections: lighthouse-beam rings from the top-right corner + red and blue glows */
+.bg-rings {
+  background-color: var(--deep);
+  background-image:
+    radial-gradient(ellipse 55% 60% at 100% 0%, rgba(194,52,43,0.20), rgba(194,52,43,0) 70%),
+    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(46,96,160,0.22), rgba(46,96,160,0) 70%),
+    repeating-radial-gradient(circle at 100% 0%, rgba(255,255,255,0.045) 0 1px, transparent 1px 56px);
+}
+
+/* Light sections: soft corner tints */
+.bg-glow {
+  background-color: var(--surface);
+  background-image:
+    radial-gradient(ellipse 50% 70% at 0% 100%, rgba(11,42,82,0.07), rgba(11,42,82,0) 70%),
+    radial-gradient(ellipse 40% 60% at 100% 0%, rgba(194,52,43,0.06), rgba(194,52,43,0) 70%);
+}
+
+/* Light grey with fine vertical lines every 96px */
+.bg-lines {
+  background-color: var(--surface-alt);
+  background-image: repeating-linear-gradient(90deg, rgba(11,42,82,0.05) 0 1px, transparent 1px 96px);
+}
+
+/* Dot field, used as a fading layer at the top of the Services section */
+.bg-dots {
+  background-color: var(--surface);
+  background-image: radial-gradient(rgba(11,42,82,0.12) 1px, transparent 1.2px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+          mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

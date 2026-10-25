@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 140" role="img" aria-label="Lighthouse Maritime Agency">
+  <path d="M60 4 L60 12" stroke="#FFFFFF" stroke-width="5"/>
+  <path d="M46 24 L60 11 L74 24 Z" fill="#FFFFFF"/>
+  <rect x="49" y="24" width="22" height="15" fill="#FFFFFF"/>
+  <rect x="54" y="27" width="12" height="9" fill="#FFE9B8"/>
+  <rect x="42" y="39" width="36" height="5" fill="#FFFFFF"/>
+  <path d="M46 44 L74 44 L86 108 L34 108 Z" fill="#FFFFFF"/>
+  <path d="M4 106 C36 122 72 94 116 98 L116 110 C78 108 44 132 4 118 Z" fill="#FFFFFF"/>
+  <path d="M18 126 C52 132 82 112 116 114 L116 121 C84 120 54 140 18 133 Z" fill="#E0493E"/>
+</svg>
