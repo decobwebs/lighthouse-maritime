@@ -89,8 +89,17 @@ Defined in `tokens.css`:
 - **Dark solid:** `--navy` background (Contact form submit, Back to home).
 - Focus: `outline: 3px solid` navy (on light) or white (on dark), offset 3px.
 
+### Logo
+The official Lighthouse mark: a vector trace of the client's logo (lighthouse on a wave, with a red ribbon). Source files are in `brand-source/`; the site uses the svgo-optimised copies in `public/` (each under 12 KB, viewBox kept):
+- `logo-mark.svg`: navy `#0B2A52` + red `#D03830`, for light backgrounds.
+- `logo-mark-white.svg`: white + red `#E0493E`, for dark backgrounds. This is the one used on the site (header, footer, mobile menu), all of which sit on navy.
+- `favicon.svg`: the white mark on a navy `#0B2A52` rounded square.
+- `apple-touch-icon.png` (180px, white mark on `#0B2A52`, rounded corners) and `og-image.png` (1200×630, mark + wordmark + tagline on the navy chart background).
+
+The mark is narrow (viewBox ratio about 0.81 wide to 1 tall), so size it by **height** with `width: auto`: 40px in the header, 36px in the footer and mobile menu. It is an `<img>` with width/height attributes so it never shifts the layout. The "Lighthouse / MARITIME AGENCY" wordmark sits beside it in live text (Manrope 800 + Inter 500, 0.2em tracking); the wordmark is not part of the SVG. Don't recolour, stretch or redraw the mark, and don't put the navy version on a dark background.
+
 ### Header (fixed, all pages)
-No utility bar. Logo (white mark 32×37 + "Lighthouse" Manrope 800 18px + "MARITIME AGENCY" 10.5px, 0.2em tracking), nav (Services, How we work, Ports, About, Contact, 15px/500, 2px red underline on hover and on the active page), a "Call" ghost button with a phone icon and the "Request a PDA" red button.
+No utility bar. Logo (white mark 40px tall, width auto + "Lighthouse" Manrope 800 18px + "MARITIME AGENCY" 10.5px, 0.2em tracking), nav (Services, How we work, Ports, About, Contact, 15px/500, 2px red underline on hover and on the active page), a "Call" ghost button with a phone icon and the "Request a PDA" red button.
 - **Fixed** to the top, 88px tall. On pages with a photo hero it starts **transparent**; after 40px of scroll it becomes **solid** `--deep` with a soft shadow (`0 10px 30px rgba(4,14,30,.28)`) and **shrinks to 70px**. Pages without a photo hero use the solid state from the start.
 - **Hides** when scrolling down past 120px and **slides back** on scroll up (4px threshold), 320ms `--ease-out`. Never hidden while the mobile menu is open or focus is inside the header.
 - Shrinking and hiding use transforms only, so the header never causes layout shift.
@@ -204,4 +213,4 @@ Also allowed: button colour transitions (200ms), card image zoom and arrow nudge
 | cta-night.jpg | Home CTA banner | A container ship alongside under quay cranes at night | 50% 40% (TODO(brand-photo): EVERGREEN branding) |
 
 ## 9. SEO and meta
-Each page: a unique `<title>` ("Port agency in Nigeria | Lighthouse Maritime Agency"), a meta description (≤ 155 characters, in CONTENT.md), canonical URL, Open Graph image (hero crop 1200×630), `LocalBusiness` JSON-LD on Home and Contact (name, address, phones, email, url; no ratings), `sitemap.xml` via `@astrojs/sitemap`, and `robots.txt`.
+Each page: a unique `<title>` ("Port agency in Nigeria | Lighthouse Maritime Agency"), a meta description (≤ 155 characters, in CONTENT.md), canonical URL, Open Graph image (`public/og-image.png`, logo card 1200×630), favicon.svg + 180px apple-touch-icon, `LocalBusiness` JSON-LD on Home and Contact (name, address, phones, email, url; no ratings), `sitemap.xml` via `@astrojs/sitemap`, and `robots.txt`.

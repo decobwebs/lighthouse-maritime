@@ -1,22 +1,25 @@
 ---
-// White lighthouse mark + wordmark, for dark surfaces. Same drawing as public/logo-mark-white.svg.
+// Official Lighthouse mark (white, public/logo-mark-white.svg) + wordmark, for dark surfaces.
+// The mark is an <img> so its ~4 KB of path data is downloaded once and cached, not inlined on every page.
+// Width and height attributes match the viewBox ratio (264.8 × 328.5 ≈ 0.81), so nothing shifts while it loads.
 interface Props {
+  /** md: header (mark 40px tall). sm: footer and mobile menu (mark 36px tall). */
   size?: 'md' | 'sm';
   class?: string;
 }
 const { size = 'md', class: className } = Astro.props;
+const markHeight = size === 'md' ? 40 : 36;
+const markWidth = Math.round((markHeight * 264.8) / 328.5);
 ---
 <a href="/" class:list={['logo', `logo--${size}`, className]} aria-label="Lighthouse Maritime Agency, home">
-  <svg class="logo__mark" viewBox="0 0 120 140" aria-hidden="true" focusable="false">
-    <path d="M60 4 L60 12" stroke="#FFFFFF" stroke-width="5" />
-    <path d="M46 24 L60 11 L74 24 Z" fill="#FFFFFF" />
-    <rect x="49" y="24" width="22" height="15" fill="#FFFFFF" />
-    <rect x="54" y="27" width="12" height="9" fill="var(--lamp)" />
-    <rect x="42" y="39" width="36" height="5" fill="#FFFFFF" />
-    <path d="M46 44 L74 44 L86 108 L34 108 Z" fill="#FFFFFF" />
-    <path d="M4 106 C36 122 72 94 116 98 L116 110 C78 108 44 132 4 118 Z" fill="#FFFFFF" />
-    <path d="M18 126 C52 132 82 112 116 114 L116 121 C84 120 54 140 18 133 Z" fill="var(--logo-red)" />
-  </svg>
+  <img
+    class="logo__mark"
+    src="/logo-mark-white.svg"
+    alt=""
+    width={markWidth}
+    height={markHeight}
+    decoding="async"
+  />
   <span class="logo__text" aria-hidden="true">
     <span class="logo__name">Lighthouse</span>
     <span class="logo__sub">MARITIME AGENCY</span>
@@ -33,7 +36,7 @@ const { size = 'md', class: className } = Astro.props;
     min-height: 44px;
   }
   .logo:hover { color: var(--on-dark); }
-  .logo__mark { width: 32px; height: 37px; flex: none; }
+  .logo__mark { display: block; height: 40px; width: auto; flex: none; }
   .logo__text { display: flex; flex-direction: column; line-height: 1.1; }
   .logo__name {
     font-family: var(--font-display);
@@ -50,13 +53,12 @@ const { size = 'md', class: className } = Astro.props;
   }
 
   .logo--sm { gap: 10px; }
-  .logo--sm .logo__mark { width: 26px; height: 30px; }
+  .logo--sm .logo__mark { height: 36px; }
   .logo--sm .logo__name { font-size: 16px; }
   .logo--sm .logo__sub { font-size: 9.5px; margin-top: 2px; }
 
   @media (max-width: 959px) {
     .logo:not(.logo--sm) { gap: 10px; }
-    .logo:not(.logo--sm) .logo__mark { width: 26px; height: 30px; }
     .logo:not(.logo--sm) .logo__name { font-size: 16px; }
     .logo:not(.logo--sm) .logo__sub { font-size: 9.5px; margin-top: 2px; }
   }

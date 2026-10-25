@@ -1,7 +1,5 @@
 ---
 // <head> meta: title, description, canonical, Open Graph, favicon and optional LocalBusiness JSON-LD.
-import { getImage } from 'astro:assets';
-import heroHarbour from '../assets/images/hero-harbour.jpg';
 import { SITE } from '../data/site';
 
 interface Props {
@@ -15,17 +13,8 @@ const { title, description, localBusiness = false, noindex = false } = Astro.pro
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 
-// Default share image: a 1200×630 crop of the home hero.
-const og = await getImage({
-  src: heroHarbour,
-  width: 1200,
-  height: 630,
-  fit: 'cover',
-  position: 'center', // sharp accepts keywords only, not percentages
-  format: 'jpg',
-  quality: 80,
-});
-const ogImage = new URL(og.src, Astro.site ?? SITE.url).href;
+// Share image: white mark and wordmark on navy, 1200×630 (public/og-image.png, made from public/logo-mark-white.svg).
+const ogImage = new URL('/og-image.png', Astro.site ?? SITE.url).href;
 
 const jsonLd = localBusiness
   ? {
@@ -71,11 +60,12 @@ const jsonLd = localBusiness
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="A cargo vessel entering harbour at dusk past a quayside crane" />
+<meta property="og:image:alt" content="Lighthouse Maritime Agency logo: a white lighthouse on a navy background" />
 <meta property="og:locale" content="en_NG" />
 <meta name="twitter:card" content="summary_large_image" />
 
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta name="theme-color" content="#071A33" />
 
 {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
