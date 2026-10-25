@@ -1,0 +1,120 @@
+---
+// Operations desk board at the bottom of the Home hero (DESIGN.md §6). Replaces the old stats bar.
+// The clock shows Lagos time (Africa/Lagos, 24-hour), refreshed every 30 seconds. It is deliberately
+// not a live region, so screen readers don't announce each update. Without JS it reads "Lagos (WAT)".
+---
+<section class="desk" aria-label="Operations desk">
+  <div class="desk__cell">
+    <h2 class="desk__label">Apapa operations desk</h2>
+    <p class="desk__time"><span data-lagos-time>Lagos (WAT)</span><span class="desk__tz" data-lagos-tz hidden>WAT</span></p>
+    <p class="t-micro desk__meta">06°27′N 003°22′E · Lagos local time</p>
+  </div>
+  <div class="desk__cell">
+    <h2 class="desk__label">Desk status</h2>
+    <p class="desk__value"><span class="desk__dot" aria-hidden="true"></span>Open now</p>
+    <p class="desk__note">Answering 24 hours a day, every day.</p>
+  </div>
+  <div class="desk__cell">
+    <h2 class="desk__label">Coverage</h2>
+    <p class="desk__value">9 ports + offshore</p>
+    <p class="desk__note">Lagos, Delta, Rivers and Cross River.</p>
+  </div>
+  <div class="desk__cell">
+    <h2 class="desk__label">PDA turnaround</h2>
+    <p class="desk__value">Within [X] hours</p>
+    <p class="desk__note">After a complete request.</p>
+  </div>
+</section>
+
+<script>
+  const time = document.querySelector<HTMLElement>('[data-lagos-time]');
+  const tz = document.querySelector<HTMLElement>('[data-lagos-tz]');
+  if (time) {
+    const format = new Intl.DateTimeFormat('en-GB', {
+      timeZone: 'Africa/Lagos',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+    });
+    const tick = () => {
+      time.textContent = format.format(new Date());
+    };
+    tick();
+    if (tz) tz.hidden = false;
+    window.setInterval(tick, 30_000);
+  }
+</script>
+
+<style>
+  .desk {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .desk__cell { padding: 24px 26px; background: var(--panel); }
+
+  .desk__label {
+    font-family: var(--font-body);
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--on-dark-label);
+  }
+  .desk__time {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .desk__tz {
+    margin-left: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--on-dark-label);
+  }
+  .desk__meta { margin-top: 10px; color: var(--on-dark-label); font-variant-numeric: tabular-nums; }
+
+  .desk__value {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .desk__dot {
+    width: 10px;
+    height: 10px;
+    flex: none;
+    border-radius: 50%;
+    background: var(--ok-dot);
+    box-shadow: 0 0 0 5px rgba(52, 195, 143, 0.18);
+  }
+  .desk__note { margin-top: 8px; font-size: 14.5px; line-height: 1.55; color: var(--on-dark-muted); }
+
+  /* No JS: "Lagos (WAT)" is text, not a clock, so size it like the other values. */
+  :global(html:not(.js)) .desk__time { font-size: 24px; margin-top: 12px; }
+
+  @media (max-width: 1099px) {
+    .desk { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 599px) {
+    .desk__cell { padding: 18px 16px; }
+    .desk__time { font-size: 30px; }
+    .desk__value { font-size: 18px; gap: 10px; }
+    .desk__meta { font-size: 11px; }
+    .desk__note { font-size: 13px; }
+  }
+</style>

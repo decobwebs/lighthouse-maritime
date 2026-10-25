@@ -7,7 +7,7 @@ The design is **finished and approved**. Your job is to implement it faithfully,
 ## Read these first, every session
 1. `docs/DESIGN.md`: the design system (type scale, colours, spacing, backgrounds, components, motion, responsive rules).
 2. `docs/CONTENT.md`: the exact copy for every page. Use it word for word.
-3. `docs/design-reference/*.html`: the approved screens. Open them in a browser to see the target. They are static mock-ups written with inline styles; **match their look, but do not copy their inline-style markup**. Rebuild them as clean components that use `src/styles/tokens.css`.
+3. `docs/design-reference/*.html`: the approved screens. **`01-home-desktop-v4.html` is the source of truth** where it differs from the older screens. Open them in a browser to see the target. They are static mock-ups written with inline styles; **match their look, but do not copy their inline-style markup**. Rebuild them as clean components that use `src/styles/tokens.css`.
 4. `docs/BUILD_PROMPTS.md`: the build is done in stages; do only the stage you are asked for.
 
 ## Stack (decided, do not change without asking)
@@ -18,14 +18,15 @@ The design is **finished and approved**. Your job is to implement it faithfully,
 - Hosting: **Vercel**, serving the static `dist/` folder (no adapter needed).
 - Forms: **no server.** Request a PDA and Contact are checked in the browser (`src/lib/pda-rules.ts`, `src/lib/contact-rules.ts`), confirmed in a "Check your details" dialog, then sent by the visitor from their own email app (`mailto:`) or WhatsApp, or copied (`src/lib/send.ts`, `src/scripts/send-flow.ts`). PDA → operations@ (cc admin@); Contact → admin@ (cc operations@). No Resend, Supabase or Turnstile.
 - Email addresses never appear whole in page HTML or scripts: use `<Email mailbox="…" />` in pages and `emailAddress()` in scripts (the one exception is the no-JS fallback link on Request a PDA).
-- JavaScript: only where needed (mobile menu, hero tab switcher, PDA purpose chips, the form check-and-send flow, email links). Everything else must work with JS disabled; without JS the forms show a plain email/phone fallback.
+- JavaScript: only where needed (header scroll states, mobile menu, Lagos desk clock, Home section rail, scroll reveal, PDA purpose chips, the form check-and-send flow, email links). Everything else must work with JS disabled; without JS the forms show a plain email/phone fallback.
 
 ## Project structure
 ```
 src/
   assets/images/        photos (already supplied, already compressed)
-  components/           Header, Footer, Button, Eyebrow, SectionHeading, ServiceCard, StatBar,
-                        PhaseTimeline, CertifiedList, PortColumns, QuickPdaPanel, MobileActionBar, ...
+  components/           Header, Footer, Button, Eyebrow, SectionHeading, ServiceCard, DeskBoard, SectionRail,
+                        PhaseTimeline, CertifiedList, CertifiedStrip, PortColumns, QuickPdaPanel, MobileActionBar, ...
+  assets/logos/         monochrome authority logos (NPA, NIMASA, NCDMB); see src/data/authorities.ts
   layouts/BaseLayout.astro   <head>, SEO meta, fonts, tokens, Header, Footer, MobileActionBar
   content/              services as content collection (one .md per service)
   pages/
@@ -43,7 +44,7 @@ src/
   lib/                  pda-rules.ts, contact-rules.ts, email-typos.ts, send.ts (pure, shared)
   scripts/send-flow.ts  browser side of both forms
   styles/tokens.css  styles/global.css
-public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt
+public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt  patterns/chart-dark.svg  patterns/chart-light.svg
 ```
 
 ## Non-negotiable rules
@@ -51,7 +52,7 @@ public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt
 - **Registration numbers are confidential.** Show "Certified" for NPA, NIMASA and NCDMB NOGIC JQS. Only the CAC RC number (7964161) is shown.
 - Domain: **lighthousemaritimeltd.com**. Emails (render with `<Email>`, never as plain text): `operations@lighthousemaritimeltd.com` (24/7 desk, PDA requests) and `admin@lighthousemaritimeltd.com` (general, tenders). Phones: +234 806 118 9106 (operations, 24/7), +234 908 622 3063 (administration).
 - Red (`--red`) is for the primary action only. One red button per view, plus the header button.
-- Sections divide with straight 1px lines (`--line`). No drop shadows except the one floating card on Home/About (`--shadow-float`).
+- Sections are separated by **background rhythm only** (white, mist, navy chart; see DESIGN.md §4): no full-width dividers. Rules stay inside components. Shadows only where DESIGN.md specifies them (floating head-office card, port cards, solid header, section rail, dialogs).
 - Accessibility: WCAG 2.2 AA. Real `<button>`/`<a>`/`<label>`, visible focus (3px outline), alt text from `docs/CONTENT.md`, `prefers-reduced-motion` respected, 44px minimum touch targets.
 - Performance budget (mobile, 4G): LCP ≤ 2.5s, CLS ≤ 0.1, total JS ≤ 30 KB gzipped on content pages.
 - Two photos show other shipping lines' names (MSC on the Port agency image, EVERGREEN on the night CTA image). Keep them for now, but leave a `TODO(brand-photo)` comment wherever they are used. The client may swap them.

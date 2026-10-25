@@ -60,9 +60,9 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
   </div>
 
   <!-- General enquiry -->
-  <section class="section enquiry-section" aria-labelledby="enquiry-title">
+  <section class="section enquiry-section bg-white" aria-labelledby="enquiry-title">
     <div class="container enquiry">
-      <div class="enquiry__intro">
+      <div class="enquiry__intro" data-reveal>
         <p class="t-eyebrow eyebrow">General enquiry</p>
         <h2 class="enquiry__title" id="enquiry-title">Send us a message.</h2>
         <p class="t-body enquiry__text">
@@ -118,9 +118,9 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
   </section>
 
   <!-- Map: Google content loads only after the visitor asks for it -->
-  <section class="map-section bg-lines" aria-label="Map of our head office">
+  <section class="map-section bg-mist" aria-label="Map of our head office">
     <div class="container">
-      <div class="map" data-map data-embed={embedUrl}>
+      <div class="map" data-map data-embed={embedUrl} data-reveal>
         <svg class="map__art" viewBox="0 0 1200 460" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <g fill="none" stroke="currentColor" stroke-width="2">
             <path d="M0 120 H1200 M0 300 H1200 M220 0 V460 M560 0 V460 M900 0 V460" />
@@ -331,7 +331,7 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
   .submit:hover { background: var(--deep); }
 
   /* ---------- Map ---------- */
-  .map-section { padding-block: 96px; border-bottom: 1px solid var(--line); }
+  .map-section { padding-block: 96px; }
   .map {
     position: relative;
     aspect-ratio: 21 / 8;

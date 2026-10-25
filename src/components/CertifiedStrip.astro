@@ -1,46 +1,59 @@
 ---
-// "Certified by" strip: authority names as text only, no logos (DESIGN.md §6).
-const names = ['Nigerian Ports Authority', 'NIMASA', 'NCDMB · NOGIC JQS', 'CAC · RC 7964161'];
+// "Certified by" strip (DESIGN.md §6): three equal logo slots, monochrome, ~48px tall. No CAC/RC here.
+// A slot without a logo shows the authority's name instead.
+import { Image } from 'astro:assets';
+import { AUTHORITIES } from '../data/authorities';
 ---
 <section class="cert" aria-labelledby="cert-label">
-  <div class="container cert__inner">
+  <div class="container cert__inner" data-reveal>
     <p class="t-eyebrow cert__label" id="cert-label">Certified by</p>
-    <ul role="list" class="cert__names">
-      {names.map((n) => <li>{n}</li>)}
+    <ul role="list" class="cert__logos">
+      {AUTHORITIES.map((a) => (
+        <li class="cert__slot">
+          {a.logo ? (
+            <Image src={a.logo} alt={a.logoAlt} format="webp" class="cert__logo" loading="lazy" />
+          ) : (
+            <span class="cert__name">{a.short}</span>
+          )}
+        </li>
+      ))}
     </ul>
   </div>
 </section>
 
 <style>
-  .cert { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .cert { background: var(--surface); }
   .cert__inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px 48px;
-    padding-block: 36px;
+    justify-content: center;
+    gap: 24px 64px;
+    padding-top: 56px;
   }
   .cert__label { color: var(--label); }
-  .cert__names {
+  .cert__logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px 56px; }
+  .cert__slot {
+    width: 168px;
+    height: 64px;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 16px 56px;
+    justify-content: center;
+  }
+  .cert__logo { width: auto; height: 48px; }
+  .cert__name {
     font-family: var(--font-display);
-    font-size: 21px;
+    font-size: 17px;
     font-weight: 700;
+    line-height: 1.25;
     letter-spacing: -0.01em;
+    text-align: center;
     color: var(--label);
   }
 
-  @media (max-width: 1199px) {
-    .cert__names { gap: 12px 36px; font-size: 19px; }
-  }
   @media (max-width: 599px) {
-    .cert__inner { display: block; padding-block: 28px; }
-    .cert__names { display: block; margin-top: 12px; font-size: 17px; line-height: 1.7; }
-    .cert__names li { display: inline; }
-    .cert__names li:not(:last-child)::after { content: ' · '; }
+    .cert__inner { gap: 16px; padding-top: 40px; }
+    .cert__logos { gap: 12px 28px; }
+    .cert__slot { width: auto; min-width: 72px; height: 56px; }
   }
 </style>

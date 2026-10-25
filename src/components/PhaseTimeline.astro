@@ -1,5 +1,5 @@
 ---
-// Three phase columns on .bg-rings (DESIGN.md §6 Phase timeline).
+// Three contained phase panels on .bg-chart-dark (DESIGN.md §6 Phase panels).
 // Stages 01 and 08 have filled red circles; each step ends with a green "You receive" line.
 const phases = [
   {
@@ -36,7 +36,7 @@ const filled = new Set(['01', '08']);
 ---
 <div class="phases">
   {phases.map((p, i) => (
-    <div class="phase">
+    <div class="phase" data-reveal>
       <div class="phase__meta">
         <p class="t-eyebrow phase__label">{p.phase}</p>
         <p class="t-micro phase__range">{p.range}</p>
@@ -72,26 +72,32 @@ const filled = new Set(['01', '08']);
 <style>
   .phases {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border-top: 1px solid var(--on-dark-line);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
   }
-  .phase { padding: 36px 36px 8px; border-right: 1px solid var(--on-dark-line); }
-  .phase:first-child { padding-left: 0; }
-  .phase:last-child { padding-right: 0; border-right: 0; }
+  .phase {
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--r-card);
+    background: rgba(255, 255, 255, 0.04);
+  }
 
   .phase__meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
-  .phase__label { font-size: 12px; color: var(--on-dark-grey); }
-  .phase__range { color: var(--on-dark-grey); }
+  .phase__label { font-size: 12px; color: var(--on-dark-label); }
+  .phase__range { color: var(--on-dark-label); }
   .phase__title { margin-top: 12px; font-size: min(var(--fs-h3), 28px); }
 
-  .steps { margin-top: 32px; }
+  .steps { margin-top: 28px; }
   .step {
     position: relative;
     display: grid;
     grid-template-columns: 44px 1fr;
     gap: 16px;
-    padding-bottom: 28px;
+    padding-bottom: 26px;
   }
+  .step:last-child { padding-bottom: 0; }
   /* Dashed connector between circles. */
   .step:not(:last-child)::before {
     content: '';
@@ -124,31 +130,25 @@ const filled = new Set(['01', '08']);
   }
   .step__receive-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--ok-dot); }
 
+  /* The note sits at the bottom of the third panel. */
   .phase__note {
-    margin-top: 12px;
-    margin-bottom: 28px;
-    padding: 20px 22px;
-    border: 1px solid var(--on-dark-line);
+    margin-top: auto;
+    padding: 18px 20px;
     border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255, 255, 255, 0.06);
   }
+  .phase:last-child .steps { margin-bottom: 24px; }
   .phase__note-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.35; }
   .phase__note-text { margin-top: 6px; font-size: 14.5px; line-height: 1.6; color: var(--on-dark-muted); }
 
-  /* Below 960px the columns stack and the vertical rules become horizontal ones. */
-  @media (max-width: 959px) {
-    .phases { grid-template-columns: 1fr; }
-    .phase,
-    .phase:first-child,
-    .phase:last-child { padding: 28px 0 4px; border-right: 0; }
-    .phase:not(:last-child) { border-bottom: 1px solid var(--on-dark-line); }
-  }
   .phase__summary { display: none; }
 
+  /* Below 960px the panels stack. */
+  @media (max-width: 959px) {
+    .phases { grid-template-columns: 1fr; gap: 16px; }
+  }
   @media (max-width: 599px) {
-    .phase,
-    .phase:first-child,
-    .phase:last-child { padding: 24px 0; }
+    .phase { padding: 22px 20px; }
     .phase__label { font-size: 11px; }
     .phase__title { margin-top: 8px; }
     .phase__summary { display: block; }

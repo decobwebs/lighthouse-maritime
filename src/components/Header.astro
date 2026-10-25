@@ -1,7 +1,9 @@
 ---
-// Site header (DESIGN.md §6 Header).
-// overlay: transparent, absolutely positioned over a photo hero.
-// solid:   sits inside the page's .bg-rings masthead (see BaseLayout).
+// Site header (DESIGN.md §6 Header). Fixed to the top on every page.
+// overlay: starts transparent over a photo hero; turns solid after 40px of scroll.
+// solid:   solid from the start (pages without a photo hero).
+// After 40px it also shrinks 88 → 70px; it hides on scroll down (past 120px) and returns on scroll up.
+// Shrinking and hiding use transforms only, so the header never causes layout shift.
 import Logo from './Logo.astro';
 import Button from './Button.astro';
 import Icon from './Icon.astro';
@@ -18,71 +20,60 @@ const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
 // On the PDA page itself, the red button would link to the current page; show the desk number instead.
 const onPdaPage = isActive('/request-a-pda');
 ---
-<div class:list={['site-header', `site-header--${variant}`, 'on-dark']}>
-  <div class="utility">
-    <div class="container utility__inner t-micro">
-      <span class="utility__item">
-        <Icon name="pin" size={14} />
-        {SITE.address.short}
-      </span>
-      <span class="utility__group">
-        <Email mailbox={SITE.ops.mailbox} class="utility__link" />
-        <a href={SITE.ops.tel} class="utility__link utility__link--strong">
-          <span class="live-dot" aria-hidden="true"></span>24/7 Operations · {SITE.ops.phone}
+<header
+  class:list={['site-header', 'on-dark', { 'is-solid': variant === 'solid' }]}
+  data-site-header
+  data-variant={variant}
+>
+  <div class="container bar">
+    <Logo />
+
+    <nav class="nav" aria-label="Main">
+      <ul role="list" class="nav__list">
+        {NAV.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class:list={['nav__link', { 'is-active': isActive(item.href) }]}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="bar__actions">
+      {onPdaPage ? (
+        <a href={SITE.ops.tel} class="desk-pill">
+          <span class="live-dot" aria-hidden="true"></span>24/7 · {SITE.ops.phone}
         </a>
-      </span>
-    </div>
-  </div>
-
-  <header class="bar">
-    <div class="container bar__inner">
-      <Logo />
-
-      <nav class="nav" aria-label="Main">
-        <ul role="list" class="nav__list">
-          {NAV.map((item) => (
-            <li>
-              <a
-                href={item.href}
-                class:list={['nav__link', { 'is-active': isActive(item.href) }]}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <div class="bar__actions">
-        {onPdaPage ? (
-          <a href={SITE.ops.tel} class="desk-pill">
-            <span class="live-dot" aria-hidden="true"></span>24/7 · {SITE.ops.phone}
+      ) : (
+        <>
+          <a href={SITE.ops.tel} class="ghost-btn" aria-label={`Call the 24/7 operations desk, ${SITE.ops.phone}`}>
+            <Icon name="phone" size={16} strokeWidth={1.9} />Call
           </a>
-        ) : (
-          <>
-            <a href={SITE.ops.tel} class="ghost-btn">Call 24/7</a>
-            <Button href="/request-a-pda" size="sm">Request a PDA</Button>
-          </>
-        )}
-      </div>
-
-      <!-- Without JS this link jumps to the footer, which lists every page. -->
-      <a
-        href="#site-footer"
-        class="menu-btn"
-        data-menu-open
-        aria-haspopup="dialog"
-        aria-controls="site-menu"
-        aria-label="Open menu"
-      >
-        <Icon name="menu" size={20} strokeWidth={2} />
-      </a>
+          <Button href="/request-a-pda" size="sm">Request a PDA</Button>
+        </>
+      )}
     </div>
-  </header>
-</div>
 
-<dialog id="site-menu" class="menu bg-rings on-dark" aria-label="Menu">
+    <!-- Without JS this link jumps to the footer, which lists every page. -->
+    <a
+      href="#site-footer"
+      class="menu-btn"
+      data-menu-open
+      aria-haspopup="dialog"
+      aria-controls="site-menu"
+      aria-label="Open menu"
+    >
+      <Icon name="menu" size={20} strokeWidth={2} />
+    </a>
+  </div>
+</header>
+
+<dialog id="site-menu" class="menu bg-chart-dark on-dark" aria-label="Menu">
   <div class="menu__top">
     <Logo size="sm" />
     <button type="button" class="menu-btn menu-btn--close" data-menu-close aria-label="Close menu" autofocus>
@@ -118,10 +109,54 @@ const onPdaPage = isActive('/request-a-pda');
 </dialog>
 
 <script>
-  // Native <dialog> gives the focus trap, Esc to close and an inert background.
+  const header = document.querySelector<HTMLElement>('[data-site-header]');
   const menu = document.getElementById('site-menu') as HTMLDialogElement | null;
-  const openers = document.querySelectorAll<HTMLAnchorElement>('[data-menu-open]');
 
+  /* ---------- Scroll states ---------- */
+  if (header) {
+    const alwaysSolid = header.dataset.variant === 'solid';
+    let lastY = window.scrollY;
+    let hidden = false;
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const y = Math.max(0, window.scrollY);
+      const scrolled = y > 40;
+      header.classList.toggle('is-solid', alwaysSolid || scrolled);
+      header.classList.toggle('is-compact', scrolled);
+
+      // Never hide while the menu is open or focus is inside the header.
+      const pinned = Boolean(menu?.open) || header.contains(document.activeElement);
+      if (y < 120 || pinned) {
+        hidden = false;
+        lastY = y;
+      } else if (y > lastY + 4) {
+        hidden = true;
+        lastY = y;
+      } else if (y < lastY - 4) {
+        hidden = false;
+        lastY = y;
+      }
+      header.classList.toggle('is-hidden', hidden);
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    header.addEventListener('focusin', () => {
+      hidden = false;
+      header.classList.remove('is-hidden');
+    });
+    update();
+  }
+
+  /* ---------- Phone menu: native <dialog> gives the focus trap, Esc and an inert page ---------- */
+  const openers = document.querySelectorAll<HTMLAnchorElement>('[data-menu-open]');
   if (menu && typeof menu.showModal === 'function') {
     let lastOpener: HTMLElement | null = null;
 
@@ -131,6 +166,7 @@ const onPdaPage = isActive('/request-a-pda');
       opener.addEventListener('click', (event) => {
         event.preventDefault();
         lastOpener = opener;
+        header?.classList.remove('is-hidden');
         menu.showModal();
         opener.setAttribute('aria-expanded', 'true');
       });
@@ -175,46 +211,37 @@ const onPdaPage = isActive('/request-a-pda');
 </script>
 
 <style>
-  .site-header { position: relative; z-index: 20; color: var(--on-dark); }
-  .site-header--overlay { position: absolute; inset: 0 0 auto 0; }
-
-  /* ---------- Utility bar ---------- */
-  .utility { border-bottom: 1px solid var(--on-dark-line); }
-  .utility__inner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 8px 24px;
-    padding-block: 11px;
-    color: var(--on-dark-soft);
+  /* ---------- Fixed header ---------- */
+  .site-header {
+    --shrink: 18px; /* 88 → 70px */
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    height: var(--header-h);
+    color: var(--on-dark);
+    background-color: transparent;
+    transform: translateY(0);
+    transition:
+      transform 320ms var(--ease-out),
+      background-color 250ms ease,
+      box-shadow 250ms ease;
   }
-  .utility__item { display: inline-flex; align-items: center; gap: 8px; }
-  .utility__group { display: inline-flex; flex-wrap: wrap; gap: 8px 28px; }
-  .utility__group :global(.utility__link) { color: var(--on-dark-soft); text-decoration: none; }
-  .utility__group :global(.utility__link:hover),
-  .utility__link:hover { color: var(--on-dark); text-decoration: underline; }
-  .utility__group :global(.utility__link--strong) { color: var(--on-dark); display: inline-flex; align-items: center; gap: 8px; }
+  .site-header.is-solid { background-color: var(--deep); box-shadow: var(--shadow-header); }
+  /* Shrink: slide the whole bar up and re-centre its content in the visible part. */
+  .site-header.is-compact { transform: translateY(calc(var(--shrink) * -1)); }
+  .site-header.is-compact .bar { transform: translateY(calc(var(--shrink) / 2)); }
+  .site-header.is-hidden { transform: translateY(-100%); box-shadow: none; }
 
-  .live-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--ok-dot);
-    flex: none;
-  }
-
-  /* ---------- Main bar ---------- */
-  .site-header--solid .bar { border-bottom: 1px solid var(--on-dark-line); }
-  .bar__inner {
+  .bar {
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px 32px;
-    padding-block: 22px;
+    transition: transform 320ms var(--ease-out);
   }
-  .site-header--solid .bar__inner { padding-block: 20px; }
 
-  .nav__list { display: flex; gap: 8px 36px; }
+  .nav__list { display: flex; gap: 8px 34px; }
   .nav__link {
     display: inline-flex;
     align-items: center;
@@ -226,11 +253,11 @@ const onPdaPage = isActive('/request-a-pda');
     border-bottom: 2px solid transparent;
     padding-top: 2px;
   }
-  .nav__link:hover { color: var(--on-dark); border-bottom-color: rgba(255, 255, 255, 0.5); }
+  .nav__link:hover { color: var(--on-dark); border-bottom-color: var(--red); }
   .nav__link.is-active,
   .nav__link.is-active:hover { border-bottom-color: var(--red); }
 
-  .bar__actions { display: flex; gap: 12px; align-items: center; }
+  .bar__actions { display: flex; gap: 10px; align-items: center; }
 
   .ghost-btn,
   .desk-pill {
@@ -238,10 +265,10 @@ const onPdaPage = isActive('/request-a-pda');
     align-items: center;
     gap: 8px;
     min-height: 44px;
-    padding: 11px 18px;
+    padding: 11px 16px;
     border-radius: var(--r-btn);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: transparent;
     color: var(--on-dark);
     font-size: 14.5px;
     font-weight: 500;
@@ -250,9 +277,16 @@ const onPdaPage = isActive('/request-a-pda');
     white-space: nowrap;
     transition: background-color 200ms;
   }
-  .desk-pill { background: transparent; border-color: rgba(255, 255, 255, 0.22); }
   .ghost-btn:hover,
   .desk-pill:hover { background: rgba(255, 255, 255, 0.16); color: var(--on-dark); }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok-dot);
+    flex: none;
+  }
 
   .menu-btn {
     display: none;
@@ -268,22 +302,26 @@ const onPdaPage = isActive('/request-a-pda');
   }
   .menu-btn:hover { background: rgba(255, 255, 255, 0.16); color: var(--on-dark); }
 
-  /* Compact desktop: the utility bar already carries the desk number. */
+  /* Compact desktop: tighter nav; the Call button returns at 1100px and up. */
   @media (max-width: 1199px) {
     .nav__list { gap: 8px 24px; }
-    .bar__inner { gap: 16px 24px; }
+    .bar { gap: 16px 24px; }
+  }
+  @media (max-width: 1099px) {
     .ghost-btn { display: none; }
   }
 
   /* Tablet and phone: logo + menu button only. */
   @media (max-width: 959px) {
-    .utility,
+    .site-header { --shrink: 8px; }
     .nav,
     .bar__actions { display: none; }
     .menu-btn { display: inline-flex; }
-    .bar { border-bottom: 1px solid var(--on-dark-line); }
-    .bar__inner,
-    .site-header--solid .bar__inner { padding-block: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header,
+    .bar { transition: none; }
   }
 
   /* ---------- Full-screen menu ---------- */
@@ -295,7 +333,7 @@ const onPdaPage = isActive('/request-a-pda');
     height: 100%;
     max-height: none;
     margin: 0;
-    padding: 14px var(--gutter) calc(32px + env(safe-area-inset-bottom));
+    padding: 12px var(--gutter) calc(32px + env(safe-area-inset-bottom));
     border: 0;
     color: var(--on-dark);
     overflow-y: auto;

@@ -1,0 +1,27 @@
+---
+// Section eyebrow. "01 — About Lighthouse" renders with the draft mark (three bars + bold number + label);
+// any other text renders as a plain eyebrow. Red on light, soft red on dark.
+interface Props {
+  text: string;
+  onDark?: boolean;
+  as?: 'p' | 'h2' | 'span';
+  id?: string;
+  class?: string;
+}
+const { text, onDark = false, as: Tag = 'p', id, class: className } = Astro.props;
+const match = text.match(/^(\d{2})\s*[—–-]\s*(.+)$/);
+---
+{match ? (
+  <Tag id={id} class:list={['t-eyebrow', 'eyebrow', 'eyebrow-mark', { 'eyebrow--dark': onDark }, className]}>
+    <span class="eyebrow-mark__bars" aria-hidden="true"></span>
+    <span class="eyebrow-mark__num">{match[1]}</span>
+    <span>{match[2]}</span>
+  </Tag>
+) : (
+  <Tag id={id} class:list={['t-eyebrow', 'eyebrow', { 'eyebrow--dark': onDark }, className]}>{text}</Tag>
+)}
+
+<style>
+  .eyebrow { color: var(--red); }
+  .eyebrow--dark { color: var(--red-soft); }
+</style>

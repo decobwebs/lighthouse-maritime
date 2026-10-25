@@ -1,16 +1,18 @@
 ---
-// Site footer on .bg-rings (DESIGN.md §5, CONTENT.md "Footer").
+// Site footer on .bg-chart-dark (DESIGN.md §6 Footer, CONTENT.md "Footer").
 import Logo from './Logo.astro';
+import Button from './Button.astro';
 import Email from './Email.astro';
 import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
 ---
-<footer id="site-footer" class="footer bg-rings on-dark">
+<footer id="site-footer" class="footer bg-chart-dark on-dark">
   <div class="container footer__main">
     <div class="footer__brand">
       <Logo />
       <p class="t-small footer__tagline">
         Ship agency and maritime services across Nigerian ports, from our head office in Apapa, Lagos.
       </p>
+      <Button href="/request-a-pda" class="footer__cta">Request a PDA</Button>
     </div>
 
     <div class="footer__cols">
@@ -61,9 +63,10 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 48px 64px;
-    padding-block: 88px 56px;
+    padding-block: 96px 56px;
   }
-  .footer__brand { flex: 1 1 280px; max-width: 340px; }
+  .footer__brand { flex: 1 1 280px; max-width: 360px; }
+  .footer__brand :global(.footer__cta) { margin-top: 26px; padding: 14px 22px; font-size: 15px; }
   .footer__tagline { margin-top: 22px; color: var(--on-dark-muted); }
 
   .footer__cols {

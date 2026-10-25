@@ -49,16 +49,16 @@ const weNeed = s.weNeedHeading;
   </PageHero>
 
   <!-- What's included -->
-  <section class="section bg-glow" aria-labelledby="included-title">
+  <section class="section bg-white" aria-labelledby="included-title">
     <div class="container split">
-      <div class="split__intro">
+      <div class="split__intro" data-reveal>
         <p class="t-eyebrow eyebrow">What's included</p>
         <h2 class="t-h2 sec-title" id="included-title">
           {included.title} <span class="dim">{included.dim}</span>
         </h2>
         {included.body && <p class="t-body sec-body">{included.body}</p>}
       </div>
-      <ul role="list" class="ticks">
+      <ul role="list" class="ticks" data-reveal>
         {s.included.map((item) => (
           <li class="ticks__item">
             <svg class="ticks__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5 9-10" /></svg>
@@ -73,13 +73,15 @@ const weNeed = s.weNeedHeading;
   </section>
 
   <!-- Who it's for -->
-  <section class="section" aria-labelledby="who-title">
+  <section class="section bg-mist" aria-labelledby="who-title">
     <div class="container">
+      <div data-reveal>
       <p class="t-eyebrow eyebrow">Who it's for</p>
       <h2 class="t-h2 sec-title who__title" id="who-title">
         {whoFor.title} <span class="dim">{whoFor.dim}</span>
       </h2>
-      <ol role="list" class="who">
+      </div>
+      <ol role="list" class="who" data-reveal>
         {s.whoFor.map((item, i) => (
           <li class="who__col">
             <p class="who__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</p>
@@ -92,9 +94,9 @@ const weNeed = s.weNeedHeading;
   </section>
 
   <!-- What we need from you -->
-  <section class="section bg-lines" aria-labelledby="need-title">
+  <section class="section bg-white" aria-labelledby="need-title">
     <div class="container need">
-      <div class="need__photo">
+      <div class="need__photo" data-reveal>
         <Picture
           src={s.needImage}
           formats={['avif', 'webp']}
@@ -107,7 +109,7 @@ const weNeed = s.weNeedHeading;
           decoding="async"
         />
       </div>
-      <div class="need__copy">
+      <div class="need__copy" data-reveal>
         <p class="t-eyebrow eyebrow">To get started</p>
         <h2 class="t-h2 sec-title" id="need-title">
           {weNeed.title} <span class="dim">{weNeed.dim}</span>
@@ -123,22 +125,22 @@ const weNeed = s.weNeedHeading;
   </section>
 
   <!-- Ports covered -->
-  <section class="section ports-strip" aria-labelledby="ports-title">
+  <section class="section ports-strip bg-mist" aria-labelledby="ports-title">
     <div class="container ports">
-      <div class="ports__intro">
+      <div class="ports__intro" data-reveal>
         <p class="t-eyebrow eyebrow">Ports covered</p>
         <h2 class="t-h2 ports__title" id="ports-title">Available at every Nigerian port.</h2>
       </div>
-      <ul role="list" class="chips">
+      <ul role="list" class="chips" data-reveal>
         {ports.map((port, i) => <li class:list={['chip', { 'chip--on': i === 0 }]}>{port}</li>)}
       </ul>
     </div>
   </section>
 
   <!-- Related services -->
-  <section class="section" aria-labelledby="related-title">
+  <section class="section bg-white" aria-labelledby="related-title">
     <div class="container">
-      <div class="related__head">
+      <div class="related__head" data-reveal>
         <div>
           <p class="t-eyebrow eyebrow">Often booked together</p>
           <h2 class="t-h2 related__title" id="related-title">Related services</h2>

@@ -11,6 +11,8 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* The header is fixed: keep anchor jumps clear of it. */
+  scroll-padding-top: var(--header-h);
 }
 
 body, h1, h2, h3, h4, h5, h6, p, figure, blockquote, dl, dd, ol, ul { margin: 0; }
@@ -50,7 +52,7 @@ a:hover { color: var(--red); }
   outline-offset: 3px;
 }
 .on-dark :focus-visible,
-.bg-rings :focus-visible { outline-color: var(--on-dark); }
+.bg-chart-dark :focus-visible { outline-color: var(--on-dark); }
 
 ::selection { background: var(--navy); color: var(--on-dark); }
 
@@ -148,7 +150,25 @@ a:hover { color: var(--red); }
 /* Two-tone headings: bold first clause, lighter second clause */
 .dim { color: var(--label); font-weight: 500; }
 .on-dark .dim,
-.bg-rings .dim { color: var(--on-dark-grey); }
+.bg-chart-dark .dim { color: var(--on-dark-grey); }
+
+/* Draft-mark eyebrow on numbered sections: three bars + bold number + label (DESIGN.md §3). */
+.eyebrow-mark { display: inline-flex; align-items: center; gap: 12px; }
+.eyebrow-mark__bars {
+  width: 18px;
+  height: 20px;
+  flex: none;
+  background:
+    linear-gradient(currentColor, currentColor) 0 0 / 18px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 9px / 11px 2px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 18px / 18px 2px no-repeat;
+}
+.eyebrow-mark__num {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
 
 /* ---------- Layout ---------- */
 .container {
@@ -158,10 +178,19 @@ a:hover { color: var(--red); }
   padding-inline: var(--gutter);
 }
 
-.section {
-  padding-block: var(--section-y);
-  border-bottom: 1px solid var(--line);
+/* Sections are separated by background only: no dividing rules (DESIGN.md §1). */
+.section { padding-block: var(--section-y); }
+
+/* ---------- Scroll reveal (DESIGN.md §7) ----------
+   `reveal-on` is added in <head> only when JS runs and motion is allowed, so without JS
+   (or with reduced motion) everything is simply visible. */
+html.reveal-on [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+  transition-delay: var(--reveal-delay, 0ms);
 }
+html.reveal-on [data-reveal].is-revealed { opacity: 1; transform: none; }
 
 .on-dark { color: var(--on-dark); }
 
@@ -224,6 +253,11 @@ html:not(.js) [data-js-only] { display: none !important; }
   }
 }
 
+@media (max-width: 959px) {
+  :root { --header-h: 68px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  html.reveal-on [data-reveal] { opacity: 1; transform: none; transition: none; }
 }

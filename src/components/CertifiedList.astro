@@ -1,72 +1,91 @@
 ---
-// Certification rows (DESIGN.md §6 Certified list). Registration numbers stay confidential:
-// only the CAC RC number is shown.
-const rows = [
-  { name: 'Nigerian Ports Authority', sub: 'Shipping agent', badge: 'Certified' },
-  { name: 'NIMASA', sub: 'Maritime services', badge: 'Certified' },
-  { name: 'NCDMB · NOGIC JQS', sub: 'Oil and gas vendor', badge: 'Certified' },
-  { name: 'Corporate Affairs Commission', sub: 'RC 7964161 · Incorporated 2024', badge: 'Registered' },
-];
+// Compliance cards (DESIGN.md §6): logo area, name, role and a "✓ Certified" pill.
+// Registration numbers stay confidential: only the CAC RC number is shown (About only).
+import { Image } from 'astro:assets';
+import { AUTHORITIES } from '../data/authorities';
 
 interface Props {
-  /** Green tick column (Home). About shows the rows without it. */
-  ticks?: boolean;
+  /** Add the Corporate Affairs Commission card (About). */
+  cac?: boolean;
+  /** Card fill: mist on a white section (default), white on a mist section. */
+  tone?: 'mist' | 'white';
 }
-const { ticks = true } = Astro.props;
+const { cac = false, tone = 'mist' } = Astro.props;
 ---
-<ul role="list" class:list={['certs', { 'certs--plain': !ticks }]}>
-  {rows.map((r) => (
-    <li class="certs__row">
-      {ticks && <span class="certs__tick" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10" /></svg>
-      </span>}
-      <div>
-        <p class="t-h4 certs__name">{r.name}</p>
-        <p class="t-small certs__sub">{r.sub}</p>
+<ul role="list" class:list={['certs', { 'certs--four': cac }]}>
+  {AUTHORITIES.map((a) => (
+    <li class:list={['card', `card--${tone}`]} data-reveal>
+      <div class="card__logo">
+        {a.logo ? (
+          <Image src={a.logo} alt={a.logoAlt} format="webp" class="card__img" loading="lazy" />
+        ) : (
+          <span class="card__logo-text">{a.short}</span>
+        )}
       </div>
-      <span class="t-micro certs__badge">{r.badge}</span>
+      <p class="t-h5 card__name">{a.name}</p>
+      <p class="t-small card__role">{a.role}</p>
+      <span class="t-micro card__badge"><span aria-hidden="true">✓</span> Certified</span>
     </li>
   ))}
+  {cac && (
+    <li class:list={['card', `card--${tone}`]} data-reveal>
+      <p class="t-h5 card__name card__name--first">Corporate Affairs Commission</p>
+      <p class="t-small card__role">RC 7964161 · Incorporated 2024</p>
+      <span class="t-micro card__badge"><span aria-hidden="true">✓</span> Registered</span>
+    </li>
+  )}
 </ul>
 
 <style>
-  .certs { border-top: 2px solid var(--navy); }
-  .certs__row {
+  .certs {
     display: grid;
-    grid-template-columns: 48px 1fr auto;
-    gap: 20px;
-    align-items: center;
-    padding-block: 26px;
-    border-bottom: 1px solid var(--line);
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
   }
-  .certs--plain .certs__row { grid-template-columns: 1fr auto; padding-block: 24px; }
-  .certs--plain .certs__sub { margin-top: 2px; }
-  .certs__tick {
-    width: 40px;
-    height: 40px;
-    display: inline-flex;
+  .certs--four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 26px;
+    border-radius: var(--r-card);
+  }
+  .card--mist { background: var(--mist); }
+  .card--white { background: var(--surface); }
+
+  .card__logo {
+    width: 100%;
+    height: 48px;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: var(--ok-bg);
-    color: var(--ok);
+    border-radius: var(--r-input);
+    background: var(--surface);
   }
-  .certs__name { font-size: 20px; }
-  .certs__sub { margin-top: 4px; color: var(--muted); }
-  .certs__badge {
+  .card--white .card__logo { background: var(--mist); }
+  .card__img { width: auto; height: 36px; }
+  .card__logo-text { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--label); }
+
+  .card__name { margin-top: 18px; }
+  .card__name--first { margin-top: 0; }
+  .card__role { margin-top: 2px; color: var(--muted); }
+  .card__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
     padding: 6px 12px;
     border-radius: 20px;
     background: var(--ok-bg);
     color: var(--ok);
     font-weight: 600;
   }
+  .card__role { margin-bottom: 14px; }
 
   @media (max-width: 599px) {
-    .certs__row,
-    .certs--plain .certs__row { grid-template-columns: 1fr auto; gap: 12px; padding-block: 18px; }
-    .certs__tick { display: none; }
-    .certs__name { font-size: 17px; }
-    .certs__sub { font-size: 14px; }
-    .certs__badge { padding: 5px 10px; }
+    .certs,
+    .certs--four { grid-template-columns: 1fr; gap: 12px; }
+    .card { padding: 22px; }
   }
 </style>

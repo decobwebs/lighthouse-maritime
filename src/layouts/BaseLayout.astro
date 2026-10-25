@@ -1,8 +1,10 @@
 ---
 // Page shell: <head>, fonts, global styles, header, footer and the phone action bar.
 //
-// header="overlay": the header floats over the page's own photo hero (Home).
-// header="solid":   the header and the `hero` slot share one .bg-rings masthead (inner pages).
+// The header is fixed on every page (see Header.astro).
+// header="overlay": transparent over the page's own photo hero until the visitor scrolls.
+// header="solid":   solid from the start; the `hero` slot sits in a .bg-chart-dark masthead
+//                   padded by the header height.
 // Latin subsets only: the copy is English, so the other subsets are never needed.
 import '@fontsource/manrope/latin-500.css';
 import '@fontsource/manrope/latin-600.css';
@@ -35,8 +37,18 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Flags JS before first paint so JS-only UI (hero tabs) appears without a layout shift. -->
-    <script is:inline>document.documentElement.classList.add('js');</script>
+    <!-- Before first paint: flag JS, and switch scroll-reveal on only when JS runs and motion is allowed.
+         If the reveal script never starts, a timer makes everything visible again. -->
+    <script is:inline>
+      (function () {
+        var html = document.documentElement;
+        html.classList.add('js');
+        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          html.classList.add('reveal-on');
+          setTimeout(function () { if (!window.__revealReady) html.classList.remove('reveal-on'); }, 3000);
+        }
+      })();
+    </script>
     <link rel="preload" href={manrope700} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
     <slot name="head" />
@@ -45,14 +57,13 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
+    <Header variant={header} />
     {header === 'overlay' ? (
       <div class="masthead masthead--overlay">
-        <Header variant="overlay" />
         <slot name="hero" />
       </div>
     ) : (
-      <div class="masthead bg-rings on-dark">
-        <Header variant="solid" />
+      <div class="masthead masthead--solid bg-chart-dark on-dark">
         <slot name="hero" />
       </div>
     )}
@@ -65,6 +76,25 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
     <MobileActionBar />
 
     <script>
+      /* Scroll reveal (DESIGN.md §7): fade [data-reveal] elements up once, as they come into view.
+         Elements revealed together are staggered 80ms apart, in document order. */
+      if (document.documentElement.classList.contains('reveal-on')) {
+        (window as unknown as { __revealReady: boolean }).__revealReady = true;
+        const observer = new IntersectionObserver(
+          (entries) => {
+            const visible = entries.filter((e) => e.isIntersecting);
+            visible.forEach((entry, i) => {
+              const el = entry.target as HTMLElement;
+              el.style.setProperty('--reveal-delay', `${Math.min(i, 5) * 80}ms`);
+              el.classList.add('is-revealed');
+              observer.unobserve(el);
+            });
+          },
+          { threshold: 0.15 },
+        );
+        document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
+      }
+
       // Assemble <Email> links in the browser so addresses never sit whole in the HTML.
       document.querySelectorAll<HTMLAnchorElement>('a[data-mailbox]').forEach((link) => {
         const domain = [...(link.dataset.domain ?? '')].reverse().join('');
@@ -82,6 +112,8 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
 
 <style>
   .masthead--overlay { position: relative; }
+  /* Room for the fixed header above solid heroes. */
+  .masthead--solid { padding-top: var(--header-h); }
 
   .skip-link {
     position: absolute;

@@ -89,7 +89,7 @@ const accent = new Set(['01', '08']);
     </div>
   </PageHero>
 
-  <section class="guide" aria-label="The eight stages">
+  <section class="guide bg-white" aria-label="The eight stages">
     <div class="container guide__inner">
       <nav class="toc" aria-labelledby="toc-label">
         <p class="label" id="toc-label">In this guide</p>
@@ -107,7 +107,7 @@ const accent = new Set(['01', '08']);
 
       <div class="stages">
         {stages.map((s) => (
-          <article id={`stage-${s.n}`} class="stage" aria-labelledby={`stage-${s.n}-title`}>
+          <article id={`stage-${s.n}`} class="stage" aria-labelledby={`stage-${s.n}-title`} data-reveal>
             <p class:list={['stage__num', { 'stage__num--accent': accent.has(s.n) }]} aria-hidden="true">{s.n}</p>
             <div>
               <p class="t-eyebrow stage__phase">{s.phase}</p>
@@ -141,8 +141,8 @@ const accent = new Set(['01', '08']);
     </div>
   </section>
 
-  <section class="cta bg-lines" aria-labelledby="guide-cta-title">
-    <div class="container cta__inner">
+  <section class="cta bg-mist" aria-labelledby="guide-cta-title">
+    <div class="container cta__inner" data-reveal>
       <div class="cta__copy">
         <p class="t-eyebrow cta__eyebrow">Ready when you are</p>
         <h2 class="t-h2 cta__title" id="guide-cta-title">Let us take your vessel through all eight stages.</h2>
@@ -154,7 +154,7 @@ const accent = new Set(['01', '08']);
     </div>
   </section>
 
-  <div class="note">
+  <div class="note bg-mist">
     <p class="container t-micro note__text">
       This guide is for general information. Requirements can change; confirm with our desk before arrival.
     </p>
@@ -186,7 +186,6 @@ const accent = new Set(['01', '08']);
   }
 
   /* ---------- Contents + stages ---------- */
-  .guide { border-bottom: 1px solid var(--line); }
   .guide__inner {
     display: flex;
     flex-wrap: wrap;
@@ -197,7 +196,7 @@ const accent = new Set(['01', '08']);
 
   .toc {
     position: sticky;
-    top: 24px;
+    top: calc(var(--header-h) + 16px);
     flex: 1 1 260px;
     max-width: 300px;
     padding-top: 56px;
@@ -225,7 +224,6 @@ const accent = new Set(['01', '08']);
     gap: 24px 32px;
     padding-block: 56px;
     border-bottom: 1px solid var(--line);
-    scroll-margin-top: 24px;
   }
   .stage:last-child { border-bottom: 0; }
   .stage__num {
@@ -269,21 +267,20 @@ const accent = new Set(['01', '08']);
   .stage__dot { width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--ok-dot); }
 
   /* ---------- CTA + note ---------- */
-  .cta { border-bottom: 1px solid var(--line); }
   .cta__inner {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: 32px 64px;
-    padding-block: 96px;
+    padding-block: 96px 40px;
   }
   .cta__copy { max-width: 640px; }
   .cta__eyebrow { color: var(--red); }
   .cta__title { margin-top: 16px; }
   .cta__actions { display: flex; flex-wrap: wrap; gap: 14px; }
 
-  .note__text { padding-block: 24px; color: var(--muted); }
+  .note__text { padding-block: 16px 56px; color: var(--muted); }
 
   /* ---------- Tablet/phone: contents becomes a scrollable chip row ---------- */
   @media (max-width: 959px) {
@@ -324,7 +321,6 @@ const accent = new Set(['01', '08']);
 
   @media (max-width: 599px) {
     .guide__inner { padding-bottom: 64px; }
-    .stage { scroll-margin-top: 16px; }
     .stage__facts { gap: 20px; margin-top: 20px; }
     .stage__receive { margin-top: 20px; }
     .cta__inner { padding-block: 64px; gap: 24px; }

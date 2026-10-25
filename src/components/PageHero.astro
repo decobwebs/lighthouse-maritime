@@ -1,6 +1,6 @@
 ---
 // Inner-page hero. With `image`: photo + left-to-right overlay under the overlay header
-// (service pages, 04-service-page-port-agency). Without: plain content for the .bg-rings masthead.
+// (service pages, 04-service-page-port-agency). Without: plain content for the .bg-chart-dark masthead.
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
@@ -77,8 +77,8 @@ const hasAside = Astro.slots.has('aside');
   }
 
   .ph__body { position: relative; padding-block: 72px 80px; }
-  /* Under the overlay header (~128px): 96px gap above the breadcrumb, as designed. */
-  .ph--photo .ph__body { padding-block: 224px 112px; }
+  /* Under the fixed, transparent header: 96px gap above the breadcrumb, as designed. */
+  .ph--photo .ph__body { padding-block: calc(var(--header-h) + 96px) 112px; }
 
   /* Crumb links are 44px tall for touch; the negative margin keeps the visual spacing. */
   .ph__crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; margin-block: -12px; color: var(--on-dark-muted); }
@@ -110,7 +110,7 @@ const hasAside = Astro.slots.has('aside');
   .ph__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
 
   @media (max-width: 959px) {
-    .ph--photo .ph__body { padding-block: 152px 88px; }
+    .ph--photo .ph__body { padding-block: calc(var(--header-h) + 72px) 88px; }
   }
   @media (max-width: 599px) {
     .ph__shade {
@@ -119,7 +119,7 @@ const hasAside = Astro.slots.has('aside');
     .ph__body { padding-block: 48px 56px; }
     .ph--flush .ph__body { padding-bottom: 0; }
     .ph__aside { flex-basis: 100%; }
-    .ph--photo .ph__body { padding-block: 120px 56px; }
+    .ph--photo .ph__body { padding-block: calc(var(--header-h) + 48px) 56px; }
     .ph__eyebrow { margin-top: 28px; }
     .ph__title { line-height: 1.06; letter-spacing: -0.03em; }
     .ph__lead { margin-top: 18px; }

@@ -62,7 +62,7 @@ export const PORT_REGIONS = [
   { region: 'Lagos', note: 'Head office', ports: ['Apapa', 'Tin Can Island', 'Lekki Deep Sea Port'] },
   { region: 'Delta', note: 'Western ports', ports: ['Warri', 'Escravos'] },
   { region: 'Rivers', note: 'Eastern ports', ports: ['Port Harcourt', 'Onne', 'Bonny'] },
-  { region: 'Cross River & offshore', note: 'South-east and at sea', ports: ['Calabar', 'Offshore terminals and FPSOs'] },
+  { region: 'Cross River', note: 'and offshore', ports: ['Calabar', 'Offshore terminals and FPSOs'] },
 ] as const;
 
 /** Port choices for the PDA forms: every named port, plus offshore. */

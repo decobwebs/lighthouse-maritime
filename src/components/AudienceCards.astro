@@ -1,5 +1,5 @@
 ---
-// "Who we work with" cards (DESIGN.md §6 Audience cards). Oil and gas carries the red accent.
+// "Who we work with" cards (DESIGN.md §6 Audience cards): white, no borders. Oil and gas has a red icon tile.
 const cards = [
   {
     title: 'Shipowners and operators',
@@ -26,7 +26,7 @@ const cards = [
 ---
 <ul role="list" class="aud">
   {cards.map((c) => (
-    <li class:list={['aud__card', { 'aud__card--accent': c.accent }]}>
+    <li class:list={['aud__card', { 'aud__card--accent': c.accent }]} data-reveal>
       <span class="aud__icon">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" set:html={c.icon} />
       </span>
@@ -45,11 +45,8 @@ const cards = [
   .aud__card {
     padding: 32px 28px 36px;
     background: var(--surface);
-    border: 1px solid var(--line);
-    border-top: 3px solid var(--navy);
-    border-radius: 4px 4px 14px 14px;
+    border-radius: var(--r-card);
   }
-  .aud__card--accent { border-top-color: var(--red); }
 
   .aud__icon {
     width: 52px;

@@ -15,19 +15,20 @@ Use this copy word for word. Text in `[square brackets]` is a placeholder the cl
 - Ports: Apapa, Tin Can Island, Lekki Deep Sea Port (Lagos) · Warri, Escravos (Delta) · Port Harcourt, Onne, Bonny (Rivers) · Calabar (Cross River) · Offshore terminals and FPSOs
 
 ## Global components
-**Utility bar:** 5 Bornu Crescent, Apapa, Lagos · operations@lighthousemaritimeltd.com · ● 24/7 Operations · +234 806 118 9106
-**Nav:** Services · How we work · Ports · About · Contact · [Call 24/7] · [Request a PDA]
+**Header (v4, no utility bar):** Services · How we work · Ports · About · Contact · [Call] (phone icon; dials +234 806 118 9106) · [Request a PDA]
 **Mobile action bar:** Call 24/7 · WhatsApp · Request a PDA
 **Footer:**
 - Tagline: "Ship agency and maritime services across Nigerian ports, from our head office in Apapa, Lagos."
 - Services: Port agency · Husbandry and crew · Clearance · Ship supply · Logistics
 - Company: About us · Port coverage · Port call guide · Compliance · Contact
 - Contact: the address, both phones, both emails
+- Under the tagline: [Request a PDA]
 - Bottom line: © 2026 Lighthouse Maritime Agency Ltd · RC 7964161 · Privacy policy · Terms of use
 
 ---
 
 ## Home `/`
+Section rail labels (≥ 1180px): 01 About · 02 Services · 03 Port call · 04 Ports · 05 Clients · 06 Compliance
 Meta title: Ship agency at every Nigerian port | Lighthouse Maritime Agency
 Meta description: Port agency, husbandry, clearance and vessel supply at every Nigerian port. Accurate PDAs, clear updates and a 24/7 operations desk in Apapa, Lagos.
 
@@ -37,23 +38,23 @@ Meta description: Port agency, husbandry, clearance and vessel supply at every N
 - Lead: Port agency, husbandry, clearance and vessel supply, with accurate PDAs, clear updates and one accountable contact from arrival to sailing.
 - Buttons: Request a PDA → · Explore services
 
-**Quick panel**
-- Tabs: Request a PDA (Port cost estimate) · Port coverage (All Nigerian ports) · 24/7 desk (Live operations support)
-- Fields: Vessel name or IMO (placeholder "e.g. MV Atlantic Dawn / 9876543") · Port · ETA · [Get PDA]
+**Quick panel (v4, no tabs)**
+- Title: Request a PDA · Itemised port cost estimate before arrival
+- Fields: Vessel name or IMO (placeholder "e.g. MV Atlantic Dawn / 9876543") · Port · ETA · [Continue]
 - Side: "Vessel arriving soon?" / "Speak to our operations desk, day or night." / [+234 806 118 9106]
 
-**Stats bar**
-- 24/7: Operations desk, every day of the year
-- 9+: Nigerian ports and offshore terminals
-- 8: Reporting points on every port call
-- [X]hrs: PDA turnaround after a complete request
+**Operations desk board (v4, replaces the stats bar)**
+- APAPA OPERATIONS DESK: {Lagos time HH:MM} WAT / 06°27′N 003°22′E · Lagos local time (without JS: "Lagos (WAT)")
+- DESK STATUS: ● Open now / Answering 24 hours a day, every day.
+- COVERAGE: 9 ports + offshore / Lagos, Delta, Rivers and Cross River.
+- PDA TURNAROUND: Within [X] hours / After a complete request.
 
-**Certified by:** Nigerian Ports Authority · NIMASA · NCDMB · NOGIC JQS · CAC · RC 7964161
+**Certified by (v4):** three logo slots: Nigerian Ports Authority · NIMASA · NCDMB · NOGIC JQS (monochrome logos; the name shows if a logo is missing). No CAC/RC in the strip.
 
 **01 — About Lighthouse**
 - H2: A ship agency built on *clarity and accountability.*
 - Body: Lighthouse Maritime Agency supports owners, operators and charterers at every Nigerian port. We keep each call simple to follow: what it will cost, where it stands and who is responsible.
-- Floating card: HEAD OFFICE / 5 Bornu Crescent, Apapa, Lagos / Incorporated 2024 · RC 7964161
+- Floating card: HEAD OFFICE / 5 Bornu Crescent, Apapa, Lagos / Incorporated 2024
 - 01 Accurate PDAs: A full port cost estimate within [X hours], reconciled line by line in the final account.
 - 02 Clear updates: Status reports at every stage of the call, by email and WhatsApp.
 - 03 One accountable contact: A named officer for each vessel, backed by a 24/7 operations desk.
@@ -87,7 +88,7 @@ Meta description: Port agency, husbandry, clearance and vessel supply at every N
 **04 — Port coverage**
 - H2: Every Nigerian port, *one point of contact.*
 - Body: From our Apapa head office, one operations desk manages your call wherever the vessel berths.
-- Columns: LAGOS (Head office): Apapa, Tin Can Island, Lekki Deep Sea Port · DELTA (Western ports): Warri, Escravos · RIVERS (Eastern ports): Port Harcourt, Onne, Bonny · CROSS RIVER & OFFSHORE (South-east and at sea): Calabar, Offshore terminals and FPSOs
+- Cards: LAGOS (Head office): Apapa (red marker), Tin Can Island, Lekki Deep Sea Port · DELTA (Western ports): Warri, Escravos · RIVERS (Eastern ports): Port Harcourt, Onne, Bonny · CROSS RIVER (and offshore): Calabar, Offshore terminals and FPSOs
 
 **05 — Who we work with**
 - H2: Trusted support *for every side of shipping.*

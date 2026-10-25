@@ -5,6 +5,7 @@ import PageHero from '../components/PageHero.astro';
 import StatBar from '../components/StatBar.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import CertifiedList from '../components/CertifiedList.astro';
+import Eyebrow from '../components/Eyebrow.astro';
 import CtaBand from '../components/CtaBand.astro';
 import Button from '../components/Button.astro';
 import { SHOW_TEAM } from '../data/site';
@@ -52,12 +53,12 @@ const team = [
   <StatBar stats={facts} />
 
   <!-- 01 — Our story -->
-  <section class="section bg-glow" aria-labelledby="story-label">
+  <section class="section bg-mist" aria-labelledby="story-label">
     <div class="container story">
-      <div class="story__label">
-        <h2 class="t-eyebrow eyebrow" id="story-label">01 — Our story</h2>
+      <div class="story__label" data-reveal>
+        <Eyebrow as="h2" id="story-label" text="01 — Our story" />
       </div>
-      <div class="story__body">
+      <div class="story__body" data-reveal>
         <p class="t-quote">
           Owners and operators calling at Nigerian ports often struggle with unclear costs and long silences.
           <span class="dim">Lighthouse was founded to change that.</span>
@@ -73,13 +74,13 @@ const team = [
   </section>
 
   <!-- Vision and mission -->
-  <section class="vm bg-rings on-dark" aria-label="Vision and mission">
+  <section class="vm bg-chart-dark on-dark" aria-label="Vision and mission">
     <div class="container vm__grid">
-      <div class="vm__col">
+      <div class="vm__col" data-reveal>
         <h2 class="t-eyebrow vm__label">Our vision</h2>
         <p class="t-quote vm__text">To be the leading maritime agency recognised for reliability and innovation.</p>
       </div>
-      <div class="vm__col">
+      <div class="vm__col" data-reveal>
         <h2 class="t-eyebrow vm__label">Our mission</h2>
         <p class="t-quote vm__text">To deliver reliable maritime, logistics and procurement solutions with integrity and efficiency.</p>
       </div>
@@ -87,12 +88,12 @@ const team = [
   </section>
 
   <!-- 02 — How we work -->
-  <section class="section" aria-labelledby="principles-title">
+  <section class="section bg-white" aria-labelledby="principles-title">
     <div class="container">
       <SectionHeading id="principles-title" eyebrow="02 — How we work" title="Five principles," dim="each tied to a practice.">
         <p class="t-body">Values only matter when you can see them in the work. This is what each one means on a port call.</p>
       </SectionHeading>
-      <ol role="list" class="values">
+      <ol role="list" class="values" data-reveal>
         {principles.map((p, i) => (
           <li class="values__row">
             <span class="values__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
@@ -106,7 +107,7 @@ const team = [
 
   <!-- 03 — Our team: hidden until real names and photos are supplied -->
   {SHOW_TEAM && (
-    <section class="section bg-lines" aria-labelledby="team-title">
+    <section class="section bg-white" aria-labelledby="team-title">
       <div class="container">
         <SectionHeading id="team-title" eyebrow="03 — Our team" title="The people" dim="behind your port call." />
         <ul role="list" class="team">
@@ -125,14 +126,14 @@ const team = [
   )}
 
   <!-- 04 — Compliance -->
-  <section id="compliance" class="section" aria-labelledby="compliance-title">
+  <section id="compliance" class="section bg-mist" aria-labelledby="compliance-title">
     <div class="container compliance">
       <div class="compliance__copy">
         <SectionHeading id="compliance-title" eyebrow="04 — Compliance" title="Certified" dim="and registered." />
-        <p class="t-body compliance__text">Certificates are shared with clients and procurement teams on request.</p>
+        <p class="t-body compliance__text" data-reveal>Certificates are shared with clients and procurement teams on request.</p>
       </div>
       <div class="compliance__list">
-        <CertifiedList ticks={false} />
+        <CertifiedList cac tone="white" />
       </div>
     </div>
   </section>
@@ -153,7 +154,6 @@ const team = [
   .story__text { margin-top: 32px; color: var(--muted); }
 
   /* ---------- Vision and mission ---------- */
-  .vm { border-bottom: 1px solid var(--deep); }
   .vm__grid { display: grid; grid-template-columns: 1fr 1fr; }
   .vm__col { padding: 112px 56px 112px 0; }
   .vm__col + .vm__col { padding: 112px 0 112px 56px; border-left: 1px solid var(--on-dark-line); }

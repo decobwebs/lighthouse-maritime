@@ -1,0 +1,124 @@
+---
+// Section rail (DESIGN.md §6, Home only, screens ≥ 1180px): a fixed capsule linking to sections 01–06.
+// The current section is red with a longer tick and aria-current; labels slide out on hover or focus.
+interface Props {
+  items: { id: string; num: string; label: string }[];
+}
+const { items } = Astro.props;
+---
+<nav class="rail" aria-label="Sections on this page" data-rail>
+  <ul role="list">
+    {items.map((item) => (
+      <li>
+        <a href={`#${item.id}`} class="rail__link" data-rail-link={item.id}>
+          <span class="rail__label">{item.label}</span>
+          <span class="rail__num">{item.num}</span>
+          <i class="rail__tick" aria-hidden="true"></i>
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<script>
+  const rail = document.querySelector<HTMLElement>('[data-rail]');
+  if (rail) {
+    const links = [...rail.querySelectorAll<HTMLAnchorElement>('[data-rail-link]')];
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.railLink ?? ''))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      // The current section is the last one whose top has passed 45% of the viewport.
+      let current = '';
+      for (const section of sections) {
+        if (section.getBoundingClientRect().top < window.innerHeight * 0.45) current = section.id;
+      }
+      links.forEach((link) => {
+        const on = link.dataset.railLink === current;
+        link.classList.toggle('is-current', on);
+        if (on) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update();
+  }
+</script>
+
+<style>
+  .rail { display: none; }
+
+  @media (min-width: 1180px) {
+    .rail {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      z-index: 40;
+      display: block;
+      padding: 10px 8px;
+      border-radius: var(--r-pill);
+      background: rgba(255, 255, 255, 0.9);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 24px rgba(11, 42, 82, 0.14);
+      transform: translateY(-50%);
+    }
+  }
+  .rail ul { display: flex; flex-direction: column; gap: 4px; }
+
+  .rail__link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: var(--r-pill);
+    color: var(--label);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .rail__link:hover { color: var(--navy); }
+  .rail__link.is-current { color: var(--red); }
+
+  .rail__tick {
+    display: inline-block;
+    width: 10px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: width 250ms var(--ease-out);
+  }
+  .rail__link.is-current .rail__tick { width: 22px; }
+
+  .rail__label {
+    max-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    transition: max-width 300ms var(--ease-out);
+  }
+  .rail__link:hover .rail__label,
+  .rail__link:focus-visible .rail__label { max-width: 140px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail__tick,
+    .rail__label { transition: none; }
+  }
+</style>

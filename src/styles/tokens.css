@@ -20,11 +20,14 @@
   --line-strong: #C9D3DF;  /* input borders, chips */
   --surface:     #FFFFFF;
   --surface-alt: #F6F8FB;
+  --mist:        #F3F6F9;  /* alternate light sections, soft cards */
+  --panel:       #0A2242;  /* operations desk board cells */
 
   --on-dark:       #FFFFFF;
   --on-dark-soft:  #C5D0DD; /* body on dark */
   --on-dark-muted: #A9B8CA; /* captions on dark */
   --on-dark-grey:  #9FB1C8; /* grey heading halves on dark */
+  --on-dark-label: #8FA3BC; /* labels on dark panels */
   --on-dark-line:  rgba(255,255,255,0.14);
 
   --ok:        #1E7A53;  /* "Certified" badge text */
@@ -54,6 +57,7 @@
   --container: 1240px;
   --gutter: clamp(16px, 4vw, 40px);
   --section-y: 128px;      /* desktop; 64px on phone */
+  --header-h: 88px;        /* fixed header; 68px below 960px */
   --space-1: 4px;  --space-2: 8px;  --space-3: 12px; --space-4: 16px;
   --space-5: 20px; --space-6: 24px; --space-7: 32px; --space-8: 40px;
   --space-9: 48px; --space-10: 56px; --space-11: 64px; --space-12: 88px;
@@ -68,44 +72,39 @@
 
   /* ---------- Shadow (use sparingly) ---------- */
   --shadow-float: 0 24px 48px rgba(11,42,82,0.14);
+  --shadow-card:  0 12px 32px rgba(11,42,82,0.08);
+  --shadow-header: 0 10px 30px rgba(4,14,30,0.28);
 
   /* ---------- Motion ---------- */
   --ease-out: cubic-bezier(.2,.7,.2,1);
 }
 
-/* ---------- Signature backgrounds ---------- */
+/* ---------- Section backgrounds (DESIGN.md §5) ---------- */
+/* Sections are separated by background rhythm only: white, mist and navy chart. */
 
-/* Dark sections: lighthouse-beam rings from the top-right corner + red and blue glows */
-.bg-rings {
+/* Navy with nautical-chart lines + a soft red glow top-right and blue glow bottom-left */
+.bg-chart-dark {
   background-color: var(--deep);
   background-image:
-    radial-gradient(ellipse 55% 60% at 100% 0%, rgba(194,52,43,0.20), rgba(194,52,43,0) 70%),
-    radial-gradient(ellipse 50% 60% at 0% 100%, rgba(46,96,160,0.22), rgba(46,96,160,0) 70%),
-    repeating-radial-gradient(circle at 100% 0%, rgba(255,255,255,0.045) 0 1px, transparent 1px 56px);
+    radial-gradient(ellipse 60% 70% at 100% 0%, rgba(194,52,43,0.16), rgba(194,52,43,0) 65%),
+    radial-gradient(ellipse 55% 65% at 0% 100%, rgba(46,96,160,0.22), rgba(46,96,160,0) 70%),
+    url('/patterns/chart-dark.svg');
+  background-size: auto, auto, cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* Light sections: soft corner tints */
-.bg-glow {
+/* White with faint navy chart lines (Ports) */
+.bg-chart-light {
   background-color: var(--surface);
-  background-image:
-    radial-gradient(ellipse 50% 70% at 0% 100%, rgba(11,42,82,0.07), rgba(11,42,82,0) 70%),
-    radial-gradient(ellipse 40% 60% at 100% 0%, rgba(194,52,43,0.06), rgba(194,52,43,0) 70%);
+  background-image: url('/patterns/chart-light.svg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
-/* Light grey with fine vertical lines every 96px */
-.bg-lines {
-  background-color: var(--surface-alt);
-  background-image: repeating-linear-gradient(90deg, rgba(11,42,82,0.05) 0 1px, transparent 1px 96px);
-}
-
-/* Dot field, used as a fading layer at the top of the Services section */
-.bg-dots {
-  background-color: var(--surface);
-  background-image: radial-gradient(rgba(11,42,82,0.12) 1px, transparent 1.2px);
-  background-size: 22px 22px;
-  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
-          mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%);
-}
+.bg-mist { background-color: var(--mist); }
+.bg-white { background-color: var(--surface); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }

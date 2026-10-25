@@ -34,7 +34,7 @@ const {
   class: className,
 } = Astro.props;
 ---
-<a href={href} class:list={['svc', { 'svc--feature': feature, 'svc--compact': compact }, className]}>
+<a href={href} class:list={['svc', { 'svc--feature': feature, 'svc--compact': compact }, className]} data-reveal>
   <Picture
     src={image}
     formats={['avif', 'webp']}

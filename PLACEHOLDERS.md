@@ -11,7 +11,7 @@ Square brackets in `docs/CONTENT.md` around button and badge labels (for example
 | Placeholder | What it is | Where it appears (CONTENT.md) | Status |
 |---|---|---|---|
 | `[X hours]` | PDA turnaround time after a complete request | Global facts; Home promise row 01; Home CTA banner; Request a PDA meta description, lead, sidebar step 3 and thank-you page; CTA band on all five service pages and /services; About principle 02 (Reliability) | Waiting |
-| `[X]hrs` | Same turnaround, shown as a stat | Home stats bar, 4th column | Waiting |
+| `[X]` hours | Same turnaround, on the Home desk board | Home hero, Operations desk board: "Within [X] hours" | Waiting |
 | `[WhatsApp number]` | Operations WhatsApp number | Global facts; set it in `src/data/site.ts`. Until then the mobile action bar and "Message on WhatsApp" buttons go to /contact, and the forms' "Send on WhatsApp" button is hidden | Waiting |
 | `[Month 2026]` | Month the port call guide was last reviewed | Port call guide side card ("Last reviewed") | Waiting |
 | `[Name]` ×3 | Team members: Managing Director, Head of Operations, Client Relations | About, "03 — Our team" (section hidden with `SHOW_TEAM=false` until supplied) | Waiting |
@@ -21,6 +21,7 @@ Square brackets in `docs/CONTENT.md` around button and badge labels (for example
 
 | Item | Where it is used | Status |
 |---|---|---|
+| Official NPA, NIMASA and NCDMB logo files (vector or high-resolution) | Home "Certified by" strip and Compliance cards. The current monochrome logos were made from the low-resolution images supplied in chat; replace `src/assets/logos/*.png` (monochrome #5E6E84, transparent, ~112px tall) when official files arrive. A slot shows the name if its logo is removed. | Interim logos in place |
 | Port call checklist PDF | Port call guide "Download PDF" and "Download checklist" buttons | Waiting |
 | Team photos (3) | About, "03 — Our team" | Waiting |
 | Lawyer's review of the privacy policy | `/privacy` (must be reviewed before launch) | Waiting |

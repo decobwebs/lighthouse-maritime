@@ -15,7 +15,7 @@ const { eyebrow, title, lead, image, alt, position = 'center' } = Astro.props;
 ---
 <section class="cta">
   <div class="container">
-    <div class="cta__card on-dark">
+    <div class="cta__card on-dark" data-reveal>
       <Picture
         src={image}
         formats={['avif', 'webp']}
@@ -44,7 +44,7 @@ const { eyebrow, title, lead, image, alt, position = 'center' } = Astro.props;
 </section>
 
 <style>
-  .cta { padding-block: 96px; background: var(--surface); }
+  .cta { padding-block: 40px 120px; background: var(--surface); }
   .cta__card {
     position: relative;
     border-radius: var(--r-banner);

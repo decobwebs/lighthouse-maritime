@@ -20,10 +20,10 @@ import { SITE } from '../data/site';
     lead="From our Apapa head office, one operations desk manages your call wherever the vessel berths."
   />
 
-  <section class="section" aria-label="Ports by region">
+  <section class="section bg-chart-light" aria-label="Ports by region">
     <div class="container">
       <PortColumns />
-      <p class="t-body offshore">
+      <p class="t-body offshore" data-reveal>
         <strong>Offshore terminals and FPSOs:</strong> vessels calling offshore are handled by the same Apapa
         operations desk, from pre-arrival filings to the final account.
       </p>
@@ -38,9 +38,7 @@ import { SITE } from '../data/site';
 
 <style>
   .offshore {
-    margin-top: 48px;
-    padding-top: 24px;
-    border-top: 1px solid var(--line);
+    margin-top: 40px;
     max-width: 760px;
     color: var(--muted);
   }

@@ -1,9 +1,11 @@
 ---
-// Home: docs/design-reference/01-home-desktop.html + 02-home-phone.html; copy from CONTENT.md "Home".
+// Home: docs/design-reference/01-home-desktop-v4.html (source of truth) + 02-home-phone.html; copy from CONTENT.md "Home".
+// Section rhythm: hero (navy) → certified (white) → About (white) → Services (mist) → Port call (navy chart)
+// → Ports (white chart-light) → Who we work with (mist) → Compliance (white) → CTA (white) → footer (navy chart).
 import { Picture } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import StatBar from '../components/StatBar.astro';
+import SectionRail from '../components/SectionRail.astro';
 import CertifiedStrip from '../components/CertifiedStrip.astro';
 import SectionHeading from '../components/SectionHeading.astro';
 import PromiseRows from '../components/PromiseRows.astro';
@@ -21,11 +23,13 @@ const heroSrcset = await heroPreloadSrcset();
 import aboutTug from '../assets/images/about-tug.jpg';
 import ctaNight from '../assets/images/cta-night.jpg';
 
-const stats = [
-  { value: '24/7', label: 'Operations desk, every day of the year' },
-  { value: '9', accent: '+', label: 'Nigerian ports and offshore terminals' },
-  { value: '8', label: 'Reporting points on every port call' },
-  { value: '[X]', unit: 'hrs', label: 'PDA turnaround after a complete request' },
+const railItems = [
+  { id: 'about', num: '01', label: 'About' },
+  { id: 'services', num: '02', label: 'Services' },
+  { id: 'process', num: '03', label: 'Port call' },
+  { id: 'ports', num: '04', label: 'Ports' },
+  { id: 'who', num: '05', label: 'Clients' },
+  { id: 'compliance', num: '06', label: 'Compliance' },
 ];
 
 const promises = [
@@ -51,13 +55,13 @@ const promises = [
   />
   <Hero slot="hero" />
 
-  <StatBar stats={stats} />
+  <SectionRail items={railItems} />
   <CertifiedStrip />
 
   <!-- 01 — About -->
-  <section id="about" class="section bg-glow" aria-labelledby="about-title">
+  <section id="about" class="section about-section bg-white" aria-labelledby="about-title">
     <div class="container about">
-      <div class="about__media">
+      <div class="about__media" data-reveal>
         <div class="about__photo">
           <Picture
             src={aboutTug}
@@ -73,7 +77,7 @@ const promises = [
         <div class="about__card">
           <p class="t-eyebrow about__card-kicker">Head office</p>
           <p class="t-h5 about__card-title">5 Bornu Crescent, Apapa, Lagos</p>
-          <p class="t-micro about__card-meta">Incorporated 2024 · {SITE.rc}</p>
+          <p class="t-micro about__card-meta">Incorporated 2024</p>
         </div>
       </div>
       <div class="about__copy">
@@ -83,7 +87,7 @@ const promises = [
           title="A ship agency built on"
           dim="clarity and accountability."
         />
-        <p class="t-body about__text">
+        <p class="t-body about__text" data-reveal>
           Lighthouse Maritime Agency supports owners, operators and charterers at every Nigerian port. We
           keep each call simple to follow: what it will cost, where it stands and who is responsible.
         </p>
@@ -95,9 +99,8 @@ const promises = [
   </section>
 
   <!-- 02 — Services -->
-  <section id="services" class="section services" aria-labelledby="services-title">
-    <div class="services__dots bg-dots" aria-hidden="true"></div>
-    <div class="container services__inner">
+  <section id="services" class="section bg-mist" aria-labelledby="services-title">
+    <div class="container">
       <SectionHeading
         id="services-title"
         eyebrow="02 — Services"
@@ -116,7 +119,7 @@ const promises = [
   </section>
 
   <!-- 03 — How a port call works -->
-  <section id="process" class="section section--dark bg-rings on-dark" aria-labelledby="process-title">
+  <section id="process" class="section section--tall bg-chart-dark on-dark" aria-labelledby="process-title">
     <div class="container">
       <SectionHeading
         id="process-title"
@@ -135,7 +138,7 @@ const promises = [
   </section>
 
   <!-- 04 — Port coverage -->
-  <section id="ports" class="section" aria-labelledby="ports-title">
+  <section id="ports" class="section section--tall bg-chart-light" aria-labelledby="ports-title">
     <div class="container">
       <SectionHeading id="ports-title" eyebrow="04 — Port coverage" title="Every Nigerian port," dim="one point of contact.">
         <p class="t-body">From our Apapa head office, one operations desk manages your call wherever the vessel berths.</p>
@@ -147,7 +150,7 @@ const promises = [
   </section>
 
   <!-- 05 — Who we work with -->
-  <section class="section bg-lines" aria-labelledby="audience-title">
+  <section id="who" class="section section--tall bg-mist" aria-labelledby="audience-title">
     <div class="container">
       <SectionHeading
         id="audience-title"
@@ -163,7 +166,7 @@ const promises = [
   </section>
 
   <!-- 06 — Compliance -->
-  <section id="compliance" class="section bg-glow" aria-labelledby="compliance-title">
+  <section id="compliance" class="section compliance-section bg-white" aria-labelledby="compliance-title">
     <div class="container compliance">
       <div class="compliance__copy">
         <SectionHeading
@@ -172,7 +175,7 @@ const promises = [
           title="Certified by"
           dim="Nigeria's maritime authorities."
         />
-        <p class="t-body compliance__text">
+        <p class="t-body compliance__text" data-reveal>
           We are certified by the bodies that regulate ports, shipping and oil and gas supply in Nigeria.
           Certificates are shared with clients and procurement teams on request.
         </p>
@@ -203,8 +206,10 @@ const promises = [
 <style>
   .block-gap { margin-top: 64px; }
 
-  /* The dark section's bottom rule would show as a light line; keep it dark. */
-  .section--dark { border-bottom-color: var(--deep); }
+  /* v4 spacing: the navy and card-heavy sections breathe a little more. */
+  .section--tall { padding-block: 136px; }
+  .about-section { padding-block: 112px 136px; }
+  .compliance-section { padding-block: 136px 96px; }
 
   /* ---------- 01 About ---------- */
   .about {
@@ -237,7 +242,6 @@ const promises = [
     max-width: 250px;
     padding: 20px 24px;
     background: var(--surface);
-    border: 1px solid var(--line);
     border-radius: 12px;
     box-shadow: var(--shadow-float);
   }
@@ -247,22 +251,17 @@ const promises = [
 
   .about__copy { flex: 1 1 480px; min-width: 0; }
   .about__text { margin-top: 24px; color: var(--muted); }
-  .about__rows { margin-top: 40px; }
-
-  /* ---------- 02 Services ---------- */
-  .services { position: relative; }
-  .services__dots { position: absolute; inset: 0 0 auto 0; height: 420px; }
-  .services__inner { position: relative; }
+  .about__rows { margin-top: 36px; }
 
   /* ---------- 03 Process ---------- */
-  .process__timeline { margin-top: 72px; }
-  .section--dark :global(.process__guide) { font-size: 15px; padding: 14px 22px; font-weight: 600; }
+  .process__timeline { margin-top: 64px; }
+  #process :global(.process__guide) { font-size: 15px; padding: 14px 22px; font-weight: 600; }
 
   /* ---------- 06 Compliance ---------- */
   .compliance {
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     gap: 48px 96px;
   }
   .compliance__copy { flex: 1 1 400px; min-width: 0; }
@@ -276,6 +275,9 @@ const promises = [
 
   @media (max-width: 599px) {
     .block-gap { margin-top: 28px; }
+    .section--tall,
+    .about-section,
+    .compliance-section { padding-block: var(--section-y); }
     .process__timeline { margin-top: 32px; }
 
     /* Phone About: heading first, then a 4:3 photo, then the rows (02-home-phone). */
@@ -289,7 +291,7 @@ const promises = [
     .about__photo { aspect-ratio: 4 / 3; border-radius: 14px; }
     .about__card { display: none; }
 
-    .section--dark :global(.process__guide) { width: 100%; border-radius: var(--r-input); }
+    #process :global(.process__guide) { width: 100%; border-radius: var(--r-input); }
     .compliance { gap: 24px; }
     .compliance__copy :global(.compliance__btn) { width: 100%; margin-top: 24px; }
   }
