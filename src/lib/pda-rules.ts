@@ -1,6 +1,6 @@
-// Shared validation rules for the PDA request form.
-// Used by the browser (src/pages/request-a-pda.astro) and by the server (/api/pda, Stage 6),
-// so both always apply exactly the same checks and messages.
+// Validation rules for the PDA request form (src/pages/request-a-pda.astro).
+// The site is static: there is no server, so these run in the browser before the visitor
+// sends the request from their own email app or WhatsApp.
 
 import { PORT_OPTIONS } from '../data/site';
 
@@ -59,6 +59,14 @@ export function isValidEmail(value: string): boolean {
   return EMAIL_PATTERN.test(value.trim());
 }
 
+/** A phone number: 7–15 digits, allowing +, spaces, dashes, dots and brackets. */
+export function isValidPhone(value: string): boolean {
+  const v = value.trim();
+  if (!/^\+?[\d\s().-]+$/.test(v)) return false;
+  const digits = v.replace(/\D/g, '').length;
+  return digits >= 7 && digits <= 15;
+}
+
 /** Error messages, keyed by field name then rule. */
 export const MESSAGES = {
   vessel: { required: 'Please enter the vessel name.' },
@@ -76,8 +84,11 @@ export const MESSAGES = {
   name: { required: 'Please enter your full name.' },
   company: { required: 'Please enter your company.' },
   email: {
-    required: 'Please enter your work email.',
     format: 'Please enter a valid email address, for example name@company.com.',
+  },
+  phone: {
+    required: 'Please enter a phone or WhatsApp number.',
+    format: 'Please enter a valid phone number, for example +234 806 118 9106.',
   },
 } as const;
 
@@ -108,9 +119,13 @@ export function validatePda(values: PdaValues, now: Date = new Date()): Partial<
   if (!get('name')) errors.name = MESSAGES.name.required;
   if (!get('company')) errors.company = MESSAGES.company.required;
 
+  // Email is optional (replies go to the sender's own address); checked only if given.
   const email = get('email');
-  if (!email) errors.email = MESSAGES.email.required;
-  else if (!isValidEmail(email)) errors.email = MESSAGES.email.format;
+  if (email && !isValidEmail(email)) errors.email = MESSAGES.email.format;
+
+  const phone = get('phone');
+  if (!phone) errors.phone = MESSAGES.phone.required;
+  else if (!isValidPhone(phone)) errors.phone = MESSAGES.phone.format;
 
   return errors;
 }

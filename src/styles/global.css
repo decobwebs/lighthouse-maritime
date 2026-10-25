@@ -175,6 +175,41 @@ a:hover { color: var(--red); }
   border: 0;
 }
 
+/* ---------- Form feedback (Request a PDA, Contact; DESIGN.md §6 Forms) ---------- */
+.form-summary {
+  margin-bottom: 32px;
+  padding: 20px 24px;
+  border: 2px solid var(--red);
+  border-radius: var(--r-input);
+  background: var(--red-tint);
+}
+.form-summary:focus { outline: 3px solid var(--navy); outline-offset: 3px; }
+.form-summary .summary__title { font-weight: 600; color: var(--ink); }
+.form-summary ul { margin-top: 8px; padding-left: 1.2em; }
+.form-summary li { margin-top: 4px; font-size: var(--fs-small); }
+.form-summary a { color: var(--red-hover); }
+
+.fld--error input,
+.fld--error select,
+.fld--error textarea { border: 2px solid var(--red) !important; }
+.fld__error { font-size: 13.5px; font-weight: 500; line-height: 1.45; color: var(--red-hover); }
+
+.fld__suggest:empty { display: none; }
+.fld__suggest { font-size: 14px; line-height: 1.5; color: var(--muted); }
+.fld__suggest-btn {
+  min-height: 44px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  color: var(--navy);
+  font-weight: 600;
+  text-decoration: underline;
+}
+.fld__suggest-btn:hover { color: var(--red); }
+
+/* Send button is JS-only: without JS the form shows a plain email/phone fallback instead. */
+html:not(.js) [data-js-only] { display: none !important; }
+
 /* ---------- Phone (< 600px) ---------- */
 @media (max-width: 599px) {
   :root {

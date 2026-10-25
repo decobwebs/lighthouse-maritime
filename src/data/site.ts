@@ -1,4 +1,15 @@
 // Site-wide facts from docs/CONTENT.md "Global facts". Use these instead of retyping them.
+//
+// Email addresses are never written out whole here or in page HTML (to keep them away from spam
+// harvesters). Pages render them with <Email mailbox="…" />, which assembles them in the browser;
+// client scripts use emailAddress().
+
+/** Email domain, stored reversed so the full address never appears as one string. */
+const EMAIL_DOMAIN_REVERSED = 'moc.dtlemitiramesuohthgil';
+export const EMAIL_DOMAIN_REV = EMAIL_DOMAIN_REVERSED;
+export const emailDomain = () => [...EMAIL_DOMAIN_REVERSED].reverse().join('');
+/** Full address, for client-side use (mailto links, messages). */
+export const emailAddress = (mailbox: string) => `${mailbox}${String.fromCharCode(64)}${emailDomain()}`;
 
 export const SITE = {
   name: 'Lighthouse Maritime Agency',
@@ -16,12 +27,12 @@ export const SITE = {
   ops: {
     phone: '+234 806 118 9106',
     tel: 'tel:+2348061189106',
-    email: 'operations@lighthousemaritimeltd.com',
+    mailbox: 'operations',
   },
   admin: {
     phone: '+234 908 622 3063',
     tel: 'tel:+2349086223063',
-    email: 'admin@lighthousemaritimeltd.com',
+    mailbox: 'admin',
   },
   // Placeholder until the client supplies it (see PLACEHOLDERS.md).
   whatsapp: '[WhatsApp number]',
@@ -33,10 +44,16 @@ export const CHECKLIST_PDF: string | null = null;
 /** About "Our team" section. Off until real names and photos are supplied (set SHOW_TEAM=true at build). */
 export const SHOW_TEAM = import.meta.env.SHOW_TEAM === 'true';
 
+/** WhatsApp number as digits for wa.me links, or null while it is still a placeholder. */
+export function whatsappDigits(): string | null {
+  const digits = SITE.whatsapp.replace(/\D/g, '');
+  return digits.length >= 7 ? digits : null;
+}
+
 /** WhatsApp link, or the Contact page while the number is still a placeholder. */
 export function whatsappHref(): string {
   // TODO(whatsapp): the number is not supplied yet; this falls back to /contact.
-  const digits = SITE.whatsapp.replace(/\D/g, '');
+  const digits = whatsappDigits();
   return digits ? `https://wa.me/${digits}` : '/contact';
 }
 

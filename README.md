@@ -30,4 +30,4 @@ Everything Claude Code needs to build the approved design, with nothing left to 
 - Optional: two replacement photos without other shipping lines' branding (MSC, EVERGREEN)
 
 ## Accounts you will need (all have free tiers)
-Vercel (hosting), Resend (email), Supabase (form records), Cloudflare Turnstile (spam protection), Google Search Console, Google Business Profile.
+Vercel (hosting), Google Search Console, Google Business Profile. The site is fully static: forms are sent from the visitor's own email app or WhatsApp, so no email service, database or spam-protection account is needed.

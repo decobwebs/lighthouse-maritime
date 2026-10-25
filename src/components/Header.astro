@@ -5,6 +5,7 @@
 import Logo from './Logo.astro';
 import Button from './Button.astro';
 import Icon from './Icon.astro';
+import Email from './Email.astro';
 import { SITE, NAV } from '../data/site';
 
 interface Props {
@@ -25,7 +26,7 @@ const onPdaPage = isActive('/request-a-pda');
         {SITE.address.short}
       </span>
       <span class="utility__group">
-        <a href={`mailto:${SITE.ops.email}`} class="utility__link">{SITE.ops.email}</a>
+        <Email mailbox={SITE.ops.mailbox} class="utility__link" />
         <a href={SITE.ops.tel} class="utility__link utility__link--strong">
           <span class="live-dot" aria-hidden="true"></span>24/7 Operations · {SITE.ops.phone}
         </a>
@@ -111,7 +112,7 @@ const onPdaPage = isActive('/request-a-pda');
   </div>
 
   <p class="menu__contact t-small">
-    <a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a><br />
+    <Email mailbox={SITE.ops.mailbox} /><br />
     {SITE.address.short}
   </p>
 </dialog>
@@ -189,9 +190,10 @@ const onPdaPage = isActive('/request-a-pda');
   }
   .utility__item { display: inline-flex; align-items: center; gap: 8px; }
   .utility__group { display: inline-flex; flex-wrap: wrap; gap: 8px 28px; }
-  .utility__link { color: var(--on-dark-soft); text-decoration: none; }
+  .utility__group :global(.utility__link) { color: var(--on-dark-soft); text-decoration: none; }
+  .utility__group :global(.utility__link:hover),
   .utility__link:hover { color: var(--on-dark); text-decoration: underline; }
-  .utility__link--strong { color: var(--on-dark); display: inline-flex; align-items: center; gap: 8px; }
+  .utility__group :global(.utility__link--strong) { color: var(--on-dark); display: inline-flex; align-items: center; gap: 8px; }
 
   .live-dot {
     width: 7px;
@@ -327,7 +329,7 @@ const onPdaPage = isActive('/request-a-pda');
 
   .menu__actions { display: grid; gap: 12px; margin-top: 32px; }
   .menu__contact { margin-top: 28px; color: var(--on-dark-muted); }
-  .menu__contact a { color: var(--on-dark-soft); }
+  .menu__contact :global(a) { color: var(--on-dark-soft); }
 </style>
 
 <style is:global>

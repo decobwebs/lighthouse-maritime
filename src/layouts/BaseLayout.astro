@@ -63,6 +63,20 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
 
     <Footer />
     <MobileActionBar />
+
+    <script>
+      // Assemble <Email> links in the browser so addresses never sit whole in the HTML.
+      document.querySelectorAll<HTMLAnchorElement>('a[data-mailbox]').forEach((link) => {
+        const domain = [...(link.dataset.domain ?? '')].reverse().join('');
+        const at = String.fromCharCode(64);
+        link.href = `mailto:${link.dataset.mailbox}${at}${domain}`;
+        if (link.hasAttribute('data-breakable')) {
+          link.replaceChildren(`${link.dataset.mailbox}${at}`, document.createElement('wbr'), domain);
+        } else {
+          link.textContent = `${link.dataset.mailbox}${at}${domain}`;
+        }
+      });
+    </script>
   </body>
 </html>
 

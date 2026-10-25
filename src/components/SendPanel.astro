@@ -1,0 +1,79 @@
+---
+// "Send your request" panel shown after "Looks right" (filled by send-flow.ts).
+// The WhatsApp button stays hidden until the number is set in src/data/site.ts.
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<section class="send" data-send-panel hidden aria-labelledby="send-title">
+  <h2 class="send__title" id="send-title" data-send-title tabindex="-1">{title}</h2>
+  <p class="t-micro send__ref">Reference <span data-send-ref></span></p>
+  <div class="send__actions">
+    <a class="send__btn send__btn--primary" data-send-email>Send by email</a>
+    <a class="send__btn send__btn--wa" data-send-wa target="_blank" rel="noopener" hidden>Send on WhatsApp</a>
+    <button type="button" class="send__btn send__btn--line" data-send-copy>Copy details</button>
+  </div>
+  <p class="send__status" data-send-status role="status" aria-live="polite"></p>
+  <button type="button" class="send__back" data-send-back>Edit details</button>
+</section>
+
+<style>
+  .send {
+    padding: 36px;
+    border: 1px solid var(--line);
+    border-top: 2px solid var(--navy);
+    border-radius: 4px 4px var(--r-card) var(--r-card);
+  }
+  .send__title {
+    font-family: var(--font-display);
+    font-size: min(var(--fs-h3), 30px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+  .send__title:focus { outline: none; }
+  .send__ref { margin-top: 10px; color: var(--ok); font-weight: 600; letter-spacing: 0.04em; }
+
+  .send__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .send__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 52px;
+    padding: 16px 26px;
+    border-radius: var(--r-input);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 200ms, color 200ms;
+  }
+  .send__btn[hidden] { display: none; }
+  .send__btn--primary { border: 0; background: var(--red); color: var(--on-dark); }
+  .send__btn--primary:hover { background: var(--red-hover); color: var(--on-dark); }
+  .send__btn--wa { border: 0; background: var(--navy); color: var(--on-dark); }
+  .send__btn--wa:hover { background: var(--deep); color: var(--on-dark); }
+  .send__btn--line { border: 1px solid var(--navy); background: var(--surface); color: var(--navy); }
+  .send__btn--line:hover { background: var(--navy); color: var(--on-dark); }
+
+  .send__status { min-height: 1.6em; margin-top: 16px; font-size: var(--fs-small); color: var(--ok); }
+  .send__back {
+    min-height: 44px;
+    margin-top: 8px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--navy);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 599px) {
+    .send { padding: 24px 20px; }
+    .send__actions { flex-direction: column; }
+    .send__btn { width: 100%; }
+  }
+</style>

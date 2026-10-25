@@ -1,6 +1,7 @@
 ---
 // DRAFT terms of use (CONTENT.md "Legal"). Must be reviewed by a lawyer before launch.
 import LegalPage from '../components/LegalPage.astro';
+import Email from '../components/Email.astro';
 import { SITE } from '../data/site';
 ---
 <LegalPage
@@ -56,5 +57,5 @@ import { SITE } from '../data/site';
   <p>These terms are governed by the laws of the Federal Republic of Nigeria.</p>
 
   <h2>Contact</h2>
-  <p>Questions about these terms: <a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a>.</p>
+  <p>Questions about these terms: <Email mailbox={SITE.admin.mailbox} />.</p>
 </LegalPage>

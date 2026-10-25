@@ -1,0 +1,14 @@
+---
+// An email link that never appears whole in the page HTML. Without JS it reads
+// "operations [at] lighthousemaritimeltd.com" (no link); with JS, BaseLayout's script turns it into
+// a normal mailto: link. `breakable` lets the address wrap after the "@" in narrow cards.
+import { EMAIL_DOMAIN_REV, emailDomain } from '../data/site';
+
+interface Props {
+  mailbox: string;
+  breakable?: boolean;
+  class?: string;
+}
+const { mailbox, breakable = false, class: className } = Astro.props;
+---
+<a class:list={['email', className]} data-mailbox={mailbox} data-domain={EMAIL_DOMAIN_REV} data-breakable={breakable ? '' : undefined}>{mailbox} [at] {emailDomain()}</a>

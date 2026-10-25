@@ -9,7 +9,7 @@ Run them in order. After each stage, review the result in the browser (`npm run 
 Read CLAUDE.md, docs/DESIGN.md and docs/CONTENT.md fully before doing anything.
 
 Set up the project in this folder (it already contains docs/, public/, src/assets/images/ and src/styles/tokens.css; keep them):
-- Astro (latest stable) with TypeScript strict, @astrojs/vercel adapter, @astrojs/sitemap.
+- Astro (latest stable) with TypeScript strict, @astrojs/sitemap. (The @astrojs/vercel adapter was used at first and removed in Stage 6: the site is fully static.)
 - @fontsource/manrope (500,600,700,800) and @fontsource/inter (400,500,600).
 - src/styles/global.css: a modern reset, base typography using the tokens, and utility classes for every type style in DESIGN.md §3 (.t-display, .t-h1, .t-h2, .t-h3, .t-quote, .t-h4, .t-h5, .t-stat, .t-lead, .t-body, .t-small, .t-eyebrow, .t-micro) including the phone sizes, plus .container, .section and .dim (two-tone headings).
 - Create PLACEHOLDERS.md listing every [bracketed] placeholder found in docs/CONTENT.md.
@@ -59,22 +59,22 @@ Build /request-a-pda to match docs/design-reference/03-request-pda.html and CONT
 - Prefill vessel, port and eta from query params (coming from the Home quick panel).
 - Purpose-of-call chips are toggle buttons with aria-pressed, progressively enhanced from a group of checkboxes (works without JS).
 - Client validation that mirrors the server rules: required fields, IMO = exactly 7 digits, ETA not in the past, valid email. Errors as described in DESIGN.md §6 Forms, with an aria-live summary.
-- Hidden honeypot field + Cloudflare Turnstile widget (site key from env PUBLIC_TURNSTILE_SITE_KEY).
 - On success, redirect to /request-a-pda/thank-you?ref=LMA-PDA-XXXX.
-Do not build the API yet; post to /api/pda and show a friendly error if it fails. Stop and summarise.
+Stop and summarise. (Superseded in part by Stage 6: there is no API; the form is sent from the visitor's email app or WhatsApp.)
 ```
 
-## Stage 6: Form back end (PDA + contact)
+## Stage 6: Forms via email and WhatsApp (no server)
 ```
-Build src/pages/api/pda.ts and src/pages/api/contact.ts (prerender = false):
-1. Reject when the honeypot is filled; verify the Turnstile token server-side (TURNSTILE_SECRET_KEY).
-2. Validate with zod using the same rules as the client.
-3. Generate a reference: LMA-PDA-YYYYMMDD-XXXX (or LMA-ENQ-… for contact).
-4. Insert into Supabase (tables pda_requests and enquiries; give me the SQL migration in supabase/migrations/). Use SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY server-side only.
-5. Send via Resend: (a) an internal email to operations@lighthousemaritimeltd.com (PDA) or admin@lighthousemaritimeltd.com (contact) with every field in a clean table; (b) a confirmation email to the sender with the reference and the "what happens next" steps. From address: no-reply@lighthousemaritimeltd.com (RESEND_API_KEY).
-6. If email fails but the database insert worked, still return success and log the error; if both fail, return a 500 with a friendly message.
-7. Contact attachments: max 10 MB; PDF, DOCX, JPG or PNG only; stored in Supabase Storage with a signed link in the email.
-Write .env.example with every variable. Add basic rate limiting (5 requests per IP per 10 minutes). Test both forms end to end locally with test keys, then summarise.
+Change of plan: no server email, no Resend, no Supabase, no API routes. The site stays fully static.
+Request a PDA:
+- Keep all validation in src/lib/pda-rules.ts (IMO check digit, ETA in Lagos time, required fields). Email is optional; phone or WhatsApp is required.
+- Email typo help on blur (gmial/gmai/gamil → gmail.com, yahooo/yaho → yahoo.com, hotmial → hotmail.com, outlok → outlook.com, .con/.cmo → .com): "Did you mean …?" with a one-tap fix. A suggestion only.
+- On a valid submit, open an accessible "Check your details" dialog (native <dialog>, focus trapped, Esc = Edit) showing email (if given) and phone large, plus vessel, port and ETA; buttons "Edit" and "Looks right".
+- "Looks right" creates a reference (LMA-PDA-YYYYMMDD-XXXX) and a plain-text summary under 1,500 characters (notes trimmed with "(continued in reply)"), then shows "Send your request": Send by email (mailto: operations@, cc admin@, subject "PDA request · {vessel} · {port} · ETA {date} · {ref}"), Send on WhatsApp (wa.me, hidden until the number is set) and Copy details.
+- After a send button, go to the thank-you page with the ref. Saved progress stays until "Start a new request".
+- Without JS: a plain mailto link to operations@ and the phone number.
+Contact: the same flow to admin@ (cc operations@), subject "Enquiry · {type} · {company} · {ref}"; no file upload ("Need to send documents? Attach them in your email app before sending."); "Loading the map shares data with Google." next to Show map.
+Hide email addresses from spam bots (assembled with JS, readable fallback without JS). Update the docs and the privacy draft to match.
 ```
 
 ## Stage 7: Quality pass
@@ -91,7 +91,7 @@ Give me a short report with before/after scores.
 ## Stage 8: Deploy
 ```
 Prepare deployment to Vercel:
-- vercel.json if needed, security headers (CSP allowing Turnstile, Resend not needed client-side, HSTS, X-Content-Type-Options, Referrer-Policy).
-- A step-by-step checklist for me: create the Vercel project, add the env variables, connect lighthousemaritimeltd.com (DNS records), verify the domain in Resend (SPF, DKIM, DMARC), create the Supabase project and run the migration, create the Turnstile site, submit the sitemap in Google Search Console, and create a Google Business Profile for the Apapa office.
-- A launch test script: submit one PDA and one contact form on production and confirm both emails and both database rows arrive.
+- vercel.json with security headers (CSP: self only, plus Google Maps in a frame on /contact after "Show map"; HSTS, X-Content-Type-Options, Referrer-Policy). No adapter: Vercel serves the static dist/ folder.
+- A step-by-step checklist for me: create the Vercel project, connect lighthousemaritimeltd.com (DNS records), make sure operations@ and admin@ receive mail, submit the sitemap in Google Search Console, and create a Google Business Profile for the Apapa office.
+- A launch test script: on production, send one PDA and one contact message by email (desktop and phone), by WhatsApp once the number is set, and by Copy, and confirm each arrives at the right inbox with the right subject and reference.
 ```

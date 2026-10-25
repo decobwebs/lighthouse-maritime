@@ -1,13 +1,11 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-import vercel from '@astrojs/vercel';
 import sitemap from '@astrojs/sitemap';
 
-// Static by default; form API routes opt in with `export const prerender = false`.
+// Fully static site: no server code. Forms are sent from the visitor's own email app or WhatsApp.
 export default defineConfig({
   site: 'https://lighthousemaritimeltd.com',
   output: 'static',
-  adapter: vercel(),
   // Inline the (small) page CSS so it doesn't block first paint as separate requests.
   build: { inlineStylesheets: 'always' },
   integrations: [

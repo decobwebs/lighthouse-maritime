@@ -12,7 +12,7 @@ Square brackets in `docs/CONTENT.md` around button and badge labels (for example
 |---|---|---|---|
 | `[X hours]` | PDA turnaround time after a complete request | Global facts; Home promise row 01; Home CTA banner; Request a PDA meta description, lead, sidebar step 3 and thank-you page; CTA band on all five service pages and /services; About principle 02 (Reliability) | Waiting |
 | `[X]hrs` | Same turnaround, shown as a stat | Home stats bar, 4th column | Waiting |
-| `[WhatsApp number]` | Operations WhatsApp number | Global facts; used by the mobile action bar WhatsApp button, "Message on WhatsApp" buttons on the Request a PDA sidebar and urgent cards | Waiting |
+| `[WhatsApp number]` | Operations WhatsApp number | Global facts; set it in `src/data/site.ts`. Until then the mobile action bar and "Message on WhatsApp" buttons go to /contact, and the forms' "Send on WhatsApp" button is hidden | Waiting |
 | `[Month 2026]` | Month the port call guide was last reviewed | Port call guide side card ("Last reviewed") | Waiting |
 | `[Name]` ×3 | Team members: Managing Director, Head of Operations, Client Relations | About, "03 — Our team" (section hidden with `SHOW_TEAM=false` until supplied) | Waiting |
 | `[retention period]` | How long form data is kept | Privacy policy | Waiting |

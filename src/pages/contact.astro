@@ -1,9 +1,15 @@
 ---
 // Contact: docs/design-reference/07-contact.html; copy from CONTENT.md "Contact".
-// The form posts to /api/contact (built in Stage 6). The Google map loads only after "Show map".
+// No server: the enquiry is checked in the browser (src/lib/contact-rules.ts), confirmed in a "Check
+// your details" dialog, then sent from the visitor's own email app or WhatsApp (src/scripts/send-flow.ts).
+// The Google map loads only after "Show map".
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHero from '../components/PageHero.astro';
+import CheckDialog from '../components/CheckDialog.astro';
+import SendPanel from '../components/SendPanel.astro';
+import Email from '../components/Email.astro';
 import { SITE } from '../data/site';
+import { ENQUIRY_TYPES } from '../lib/contact-rules';
 
 const address = '5 Bornu Crescent, Apapa, Lagos, Nigeria';
 const q = encodeURIComponent(address);
@@ -11,13 +17,6 @@ const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${q}`;
 const embedUrl = `https://www.google.com/maps?q=${q}&output=embed`;
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
 
-const enquiryTypes = [
-  { value: 'general', label: 'General question' },
-  { value: 'tender', label: 'Tender or vendor registration' },
-  { value: 'partnership', label: 'Partnership' },
-  { value: 'company-profile', label: 'Request company profile' },
-  { value: 'careers', label: 'Careers' },
-];
 ---
 <BaseLayout
   title="Contact | Lighthouse Maritime Agency"
@@ -39,7 +38,7 @@ const enquiryTypes = [
         <p class="t-small desk__note">Vessel calls, PDAs, urgent requests.</p>
         <p class="t-body desk__lines">
           <a href={SITE.ops.tel}>{SITE.ops.phone}</a><br />
-          <a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a>
+          <Email mailbox={SITE.ops.mailbox} />
         </p>
       </section>
       <section class="desk" aria-labelledby="desk-admin">
@@ -48,7 +47,7 @@ const enquiryTypes = [
         <p class="t-small desk__note">Tenders, vendor registration, accounts.</p>
         <p class="t-body desk__lines">
           <a href={SITE.admin.tel}>{SITE.admin.phone}</a><br />
-          <a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a>
+          <Email mailbox={SITE.admin.mailbox} />
         </p>
       </section>
       <section class="desk" aria-labelledby="desk-visit">
@@ -73,42 +72,48 @@ const enquiryTypes = [
         <a href="/request-a-pda" class="pda-link">Go to the PDA form <span aria-hidden="true">→</span></a>
       </div>
 
-      <form class="form" action="/api/contact" method="post" enctype="multipart/form-data">
-        <label class="fld">
-          Full name
-          <input type="text" name="name" autocomplete="name" required />
-        </label>
-        <label class="fld">
-          Company
-          <input type="text" name="company" autocomplete="organization" />
-        </label>
-        <label class="fld">
-          Work email
-          <input type="email" name="email" autocomplete="email" required />
-        </label>
-        <label class="fld">
-          Phone
-          <input type="tel" name="phone" autocomplete="tel" />
-        </label>
-        <label class="fld fld--wide">
-          Enquiry type
-          <select name="enquiry" id="enquiry-type">
-            {enquiryTypes.map((t) => <option value={t.value}>{t.label}</option>)}
-          </select>
-        </label>
-        <label class="fld fld--wide">
-          Message
-          <textarea name="message" rows="5" required></textarea>
-        </label>
-        <div class="form__foot">
-          <label class="fld fld--file">
-            Attachment
-            <input type="file" name="attachment" accept=".pdf,.docx,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" aria-describedby="attachment-hint" />
-            <span class="hint" id="attachment-hint">PDF, DOCX, JPG or PNG, up to 10 MB</span>
-          </label>
-          <button type="submit" class="submit">Send message</button>
+      <div class="form-col">
+      <form class="form" data-contact-form>
+        <div class="form-summary fld--wide" data-summary role="alert" aria-live="assertive" tabindex="-1" hidden></div>
+        <div class="fld">
+          <label for="c-name">Full name</label>
+          <input id="c-name" type="text" name="name" autocomplete="name" required />
         </div>
+        <div class="fld">
+          <label for="c-company">Company</label>
+          <input id="c-company" type="text" name="company" autocomplete="organization" />
+        </div>
+        <div class="fld">
+          <label for="c-email">Work email (optional)</label>
+          <input id="c-email" type="email" name="email" autocomplete="email" />
+        </div>
+        <div class="fld">
+          <label for="c-phone">Phone (optional)</label>
+          <input id="c-phone" type="tel" name="phone" autocomplete="tel" />
+        </div>
+        <div class="fld fld--wide">
+          <label for="enquiry-type">Enquiry type</label>
+          <select name="enquiry" id="enquiry-type">
+            {ENQUIRY_TYPES.map((t) => <option value={t.value}>{t.label}</option>)}
+          </select>
+        </div>
+        <div class="fld fld--wide">
+          <label for="c-message">Message</label>
+          <textarea id="c-message" name="message" rows="5" required></textarea>
+        </div>
+        <div class="form__foot">
+          <p class="attach-note">Need to send documents? Attach them in your email app before sending.</p>
+          <button type="submit" class="submit" data-js-only>Send message</button>
+        </div>
+        <noscript>
+          <p class="nojs fld--wide">
+            To send a message, please email <Email mailbox={SITE.admin.mailbox} /> or call
+            <a href={SITE.admin.tel}>{SITE.admin.phone}</a>.
+          </p>
+        </noscript>
       </form>
+      <SendPanel title="Send your message" />
+      </div>
     </div>
   </section>
 
@@ -133,19 +138,56 @@ const enquiryTypes = [
           </svg>
         </div>
         <div class="map__actions">
-          <a href={mapsUrl} class="map__btn map__btn--light" data-show-map target="_blank" rel="noopener">Show map</a>
+          <span class="map__show">
+            <a href={mapsUrl} class="map__btn map__btn--light" data-show-map target="_blank" rel="noopener">Show map</a>
+            <span class="t-micro map__note" data-map-note>Loading the map shares data with Google.</span>
+          </span>
           <a href={directionsUrl} class="map__btn" target="_blank" rel="noopener">Get directions</a>
         </div>
       </div>
     </div>
   </section>
+
+  <CheckDialog />
 </BaseLayout>
 
 <script>
-  // Preselect the enquiry type from ?enquiry= (e.g. "Request company profile" links).
-  const select = document.getElementById('enquiry-type') as HTMLSelectElement | null;
-  const wanted = new URLSearchParams(window.location.search).get('enquiry');
-  if (select && wanted && [...select.options].some((o) => o.value === wanted)) select.value = wanted;
+  import { validateContact, enquiryLabel } from '../lib/contact-rules';
+  import { contactSubject, contactSummary } from '../lib/send';
+  import { setupSendFlow } from '../scripts/send-flow';
+  import { emailAddress, whatsappDigits, SITE } from '../data/site';
+
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+  if (form) {
+    const flow = setupSendFlow({
+      form,
+      kind: 'ENQ',
+      storageKey: 'lma-enq-draft',
+      fieldLabels: { name: 'Full name', email: 'Work email', phone: 'Phone', message: 'Message' },
+      validate: (v) => validateContact(v),
+      dialogRows: (v) => [
+        ...(v.email?.trim() ? [{ label: 'Email', value: v.email.trim(), big: true }] : []),
+        ...(v.phone?.trim() ? [{ label: 'Phone', value: v.phone.trim(), big: true }] : []),
+        { label: 'Name', value: v.name.trim() },
+        { label: 'Enquiry', value: enquiryLabel(v.enquiry) },
+      ],
+      summary: (v, _multi, ref) => contactSummary(v, ref),
+      subject: (v, ref) => contactSubject(v, ref),
+      to: emailAddress(SITE.admin.mailbox),
+      cc: emailAddress(SITE.ops.mailbox),
+      whatsappDigits: whatsappDigits(),
+      thankYouPath: '/contact/thank-you',
+    });
+    flow.restore();
+
+    // Preselect the enquiry type from ?enquiry= (e.g. "Request company profile" links).
+    const select = document.getElementById('enquiry-type') as HTMLSelectElement | null;
+    const wanted = new URLSearchParams(window.location.search).get('enquiry');
+    if (select && wanted && [...select.options].some((o) => o.value === wanted)) {
+      select.value = wanted;
+      flow.save();
+    }
+  }
 
   // Swap the drawing for the real Google map only on request.
   document.querySelectorAll<HTMLElement>('[data-map]').forEach((map) => {
@@ -161,6 +203,7 @@ const enquiryTypes = [
       map.classList.add('map--live');
       map.prepend(frame);
       trigger.remove();
+      map.querySelector('[data-map-note]')?.remove();
       frame.focus();
     });
   });
@@ -185,8 +228,8 @@ const enquiryTypes = [
   .desk__title { margin-top: 14px; }
   .desk__note { margin-top: 10px; color: var(--on-dark-muted); }
   .desk__lines { margin-top: 22px; line-height: 2; font-style: normal; overflow-wrap: anywhere; }
-  .desk__lines a { color: var(--on-dark); text-decoration: none; }
-  .desk__lines a:hover { text-decoration: underline; }
+  .desk__lines :global(a) { color: var(--on-dark); text-decoration: none; }
+  .desk__lines :global(a:hover) { text-decoration: underline; }
 
   /* ---------- Enquiry ---------- */
   .enquiry-section { padding-block: 112px; }
@@ -218,8 +261,9 @@ const enquiryTypes = [
   }
   .pda-link:hover { background: var(--navy); color: var(--on-dark); }
 
+  .form-col { flex: 1.5 1 540px; min-width: 0; }
+  .form[hidden] { display: none; }
   .form {
-    flex: 1.5 1 540px;
     min-width: 0;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -253,8 +297,15 @@ const enquiryTypes = [
     border-color: var(--navy);
     box-shadow: 0 0 0 3px rgba(11, 42, 82, 0.18);
   }
-  .fld--file input { padding: 10px 12px; font-size: 14px; }
-  .hint { font-size: 13px; font-weight: 400; color: var(--label); }
+  .attach-note { flex: 1 1 280px; font-size: var(--fs-small); line-height: 1.6; color: var(--muted); }
+  .nojs {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border-left: 4px solid var(--navy);
+    background: var(--surface-alt);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
 
   .form__foot {
     grid-column: 1 / -1;
@@ -265,7 +316,6 @@ const enquiryTypes = [
     gap: 16px;
     padding-top: 8px;
   }
-  .fld--file { flex: 1 1 280px; }
   .submit {
     min-height: 48px;
     padding: 17px 30px;
@@ -313,7 +363,9 @@ const enquiryTypes = [
   .map__addr { margin-top: 4px; color: var(--muted); }
   .map__pin svg { margin-top: 8px; }
 
-  .map__actions { position: absolute; right: 20px; bottom: 16px; display: flex; gap: 10px; }
+  .map__actions { position: absolute; right: 20px; bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .map__show { display: inline-flex; align-items: center; gap: 12px; }
+  .map__note { padding: 6px 10px; border-radius: var(--r-btn); background: var(--surface); color: var(--muted); }
   .map__btn {
     display: inline-flex;
     align-items: center;
@@ -351,7 +403,9 @@ const enquiryTypes = [
     .submit { width: 100%; }
     .map-section { padding-block: 48px; }
     .map { aspect-ratio: 3 / 4; border-radius: 14px; }
-    .map__actions { left: 16px; right: 16px; bottom: 16px; flex-direction: column; }
+    .map__actions { left: 16px; right: 16px; bottom: 16px; flex-direction: column; align-items: stretch; }
+    .map__show { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
+    .map__note { text-align: center; }
     .map__btn { justify-content: center; }
   }
 </style>

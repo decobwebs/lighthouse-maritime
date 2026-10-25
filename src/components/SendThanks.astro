@@ -1,0 +1,125 @@
+---
+// Thank-you after the visitor hands the message to their email app or WhatsApp.
+// Shows the ref from ?ref= (own format only), offers Copy again, and "Start a new …" clears the draft.
+import Button from './Button.astro';
+
+interface Props {
+  storageKey: string;
+  refPattern: string;
+  lead: string;
+  startHref: string;
+  startLabel: string;
+  /** Mailbox named in the "Copied" message, e.g. "operations". */
+  mailbox: string;
+}
+const { storageKey, refPattern, lead, startHref, startLabel, mailbox } = Astro.props;
+---
+<section class="done" aria-labelledby="done-title" data-thanks data-key={storageKey} data-pattern={refPattern} data-mailbox={mailbox}>
+  <div class="container done__inner">
+    <span class="done__tick" aria-hidden="true">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10" /></svg>
+    </span>
+    <p class="t-eyebrow done__ref" data-ref-wrap hidden>Your reference · <span data-ref></span></p>
+    <h2 class="done__title" id="done-title">One last step: press Send.</h2>
+    <p class="t-lead done__lead">{lead}</p>
+    <div class="done__actions">
+      <button type="button" class="done__copy" data-thanks-copy hidden>Copy details</button>
+      <a href={startHref} class="done__start" data-thanks-start>{startLabel}</a>
+      <Button href="/" variant="dark">Back to home</Button>
+    </div>
+    <p class="done__status" data-thanks-status role="status" aria-live="polite"></p>
+  </div>
+</section>
+
+<script>
+  import { copyText, draftKeys, storageClear } from '../scripts/send-flow';
+  import { emailAddress } from '../data/site';
+
+  const root = document.querySelector<HTMLElement>('[data-thanks]');
+  if (root) {
+    const keys = draftKeys(root.dataset.key ?? '');
+    const ref = new URLSearchParams(window.location.search).get('ref') ?? '';
+    // Only show references in our own format; never echo arbitrary text from the URL.
+    if (new RegExp(root.dataset.pattern ?? '^$').test(ref)) {
+      root.querySelector('[data-ref]')!.textContent = ref;
+      (root.querySelector('[data-ref-wrap]') as HTMLElement).hidden = false;
+    }
+
+    let sent: { ref: string; text: string } | null = null;
+    try {
+      sent = JSON.parse(sessionStorage.getItem(keys.sent) ?? 'null');
+    } catch {
+      sent = null;
+    }
+    const copyBtn = root.querySelector<HTMLButtonElement>('[data-thanks-copy]')!;
+    const status = root.querySelector<HTMLElement>('[data-thanks-status]')!;
+    const to = emailAddress(root.dataset.mailbox ?? '');
+    if (sent?.text) {
+      copyBtn.hidden = false;
+      copyBtn.addEventListener('click', async () => {
+        const ok = await copyText(sent!.text);
+        status.textContent = ok ? `Copied. Paste it into an email to ${to}` : `Copying didn't work here. Please email ${to} instead.`;
+      });
+    }
+
+    // Saved progress stays until the visitor chooses to start again.
+    root.querySelector('[data-thanks-start]')?.addEventListener('click', () => storageClear(keys.draft, keys.ref, keys.sent));
+  }
+</script>
+
+<style>
+  .done__inner {
+    max-width: calc(760px + var(--gutter) * 2);
+    padding-block: 96px 140px;
+    text-align: center;
+  }
+  .done__tick {
+    width: 72px;
+    height: 72px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ok-bg);
+    color: var(--ok);
+  }
+  .done__ref { margin-top: 28px; color: var(--ok); }
+  .done__title {
+    margin-top: 16px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 3.4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .done__ref[hidden] + .done__title { margin-top: 28px; }
+  .done__lead { margin-top: 20px; color: var(--muted); }
+  .done__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 40px; }
+  .done__copy,
+  .done__start {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 16px 26px;
+    border: 1px solid var(--navy);
+    border-radius: var(--r-btn);
+    background: var(--surface);
+    color: var(--navy);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    text-decoration: none;
+    transition: background-color 200ms, color 200ms;
+  }
+  .done__copy[hidden] { display: none; }
+  .done__copy:hover,
+  .done__start:hover { background: var(--navy); color: var(--on-dark); }
+  .done__status { min-height: 1.6em; margin-top: 20px; font-size: var(--fs-small); color: var(--ok); }
+
+  @media (max-width: 599px) {
+    .done__inner { padding-block: 56px 72px; }
+    .done__actions { flex-direction: column; gap: 10px; }
+    .done__actions > :global(*) { width: 100%; border-radius: var(--r-input); }
+  }
+</style>

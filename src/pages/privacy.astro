@@ -2,6 +2,7 @@
 // DRAFT privacy policy (CONTENT.md "Legal"): covers the Nigeria Data Protection Act 2023.
 // Must be reviewed by a lawyer before launch (LAUNCH-CHECKLIST.md). [retention period] is a placeholder.
 import LegalPage from '../components/LegalPage.astro';
+import Email from '../components/Email.astro';
 import { SITE } from '../data/site';
 ---
 <LegalPage
@@ -18,29 +19,38 @@ import { SITE } from '../data/site';
   </p>
 
   <h2>What we collect</h2>
-  <p>We only collect what you choose to send us through our forms:</p>
+  <p>We only receive what you choose to send us:</p>
   <ul>
-    <li><strong>PDA request form:</strong> your name, company, role, work email and phone or WhatsApp number, together with the vessel and port call details you enter.</li>
-    <li><strong>Contact form:</strong> your name, company, work email, phone number, enquiry type, message and any file you attach.</li>
+    <li><strong>PDA request:</strong> your name, company, role, phone or WhatsApp number and, if you give it, your work email, together with the vessel and port call details you enter.</li>
+    <li><strong>Contact form:</strong> your name, company, enquiry type and message, plus your email and phone number if you give them.</li>
   </ul>
+  <p>We do not use advertising or tracking cookies.</p>
+
+  <h2>How our forms work</h2>
   <p>
-    We do not use advertising or tracking cookies. To protect the forms from spam we use Cloudflare Turnstile,
-    which checks that a form is being sent by a person and may process technical data such as your IP address
-    for that purpose.
+    Our forms do not send anything to us by themselves. When you fill one in, your details are checked in your
+    own browser. When you choose to send, the form opens your own email app or WhatsApp with your details
+    already written in, and nothing reaches us until you press Send there. You can also copy your details and
+    send them yourself.
+  </p>
+  <p>
+    While you fill in a form, your browser keeps a copy of what you have typed (in "session storage"), so that
+    it is not lost if you leave the page and come back. This copy stays on your device, is never sent to us,
+    and is removed when you choose "Start a new request" or close the browser tab.
   </p>
 
   <h2>Why we use it</h2>
   <p>
     We use your details only to answer your enquiry or PDA request, to contact you about it and to keep a
-    record of it. Our lawful basis is your consent when you send a form, and our legitimate interest in
+    record of it. Our lawful basis is your consent when you send us a message, and our legitimate interest in
     responding to requests for our services.
   </p>
 
-  <h2>Where it is stored</h2>
+  <h2>Where it is kept</h2>
   <ul>
-    <li><strong>Email:</strong> form submissions are sent to our operations or administration inbox using Resend, an email delivery service.</li>
-    <li><strong>Database:</strong> a copy of each submission, and any attachment, is stored in Supabase as a backup record.</li>
-    <li><strong>Hosting:</strong> the website is hosted by Vercel.</li>
+    <li><strong>Email:</strong> messages you send arrive in our operations and administration inboxes.</li>
+    <li><strong>WhatsApp:</strong> if you send by WhatsApp, the message is handled by WhatsApp (Meta) under its own privacy policy and kept in our WhatsApp account.</li>
+    <li><strong>Hosting:</strong> the website is hosted by Vercel. It does not store the details you type into our forms.</li>
   </ul>
   <p>
     Some of these providers may store data outside Nigeria. Where they do, we rely on the safeguards required by
@@ -54,7 +64,7 @@ import { SITE } from '../data/site';
   </p>
 
   <h2>How long we keep it</h2>
-  <p>We keep form submissions for [retention period], then delete them, unless the law requires us to keep them longer.</p>
+  <p>We keep the messages you send us for [retention period], then delete them, unless the law requires us to keep them longer.</p>
 
   <h2>Your rights</h2>
   <p>Under the Nigeria Data Protection Act 2023 you have the right to:</p>
@@ -69,6 +79,6 @@ import { SITE } from '../data/site';
   <h2>Contact us</h2>
   <p>
     For any question about your data or to use your rights, email
-    <a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a> or write to us at {SITE.address.short}, Nigeria.
+    <Email mailbox={SITE.admin.mailbox} /> or write to us at {SITE.address.short}, Nigeria.
   </p>
 </LegalPage>

@@ -1,6 +1,7 @@
 ---
 // Site footer on .bg-rings (DESIGN.md §5, CONTENT.md "Footer").
 import Logo from './Logo.astro';
+import Email from './Email.astro';
 import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
 ---
 <footer id="site-footer" class="footer bg-rings on-dark">
@@ -34,8 +35,8 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
             <li>{SITE.address.street}, {SITE.address.area}</li>
             <li><a href={SITE.ops.tel}>{SITE.ops.phone}</a></li>
             <li><a href={SITE.admin.tel}>{SITE.admin.phone}</a></li>
-            <li><a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a></li>
-            <li><a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a></li>
+            <li><Email mailbox={SITE.ops.mailbox} /></li>
+            <li><Email mailbox={SITE.admin.mailbox} /></li>
           </ul>
         </address>
       </div>
@@ -81,17 +82,17 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
   }
   .footer__col ul { margin-top: 12px; }
   .footer__col li { font-size: var(--fs-small); line-height: 1.6; }
-  .footer__col a,
+  .footer__col :global(a),
   .footer__col li {
     display: flex;
     align-items: center;
     min-height: 33px;
   }
-  .footer__col a {
+  .footer__col :global(a) {
     color: var(--on-dark-soft);
     text-decoration: none;
   }
-  .footer__col a:hover { color: var(--on-dark); text-decoration: underline; }
+  .footer__col :global(a:hover) { color: var(--on-dark); text-decoration: underline; }
   address { font-style: normal; }
 
   .footer__bottom {
@@ -117,8 +118,8 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
     .footer__main { padding-block: 64px 40px; gap: 40px; }
     .footer__cols { grid-template-columns: 1fr 1fr; gap: 32px; }
     .footer__col:last-child { grid-column: 1 / -1; }
-    .footer__col a { overflow-wrap: anywhere; }
+    .footer__col :global(a) { overflow-wrap: anywhere; }
     .footer__col li,
-    .footer__col a { min-height: 44px; }
+    .footer__col :global(a) { min-height: 44px; }
   }
 </style>

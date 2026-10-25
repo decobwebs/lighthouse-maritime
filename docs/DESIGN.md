@@ -125,8 +125,12 @@ Photo with a dark left-to-right overlay, radius 20, padding up to 96, eyebrow + 
 - PDA form: four `<fieldset>`s with legends styled as "01 The vessel" (red number + h3), separated by 1px rules.
 - Purpose of call: toggle chips (radius pill, 1px border; selected = navy fill, white text, `aria-pressed`). Without JS they fall back to checkboxes.
 - Sidebar: "What happens next" three-step list (dashed connector) and a `.bg-rings` urgent card with phones and a WhatsApp button.
-- Success: a dedicated thank-you page with a green tick, "Request received · Ref LMA-PDA-XXXX", h2, lead and two buttons.
+- Email typo help: on leaving the email field, a muted line "Did you mean name@gmail.com?" with the fix as an underlined navy button (one tap applies it). Never blocks.
+- Check dialog (native `<dialog>`, radius 16, `--shadow-float`, dimmed navy backdrop): "Check your details" (Manrope 700, 26px), rows under a 2px navy rule (label in `--label`, value; email and phone in Manrope 700, 22px), buttons Edit (navy outline) and Looks right (red). Esc = Edit. On phones the buttons stack full width.
+- Send panel (replaces the form after "Looks right"): 2px navy top rule, h3-size "Send your request", green reference line, buttons Send by email (red), Send on WhatsApp (navy, hidden until the number is set), Copy details (navy outline), a live status line, and an "Edit details" text link.
+- Thank-you: green tick, "Your reference · LMA-PDA-…", h2 "One last step: press Send.", lead, buttons Copy details, Start a new request, Back to home.
 - Errors: red 2px border plus a message below the field in `--red-hover`; the summary is announced with `aria-live`.
+- No server: forms are sent from the visitor's email app (mailto:) or WhatsApp. Contact has no file upload; it says "Need to send documents? Attach them in your email app before sending."
 
 ### Mobile action bar (phones only, < 600px)
 Fixed to the bottom: Call 24/7 | WhatsApp | Request a PDA (red, wider). White background, top border and a soft shadow, plus safe-area padding. Add bottom padding to `<body>` so the bar never covers content.

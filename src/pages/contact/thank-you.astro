@@ -1,0 +1,27 @@
+---
+// After "Send by email" / "Send on WhatsApp" on /contact. Copy: CONTENT.md "Contact", thank-you.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SendThanks from '../../components/SendThanks.astro';
+import { SITE } from '../../data/site';
+---
+<BaseLayout
+  title="Almost done | Lighthouse Maritime Agency"
+  description="Press Send in your email app or WhatsApp to send your message."
+  noindex
+>
+  <PageHero
+    slot="hero"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Contact', href: '/contact' }, { label: 'Send your message' }]}
+    title="Talk to us,"
+    dim="day or night."
+  />
+  <SendThanks
+    storageKey="lma-enq-draft"
+    refPattern="^LMA-ENQ-[0-9]{8}-[A-Z0-9]{4}$"
+    lead={`Your email app or WhatsApp should have opened with your message. Please press Send there. If nothing opened, copy your details or call ${SITE.admin.phone}.`}
+    startHref="/contact"
+    startLabel="Start a new message"
+    mailbox={SITE.admin.mailbox}
+  />
+</BaseLayout>

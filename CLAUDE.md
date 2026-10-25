@@ -11,13 +11,14 @@ The design is **finished and approved**. Your job is to implement it faithfully,
 4. `docs/BUILD_PROMPTS.md`: the build is done in stages; do only the stage you are asked for.
 
 ## Stack (decided, do not change without asking)
-- **Astro** (latest stable) + **TypeScript** (strict). Static output by default; only the form API routes render on demand (`export const prerender = false`).
+- **Astro** + **TypeScript** (strict). **Fully static output: no server code, no API routes, no adapter.** (Astro 6.4.8, the newest that runs on this machine's Node 22.18; `@astrojs/sitemap` pinned to 3.7.3.)
 - **Plain CSS** with the variables in `src/styles/tokens.css`, plus scoped `<style>` in components. **No Tailwind, no UI kit, no CSS-in-JS.**
 - Fonts: **Manrope** (headings, numbers, 500–800) and **Inter** (body, 400–600), self-hosted with `@fontsource/manrope` and `@fontsource/inter` (no Google Fonts request at runtime).
 - Images: `astro:assets` `<Image>` / `<Picture>` from `src/assets/images/`, AVIF + WebP, explicit width/height, `loading="eager"` + `fetchpriority="high"` for the hero only.
-- Hosting: **Vercel** with `@astrojs/vercel`.
-- Forms: Astro API routes → **Resend** (email to the right inbox) + **Supabase** table as a backup log. Spam protection: **Cloudflare Turnstile** + a hidden honeypot field.
-- JavaScript: only where needed (mobile menu, hero tab switcher, PDA purpose chips, form enhancement). Everything else must work with JS disabled.
+- Hosting: **Vercel**, serving the static `dist/` folder (no adapter needed).
+- Forms: **no server.** Request a PDA and Contact are checked in the browser (`src/lib/pda-rules.ts`, `src/lib/contact-rules.ts`), confirmed in a "Check your details" dialog, then sent by the visitor from their own email app (`mailto:`) or WhatsApp, or copied (`src/lib/send.ts`, `src/scripts/send-flow.ts`). PDA → operations@ (cc admin@); Contact → admin@ (cc operations@). No Resend, Supabase or Turnstile.
+- Email addresses never appear whole in page HTML or scripts: use `<Email mailbox="…" />` in pages and `emailAddress()` in scripts (the one exception is the no-JS fallback link on Request a PDA).
+- JavaScript: only where needed (mobile menu, hero tab switcher, PDA purpose chips, the form check-and-send flow, email links). Everything else must work with JS disabled; without JS the forms show a plain email/phone fallback.
 
 ## Project structure
 ```
@@ -37,8 +38,10 @@ src/
     contact.astro
     request-a-pda.astro
     request-a-pda/thank-you.astro
+    contact/thank-you.astro
     privacy.astro  terms.astro  404.astro
-    api/pda.ts  api/contact.ts
+  lib/                  pda-rules.ts, contact-rules.ts, email-typos.ts, send.ts (pure, shared)
+  scripts/send-flow.ts  browser side of both forms
   styles/tokens.css  styles/global.css
 public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt
 ```
@@ -46,7 +49,7 @@ public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt
 ## Non-negotiable rules
 - **Never invent facts.** No client names, testimonials, vessel counts, years of experience, certifications or statistics beyond what `docs/CONTENT.md` contains. Placeholders are written in square brackets, e.g. `[X hours]`. Keep them visible and list them in `PLACEHOLDERS.md` at the project root; never fill them with guesses.
 - **Registration numbers are confidential.** Show "Certified" for NPA, NIMASA and NCDMB NOGIC JQS. Only the CAC RC number (7964161) is shown.
-- Domain: **lighthousemaritimeltd.com**. Emails: `operations@lighthousemaritimeltd.com` (24/7 desk, PDA requests) and `admin@lighthousemaritimeltd.com` (general, tenders). Phones: +234 806 118 9106 (operations, 24/7), +234 908 622 3063 (administration).
+- Domain: **lighthousemaritimeltd.com**. Emails (render with `<Email>`, never as plain text): `operations@lighthousemaritimeltd.com` (24/7 desk, PDA requests) and `admin@lighthousemaritimeltd.com` (general, tenders). Phones: +234 806 118 9106 (operations, 24/7), +234 908 622 3063 (administration).
 - Red (`--red`) is for the primary action only. One red button per view, plus the header button.
 - Sections divide with straight 1px lines (`--line`). No drop shadows except the one floating card on Home/About (`--shadow-float`).
 - Accessibility: WCAG 2.2 AA. Real `<button>`/`<a>`/`<label>`, visible focus (3px outline), alt text from `docs/CONTENT.md`, `prefers-reduced-motion` respected, 44px minimum touch targets.
@@ -55,7 +58,7 @@ public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt
 
 ## Commands
 - `npm run dev`: local dev server
-- `npm run build && npm run preview`: production check
+- `npm run build && npm run preview`: production check (static files in `dist/`)
 - `npm run check`: `astro check` (types); must pass before finishing any stage
 
 ## How to work

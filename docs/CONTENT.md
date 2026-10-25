@@ -117,12 +117,16 @@ Meta description: Send your vessel details and receive an itemised proforma disb
 - **01 The vessel:** Vessel name (required) · IMO number (required, 7 digits; hint: "We'll confirm vessel type and flag from the IMO.") · Vessel type (Container, Tanker, Bulk carrier, General cargo, Offshore support, Other) · Flag
 - **02 The port call:** Port (required; the 10 ports listed above + "Offshore terminal") · ETA (required) · ETD (if known) · Purpose of call, select all that apply: Discharge, Load, Bunkers, Crew change, Husbandry only, Repairs / survey
 - **03 Cargo:** Cargo type (e.g. containers, PMS, bulk wheat) · Quantity · Unit (Metric tonnes, TEU, Cubic metres, Barrels, Not applicable)
-- **04 Your details:** Full name (required) · Company (required) · Your role (Owner, Operator / manager, Charterer, Broker, Other) · Work email (required) · Phone or WhatsApp · Anything else we should know? (placeholder: "Special requirements, crew changes, spares to deliver…")
+- **04 Your details:** Full name (required) · Company (required) · Your role (Owner, Operator / manager, Charterer, Broker, Other) · Work email (optional) · Phone or WhatsApp (required) · Anything else we should know? (placeholder: "Special requirements, crew changes, spares to deliver…")
 - Consent line: By sending, you agree we may contact you about this request. We keep your details only to handle it.
 - Button: Send PDA request
 - Sidebar, WHAT HAPPENS NEXT: 1 Request reaches our desk (Instantly, day or night, with a reference number.) · 2 An officer is assigned (They contact you to confirm any missing details.) · 3 Your PDA within [X hours] (Itemised, with every port charge explained.)
 - Sidebar, URGENT?: Talk to the operations desk now. + phones + operations email + [Message on WhatsApp]
-- Thank-you page: REQUEST RECEIVED · REF LMA-PDA-{id} / Your request has reached our operations desk. / An officer will contact you shortly, and your PDA will follow within [X hours]. A copy of your request is on its way to your email. / [Back to home] [Send another request]
+- Check dialog: Check your details / Email · Phone · Vessel · Port · ETA / [Edit] [Looks right]
+- Send panel: Send your request / Reference LMA-PDA-{id} / [Send by email] [Send on WhatsApp] [Copy details] / Copied. Paste it into an email to operations@lighthousemaritimeltd.com / Edit details
+- Typo help: Did you mean {fixed address}?
+- No-JS fallback: To send this request, please email your vessel details to operations@lighthousemaritimeltd.com or call the operations desk on +234 806 118 9106.
+- Thank-you page: YOUR REFERENCE · LMA-PDA-{id} / One last step: press Send. / Your email app or WhatsApp should have opened with your request. Please press Send there. If nothing opened, copy your details or call +234 806 118 9106. / [Copy details] [Start a new request] [Back to home]
 
 ## Service pages `/services/[slug]`
 Template sections: Hero (breadcrumb, eyebrow, H1, lead, Request a PDA + Call the 24/7 desk) → What's included (h2 + 6 ticks) → Who it's for (3 numbered columns) → What we need from you (photo + numbered list) → Ports covered (chips; first chip filled) → Related services (3 photo cards) → CTA band.
@@ -270,10 +274,12 @@ Meta: Contact | Lighthouse Maritime Agency. 24/7 operations desk +234 806 118 91
 - Administration (Mon–Fri · Business hours): Tenders, vendor registration, accounts. +234 908 622 3063 · admin@lighthousemaritimeltd.com
 - Visit us (Head office): By appointment. 5 Bornu Crescent, Apapa, Lagos, Nigeria
 - General enquiry: H2 "Send us a message." Body: "For a port cost estimate, use the PDA form instead. It asks for exactly what we need and goes straight to the operations desk." Link: Go to the PDA form →
-- Form: Full name · Company · Work email · Phone · Enquiry type (General question, Tender or vendor registration, Partnership, Request company profile, Careers) · Message · Attachment (PDF/DOCX/JPG, ≤ 10 MB) · [Send message] → admin@
-- Map: Google Maps embed of 5 Bornu Crescent, Apapa (lazy-loaded behind a "Show map" click to avoid third-party cookies until consent) + [Get directions]
+- Form: Full name (required) · Company · Work email (optional) · Phone (optional) · Enquiry type (General question, Tender or vendor registration, Partnership, Request company profile, Careers) · Message (required) · "Need to send documents? Attach them in your email app before sending." · [Send message] → check dialog → Send your message (to admin@, cc operations@)
+- No-JS fallback: To send a message, please email admin@lighthousemaritimeltd.com or call +234 908 622 3063.
+- Thank-you page: as Request a PDA, with "…opened with your message…", call +234 908 622 3063, [Start a new message]
+- Map: Google Maps embed of 5 Bornu Crescent, Apapa (lazy-loaded behind a "Show map" click to avoid third-party cookies until consent), with "Loading the map shares data with Google." beside the button + [Get directions]
 
 ## Legal
-- Privacy policy: must cover the Nigeria Data Protection Act 2023. What form data is collected, why (to answer enquiries and PDA requests), where it is stored (email + Supabase), retention ([retention period]), the user's rights, and contact admin@. **Have it reviewed by a lawyer before launch.**
+- Privacy policy: must cover the Nigeria Data Protection Act 2023. What form data is collected, why (to answer enquiries and PDA requests), where it goes (the visitor sends it from their own email app or WhatsApp to our inboxes; the site itself stores nothing on a server), retention ([retention period]), the user's rights, and contact admin@. **Have it reviewed by a lawyer before launch.**
 - Terms of use: standard site terms; the port call guide is general information only.
 - 404: "This page has drifted off course." + [Back to home] [Request a PDA]

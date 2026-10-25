@@ -3,6 +3,7 @@
 // Tabs need JS; without it the tab row is hidden and the PDA form shows on its own.
 // The form is a plain GET to /request-a-pda, so vessel, port and eta arrive as query params.
 import Icon from './Icon.astro';
+import Email from './Email.astro';
 import { SITE, PORT_OPTIONS, PORT_REGIONS } from '../data/site';
 
 const tabs = [
@@ -80,12 +81,12 @@ const tabIcons: Record<(typeof tabs)[number]['id'], string> = {
         <div>
           <dt class="t-micro">Operations desk · 24/7</dt>
           <dd><a href={SITE.ops.tel}>{SITE.ops.phone}</a></dd>
-          <dd class="t-small"><a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a></dd>
+          <dd class="t-small"><Email mailbox={SITE.ops.mailbox} /></dd>
         </div>
         <div>
           <dt class="t-micro">Administration</dt>
           <dd><a href={SITE.admin.tel}>{SITE.admin.phone}</a></dd>
-          <dd class="t-small"><a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a></dd>
+          <dd class="t-small"><Email mailbox={SITE.admin.mailbox} /></dd>
         </div>
       </dl>
     </div>
@@ -287,9 +288,9 @@ const tabIcons: Record<(typeof tabs)[number]['id'], string> = {
     font-weight: 700;
     letter-spacing: -0.01em;
   }
-  .qp__desk a { color: var(--on-dark); text-decoration: none; }
-  .qp__desk dd.t-small a { color: var(--on-dark-soft); }
-  .qp__desk a:hover { text-decoration: underline; }
+  .qp__desk :global(a) { color: var(--on-dark); text-decoration: none; }
+  .qp__desk dd.t-small :global(a) { color: var(--on-dark-soft); }
+  .qp__desk :global(a:hover) { text-decoration: underline; }
 
   /* ---------- Side column ---------- */
   .qp__side {

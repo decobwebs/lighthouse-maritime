@@ -1,0 +1,72 @@
+---
+// "Check your details" dialog (native <dialog>: modal, Esc = Edit). Rows are filled by send-flow.ts.
+---
+<dialog class="check" data-check-dialog aria-labelledby="check-title">
+  <h2 class="check__title" id="check-title">Check your details</h2>
+  <dl class="check__rows" data-check-rows></dl>
+  <div class="check__actions">
+    <button type="button" class="check__btn check__btn--edit" data-check-edit>Edit</button>
+    <button type="button" class="check__btn check__btn--ok" data-check-ok>Looks right</button>
+  </div>
+</dialog>
+
+<style>
+  .check {
+    width: min(560px, calc(100% - 32px));
+    max-height: calc(100% - 32px);
+    padding: 32px;
+    border: 0;
+    border-radius: var(--r-card);
+    background: var(--surface);
+    color: var(--ink);
+    box-shadow: var(--shadow-float);
+  }
+  .check::backdrop { background: rgba(7, 26, 51, 0.6); }
+  .check__title {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .check__rows { margin-top: 20px; border-top: 2px solid var(--navy); }
+  .check__rows :global(.check__row) {
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    gap: 4px 16px;
+    align-items: baseline;
+    padding-block: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .check__rows :global(dt) { font-size: 14px; font-weight: 500; color: var(--label); }
+  .check__rows :global(dd) { font-size: 16px; overflow-wrap: anywhere; }
+  .check__rows :global(.check__row--big dd) {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .check__actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }
+  .check__btn {
+    min-height: 48px;
+    padding: 14px 24px;
+    border-radius: var(--r-input);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    transition: background-color 200ms, color 200ms;
+  }
+  .check__btn--edit { border: 1px solid var(--navy); background: var(--surface); color: var(--navy); }
+  .check__btn--edit:hover { background: var(--navy); color: var(--on-dark); }
+  .check__btn--ok { border: 0; background: var(--red); color: var(--on-dark); }
+  .check__btn--ok:hover { background: var(--red-hover); }
+
+  @media (max-width: 599px) {
+    .check { padding: 24px 20px; }
+    .check__rows :global(.check__row) { grid-template-columns: 1fr; }
+    .check__actions { flex-direction: column-reverse; }
+    .check__btn { width: 100%; }
+  }
+</style>

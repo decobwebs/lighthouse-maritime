@@ -36,7 +36,6 @@ const jsonLd = localBusiness
       logo: new URL('/logo-mark.svg', SITE.url).href,
       image: ogImage,
       telephone: SITE.ops.phone.replace(/\s/g, ''),
-      email: SITE.ops.email,
       address: {
         '@type': 'PostalAddress',
         streetAddress: SITE.address.street,
@@ -49,7 +48,6 @@ const jsonLd = localBusiness
           '@type': 'ContactPoint',
           contactType: 'operations',
           telephone: SITE.ops.phone.replace(/\s/g, ''),
-          email: SITE.ops.email,
           hoursAvailable: {
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
@@ -61,7 +59,6 @@ const jsonLd = localBusiness
           '@type': 'ContactPoint',
           contactType: 'customer service',
           telephone: SITE.admin.phone.replace(/\s/g, ''),
-          email: SITE.admin.email,
         },
       ],
     }
