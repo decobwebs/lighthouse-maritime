@@ -9,6 +9,7 @@ import Button from '../../components/Button.astro';
 import ServiceCard from '../../components/ServiceCard.astro';
 import CtaBand from '../../components/CtaBand.astro';
 import { SITE, PORT_REGIONS } from '../../data/site';
+import { photoWidths, PHOTO_QUALITY } from '../../data/images';
 
 export async function getStaticPaths() {
   const services = await getCollection('services');
@@ -97,11 +98,13 @@ const weNeed = s.weNeedHeading;
   <section class="section bg-white" aria-labelledby="need-title">
     <div class="container need">
       <div class="need__photo" data-wipe>
+        {/* sizes = drawn width: the cover crop is wider than the frame */}
         <Picture
           src={s.needImage}
           formats={['avif', 'webp']}
-          widths={[400, 640, 900, 1100]}
-          sizes="(max-width: 959px) 100vw, 560px"
+          widths={photoWidths(s.needImage)}
+          quality={PHOTO_QUALITY}
+          sizes="(max-width: 959px) 115vw, min(50vw, 715px)"
           alt={s.needAlt}
           class="need__img"
           style={`object-position: ${s.needPosition}`}
@@ -158,7 +161,6 @@ const weNeed = s.weNeedHeading;
               image={r.data.heroImage}
               alt={r.data.heroAlt}
               position={r.data.heroPosition}
-              sizes="(max-width: 959px) 100vw, 400px"
               class="related__card"
             />
           </li>

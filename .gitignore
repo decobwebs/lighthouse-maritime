@@ -20,3 +20,6 @@ Thumbs.db
 
 # original handoff zip (its contents are unpacked into the repo)
 lighthouse-maritime-handoff.zip
+
+# Full-resolution photo originals (temporary; deleted after import)
+photos-full-res/

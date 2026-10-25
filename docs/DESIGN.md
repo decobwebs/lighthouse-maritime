@@ -117,7 +117,7 @@ Four cells in one rounded block (radius 14, cells `--panel`, 1px gaps showing `r
 On phones the board is a 2×2 grid. It replaces the old stats bar on Home.
 
 ### Certified strip (white)
-Centred: "Certified by" eyebrow + three equal logo slots (NPA, NIMASA, NCDMB · NOGIC JQS). Logos are monochrome `--label` (#5E6E84) at an equal visual height of about 48px. No CAC/RC in the strip. A slot without a logo file shows the authority's name in Manrope 700, `--label`.
+Centred: the "Certified by" eyebrow on its own line, then 28px below it three equal logo slots (NPA, NIMASA, NCDMB · NOGIC JQS) in one centred row, each with its name underneath; on phones the slots wrap centred (3 across, or 2 + 1). Logos are monochrome `--label` (#5E6E84) at an equal visual height of about 48px. No CAC/RC in the strip. A slot without a logo file shows the authority's name in Manrope 700, `--label`.
 
 ### Service bento (Home)
 12-column grid, 20px gap. Port agency spans 7 columns × 2 rows (min-height 620); Husbandry and Clearance span 5 columns each (300); Supply, Logistics and the dark "Tell us what your vessel needs" card span 4 columns each (380). Below 960px everything spans 12.
@@ -211,6 +211,8 @@ Also allowed: button colour transitions (200ms), card image zoom and arrow nudge
 | about-tug.jpg (again) | Husbandry page "What we need" | A harbour tug under way | 48% 50% |
 | svc-husbandry.jpg (again) | Clearance page "What we need" | A ship's officer inspecting anchor chain on the forecastle | 60% 40% |
 | cta-night.jpg | Home CTA banner | A container ship alongside under quay cranes at night | 50% 40% (TODO(brand-photo): EVERGREEN branding) |
+
+Sources in `src/assets/images/` are the full-resolution originals (hero, tug and supply 2576px wide; the others 1920px). `src/data/images.ts` generates AVIF + WebP at 640, 960, 1280, 1920 and 2560px (never wider than the source) at quality 80. Each `sizes` attribute is the width the photo is **drawn** at, not its frame: `object-fit: cover` crops a wide photo into taller frames, so it is drawn wider than the frame (the Home tug's 4:5 frame draws the 16:9 photo about 2.2× the frame width). The Home hero and inner-page heroes use `100vw` so phones download a small version first (LCP).
 
 ## 9. SEO and meta
 Each page: a unique `<title>` ("Port agency in Nigeria | Lighthouse Maritime Agency"), a meta description (≤ 155 characters, in CONTENT.md), canonical URL, Open Graph image (`public/og-image.png`, logo card 1200×630), favicon.svg + 180px apple-touch-icon, `LocalBusiness` JSON-LD on Home and Contact (name, address, phones, email, url; no ratings), `sitemap.xml` via `@astrojs/sitemap`, and `robots.txt`.

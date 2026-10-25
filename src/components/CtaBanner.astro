@@ -2,6 +2,7 @@
 // Photo CTA banner (DESIGN.md §6): dark left-to-right overlay, copy left, buttons right.
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { photoWidths, PHOTO_QUALITY } from '../data/images';
 
 interface Props {
   eyebrow: string;
@@ -16,11 +17,13 @@ const { eyebrow, title, lead, image, alt, position = 'center' } = Astro.props;
 <section class="cta">
   <div class="container">
     <div class="cta__card on-dark" data-wipe>
+      {/* sizes = the width the photo is drawn at (object-fit: cover crops it wider than its frame) */}
       <Picture
         src={image}
         formats={['avif', 'webp']}
-        widths={[640, 960, 1280, 1600]}
-        sizes="(max-width: 1240px) 100vw, 1240px"
+        widths={photoWidths(image)}
+        quality={PHOTO_QUALITY}
+        sizes="(max-width: 959px) 160vw, min(100vw, 1160px)"
         alt={alt}
         class="cta__img"
         pictureAttributes={{ class: 'cta__picture' }}

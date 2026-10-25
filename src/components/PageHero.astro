@@ -3,6 +3,7 @@
 // (service pages, 04-service-page-port-agency). Without: plain content for the .bg-chart-dark masthead.
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { photoWidths, PHOTO_QUALITY } from '../data/images';
 
 interface Crumb {
   label: string;
@@ -29,7 +30,8 @@ const hasAside = Astro.slots.has('aside');
       <Picture
         src={image}
         formats={['avif', 'webp']}
-        widths={[640, 800, 1280, 1600, 1920]}
+        widths={photoWidths(image)}
+        quality={PHOTO_QUALITY}
         sizes="100vw"
         alt={alt}
         class="ph__img"

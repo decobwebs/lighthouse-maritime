@@ -17,6 +17,7 @@ interface Props {
 const { headingLevel = 3 } = Astro.props;
 const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
+<!-- Photo sizes are the widths the photos are drawn at (cover-cropped, so wider than their frames). -->
 <div class="bento">
   <!-- TODO(brand-photo): svc-port-agency.jpg shows MSC branding; the client may replace it. -->
   <ServiceCard
@@ -30,7 +31,7 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
     text="Documentation, berthing, pilotage and clearance for every vessel type, with a PDA before arrival and a reconciled FDA after sailing."
     image={portAgency}
     alt="A container vessel approaching port"
-    sizes="(max-width: 959px) 100vw, 700px"
+    sizes="(max-width: 959px) 150vw, min(65vw, 930px)"
   />
   <ServiceCard
     headingLevel={headingLevel}
@@ -42,7 +43,7 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
     image={husbandry}
     alt="A ship's officer inspecting anchor chain on the forecastle"
     position="60% 40%"
-    sizes="(max-width: 959px) 100vw, 500px"
+    sizes="(max-width: 959px) 92vw, min(36vw, 510px)"
   />
   <ServiceCard
     headingLevel={headingLevel}
@@ -53,11 +54,12 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
     text="NPA, NIMASA, Customs, Port Health and Immigration."
     image={clearance}
     alt="Calculator and pen on port cost documents"
-    sizes="(max-width: 959px) 100vw, 500px"
+    sizes="(max-width: 959px) 92vw, min(36vw, 510px)"
   />
   <ServiceCard
     headingLevel={headingLevel}
     class="bento__third"
+    sizes="(max-width: 959px) 92vw, min(47vw, 680px)"
     href="/services/ship-supply-and-procurement"
     code="S—04"
     title="Ship supply and procurement"
@@ -69,6 +71,7 @@ const Heading = `h${headingLevel}` as 'h2' | 'h3';
   <ServiceCard
     headingLevel={headingLevel}
     class="bento__third"
+    sizes="(max-width: 959px) 92vw, min(47vw, 680px)"
     href="/services/logistics-and-project-support"
     code="S—05"
     title="Logistics and project support"
