@@ -240,6 +240,7 @@ Meta: How a port call works in Nigeria | Lighthouse Maritime Agency. The eight s
 ## Port coverage `/ports` (not separately designed; build from Home section 04 + service-page patterns)
 - H1: Every Nigerian port, *one point of contact.* Lead: From our Apapa head office, one operations desk manages your call wherever the vessel berths.
 - Then the four port columns, then the offshore line, then the CTA band "Request a PDA for your port".
+- Offshore line: "Offshore terminals and FPSOs: vessels calling offshore are handled by the same Apapa operations desk, from pre-arrival filings to the final account."
 
 ## About `/about`
 Meta: About us | Lighthouse Maritime Agency. A maritime agency headquartered in Apapa, Lagos, certified by NPA, NIMASA and NCDMB NOGIC JQS.

@@ -23,6 +23,10 @@ import { SITE } from '../data/site';
   <section class="section" aria-label="Ports by region">
     <div class="container">
       <PortColumns />
+      <p class="t-body offshore">
+        <strong>Offshore terminals and FPSOs:</strong> vessels calling offshore are handled by the same Apapa
+        operations desk, from pre-arrival filings to the final account.
+      </p>
     </div>
   </section>
 
@@ -31,3 +35,18 @@ import { SITE } from '../data/site';
     <Button href={SITE.ops.tel} variant="secondary-dark">{SITE.ops.phone}</Button>
   </CtaBand>
 </BaseLayout>
+
+<style>
+  .offshore {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    max-width: 760px;
+    color: var(--muted);
+  }
+  .offshore strong { color: var(--ink); font-weight: 600; }
+
+  @media (max-width: 599px) {
+    .offshore { margin-top: 28px; }
+  }
+</style>

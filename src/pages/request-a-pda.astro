@@ -1,0 +1,629 @@
+---
+// Request a PDA: docs/design-reference/03-request-pda.html; copy from CONTENT.md "Request a PDA".
+// Without JS this is a plain form posting to /api/pda (Stage 6). With JS: chips, validation shared with
+// the server (src/lib/pda-rules.ts), query-string prefill, saved progress and a background submit.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import { SITE, whatsappHref } from '../data/site';
+import { VESSEL_TYPES, PURPOSES, UNITS, ROLES, PORTS } from '../lib/pda-rules';
+
+// Cloudflare's official always-pass test key until the real key is set in .env.
+const TURNSTILE_TEST_KEY = '1x00000000000000000000AA';
+const turnstileKey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || TURNSTILE_TEST_KEY;
+---
+<BaseLayout
+  title="Request a PDA | Lighthouse Maritime Agency"
+  description="Send your vessel details and receive an itemised proforma disbursement account for any Nigerian port within [X hours]."
+>
+  <script slot="head" is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+  <PageHero
+    slot="hero"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Request a PDA' }]}
+    title="Request a PDA"
+    dim="for your next Nigerian port call."
+    lead="A proforma disbursement account is our itemised estimate of every port cost before your vessel arrives. Send the details below and we'll return it within [X hours]."
+  />
+
+  <section class="pda">
+    <div class="container pda__inner">
+      <form id="pda-form" class="form" action="/api/pda" method="post" data-pda-form>
+        <div class="summary" id="pda-summary" role="alert" aria-live="assertive" tabindex="-1" hidden></div>
+
+        <!-- 01 The vessel -->
+        <fieldset class="group">
+          <legend class="group__legend"><span class="group__num">01</span><span class="group__title">The vessel</span></legend>
+          <div class="grid grid--240">
+            <div class="fld">
+              <label for="f-vessel">Vessel name</label>
+              <input id="f-vessel" name="vessel" type="text" placeholder="e.g. MV Atlantic Dawn" required autocomplete="off" />
+            </div>
+            <div class="fld">
+              <label for="f-imo">IMO number</label>
+              <input id="f-imo" name="imo" type="text" inputmode="numeric" placeholder="7 digits" required pattern="\s*(?:[Ii][Mm][Oo]\s*)?\d{7}\s*" autocomplete="off" aria-describedby="f-imo-hint" />
+              <span class="hint" id="f-imo-hint">We'll confirm vessel type and flag from the IMO.</span>
+            </div>
+            <div class="fld">
+              <label for="f-type">Vessel type</label>
+              <select id="f-type" name="vesselType">
+                {VESSEL_TYPES.map((t) => <option>{t}</option>)}
+              </select>
+            </div>
+            <div class="fld">
+              <label for="f-flag">Flag</label>
+              <input id="f-flag" name="flag" type="text" placeholder="e.g. Liberia" />
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 02 The port call -->
+        <fieldset class="group">
+          <legend class="group__legend"><span class="group__num">02</span><span class="group__title">The port call</span></legend>
+          <div class="grid grid--200">
+            <div class="fld">
+              <label for="f-port">Port</label>
+              <select id="f-port" name="port" required>
+                {PORTS.map((p) => <option value={p}>{p}</option>)}
+              </select>
+            </div>
+            <div class="fld">
+              <label for="f-eta">ETA</label>
+              <input id="f-eta" name="eta" type="date" required />
+            </div>
+            <div class="fld">
+              <label for="f-etd">ETD (if known)</label>
+              <input id="f-etd" name="etd" type="date" />
+            </div>
+          </div>
+
+          <div class="purpose" role="group" aria-labelledby="purpose-label">
+            <p class="purpose__label" id="purpose-label">Purpose of call <span class="hint">· select all that apply</span></p>
+            <div class="chips" data-chips>
+              {PURPOSES.map((p) => (
+                <label class="chip">
+                  <input type="checkbox" name="purpose" value={p} />
+                  <span>{p}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 03 Cargo -->
+        <fieldset class="group">
+          <legend class="group__legend"><span class="group__num">03</span><span class="group__title">Cargo</span></legend>
+          <div class="grid grid--200">
+            <div class="fld">
+              <label for="f-cargo">Cargo type</label>
+              <input id="f-cargo" name="cargoType" type="text" placeholder="e.g. containers, PMS, bulk wheat" />
+            </div>
+            <div class="fld">
+              <label for="f-qty">Quantity</label>
+              <input id="f-qty" name="quantity" type="text" inputmode="decimal" placeholder="e.g. 32,000" />
+            </div>
+            <div class="fld">
+              <label for="f-unit">Unit</label>
+              <select id="f-unit" name="unit">
+                {UNITS.map((u) => <option>{u}</option>)}
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- 04 Your details -->
+        <fieldset class="group">
+          <legend class="group__legend"><span class="group__num">04</span><span class="group__title">Your details</span></legend>
+          <div class="grid grid--240">
+            <div class="fld">
+              <label for="f-name">Full name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="fld">
+              <label for="f-company">Company</label>
+              <input id="f-company" name="company" type="text" autocomplete="organization" required />
+            </div>
+            <div class="fld">
+              <label for="f-role">Your role</label>
+              <select id="f-role" name="role">
+                {ROLES.map((r) => <option>{r}</option>)}
+              </select>
+            </div>
+            <div class="fld">
+              <label for="f-email">Work email</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="fld">
+              <label for="f-phone">Phone or WhatsApp</label>
+              <input id="f-phone" name="phone" type="tel" autocomplete="tel" placeholder="+" />
+            </div>
+          </div>
+          <div class="fld fld--notes">
+            <label for="f-notes">Anything else we should know?</label>
+            <textarea id="f-notes" name="notes" rows="4" placeholder="Special requirements, crew changes, spares to deliver…"></textarea>
+          </div>
+        </fieldset>
+
+        <!-- Spam protection: honeypot (people never see or fill it) + Cloudflare Turnstile -->
+        <div class="hp" aria-hidden="true">
+          <label for="f-website">Website</label>
+          <input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <div class="turnstile cf-turnstile" data-sitekey={turnstileKey} data-theme="light"></div>
+
+        <div class="form__foot">
+          <p class="t-small consent">By sending, you agree we may contact you about this request. We keep your details only to handle it.</p>
+          <button type="submit" class="submit" data-submit>Send PDA request</button>
+        </div>
+        <p class="send-error" id="pda-send-error" role="alert" tabindex="-1" hidden>
+          Sorry, we couldn't send your request just now. Please try again in a moment, or call the operations desk on
+          <a href={SITE.ops.tel}>{SITE.ops.phone}</a>. Your details are still here.
+        </p>
+      </form>
+
+      <aside class="side" aria-label="About your request">
+        <div class="next">
+          <h2 class="t-eyebrow next__label">What happens next</h2>
+          <ol role="list" class="next__list">
+            <li class="next__step">
+              <span class="next__dot next__dot--navy" aria-hidden="true">1</span>
+              <div><p class="next__title">Request reaches our desk</p><p class="next__text">Instantly, day or night, with a reference number.</p></div>
+            </li>
+            <li class="next__step">
+              <span class="next__dot" aria-hidden="true">2</span>
+              <div><p class="next__title">An officer is assigned</p><p class="next__text">They contact you to confirm any missing details.</p></div>
+            </li>
+            <li class="next__step">
+              <span class="next__dot next__dot--red" aria-hidden="true">3</span>
+              <div><p class="next__title">Your PDA within [X hours]</p><p class="next__text">Itemised, with every port charge explained.</p></div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="urgent bg-rings on-dark">
+          <h2 class="t-eyebrow urgent__label">Urgent?</h2>
+          <p class="t-h4 urgent__title">Talk to the operations desk now.</p>
+          <ul role="list" class="t-small urgent__lines">
+            <li><a href={SITE.ops.tel}>{SITE.ops.phone}</a></li>
+            <li><a href={SITE.admin.tel}>{SITE.admin.phone}</a></li>
+            <li><a href={`mailto:${SITE.ops.email}`}>operations@<wbr />lighthousemaritimeltd.com</a></li>
+          </ul>
+          <!-- TODO(whatsapp): links to /contact until the WhatsApp number is supplied. -->
+          <a href={whatsappHref()} class="urgent__wa">Message on WhatsApp</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import {
+    isSevenDigits,
+    lagosToday,
+    validatePda,
+    type PdaField,
+  } from '../lib/pda-rules';
+
+  const STORAGE_KEY = 'lma-pda-draft';
+  const form = document.querySelector<HTMLFormElement>('[data-pda-form]');
+
+  if (form) {
+    const summary = document.getElementById('pda-summary') as HTMLElement;
+    const sendError = document.getElementById('pda-send-error') as HTMLElement;
+    const submitBtn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement | null;
+    let attempted = false;
+
+    // JS takes over validation so messages match the server's exactly.
+    form.noValidate = true;
+
+    // ETA and ETD can't be before today in Lagos.
+    const today = lagosToday();
+    (field('eta') as HTMLInputElement).min = today;
+    (field('etd') as HTMLInputElement).min = today;
+
+    /* ---------- Purpose chips: checkboxes become aria-pressed toggle buttons ---------- */
+    const chips = form.querySelector<HTMLElement>('[data-chips]');
+    const chipButtons: { box: HTMLInputElement; btn: HTMLButtonElement }[] = [];
+    chips?.querySelectorAll<HTMLLabelElement>('label.chip').forEach((label) => {
+      const box = label.querySelector('input') as HTMLInputElement;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'chip chip--btn';
+      btn.textContent = box.value;
+      btn.setAttribute('aria-pressed', String(box.checked));
+      btn.addEventListener('click', () => {
+        box.checked = !box.checked;
+        btn.setAttribute('aria-pressed', String(box.checked));
+        saveDraft();
+      });
+      // Keep the real checkbox for submission, out of sight and out of the tab order.
+      box.tabIndex = -1;
+      label.classList.add('chip--source');
+      label.setAttribute('aria-hidden', 'true');
+      label.after(btn);
+      chipButtons.push({ box, btn });
+    });
+    const syncChips = () => chipButtons.forEach(({ box, btn }) => btn.setAttribute('aria-pressed', String(box.checked)));
+
+    /* ---------- Saved progress (sessionStorage) ---------- */
+    const SKIP = new Set(['website', 'cf-turnstile-response']);
+    function saveDraft() {
+      try {
+        const data: Record<string, string | string[]> = {};
+        new FormData(form!).forEach((value, key) => {
+          if (SKIP.has(key) || typeof value !== 'string') return;
+          if (key === 'purpose') ((data.purpose ??= []) as string[]).push(value);
+          else data[key] = value;
+        });
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch {
+        /* storage unavailable (private mode): the form still works, it just won't remember */
+      }
+    }
+    function restoreDraft() {
+      let data: Record<string, string | string[]> | null = null;
+      try {
+        data = JSON.parse(sessionStorage.getItem(STORAGE_KEY) ?? 'null');
+      } catch {
+        data = null;
+      }
+      if (!data) return;
+      for (const [key, value] of Object.entries(data)) {
+        if (key === 'purpose' && Array.isArray(value)) {
+          form!.querySelectorAll<HTMLInputElement>('input[name="purpose"]').forEach((box) => {
+            box.checked = value.includes(box.value);
+          });
+        } else if (typeof value === 'string') {
+          const el = field(key);
+          if (el && 'value' in el) el.value = value;
+        }
+      }
+    }
+    function clearDraft() {
+      try {
+        sessionStorage.removeItem(STORAGE_KEY);
+      } catch {
+        /* ignore */
+      }
+    }
+
+    /* ---------- Prefill from the Home quick panel (?vessel=&port=&eta=) ---------- */
+    function prefillFromQuery() {
+      const params = new URLSearchParams(window.location.search);
+      const vessel = params.get('vessel')?.trim();
+      if (vessel) {
+        // A bare 7-digit value is an IMO number, not a vessel name.
+        if (isSevenDigits(vessel)) (field('imo') as HTMLInputElement).value = vessel;
+        else (field('vessel') as HTMLInputElement).value = vessel;
+      }
+      const port = params.get('port');
+      const portSelect = field('port') as HTMLSelectElement;
+      if (port && [...portSelect.options].some((o) => o.value === port)) portSelect.value = port;
+      const eta = params.get('eta');
+      if (eta && /^\d{4}-\d{2}-\d{2}$/.test(eta)) (field('eta') as HTMLInputElement).value = eta;
+    }
+
+    restoreDraft();
+    prefillFromQuery(); // the quick panel's values win over an older saved draft
+    syncChips();
+    form.addEventListener('input', saveDraft);
+    form.addEventListener('change', saveDraft);
+
+    /* ---------- Validation display ---------- */
+    const FIELD_LABEL: Record<PdaField, string> = {
+      vessel: 'Vessel name', imo: 'IMO number', port: 'Port', eta: 'ETA',
+      name: 'Full name', company: 'Company', email: 'Work email',
+    };
+
+    function values(): Record<string, string> {
+      const out: Record<string, string> = {};
+      new FormData(form!).forEach((v, k) => {
+        if (typeof v === 'string' && k !== 'purpose') out[k] = v;
+      });
+      return out;
+    }
+
+    function setFieldError(name: PdaField, message?: string) {
+      const input = field(name);
+      if (!input) return;
+      const wrap = input.closest('.fld') as HTMLElement;
+      const errId = `${input.id}-error`;
+      let err = document.getElementById(errId);
+      const described = (input.getAttribute('aria-describedby') ?? '').split(' ').filter((id) => id && id !== errId);
+      if (message) {
+        if (!err) {
+          err = document.createElement('p');
+          err.id = errId;
+          err.className = 'fld__error';
+          wrap.append(err);
+        }
+        err.textContent = message;
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', [...described, errId].join(' '));
+        wrap.classList.add('fld--error');
+      } else {
+        err?.remove();
+        input.removeAttribute('aria-invalid');
+        if (described.length) input.setAttribute('aria-describedby', described.join(' '));
+        else input.removeAttribute('aria-describedby');
+        wrap.classList.remove('fld--error');
+      }
+    }
+
+    function showErrors(errors: Partial<Record<PdaField, string>>) {
+      (Object.keys(FIELD_LABEL) as PdaField[]).forEach((name) => setFieldError(name, errors[name]));
+      const entries = Object.entries(errors) as [PdaField, string][];
+      if (!entries.length) {
+        summary.hidden = true;
+        summary.replaceChildren();
+        return;
+      }
+      const heading = document.createElement('p');
+      heading.className = 'summary__title';
+      heading.textContent =
+        entries.length === 1 ? 'Please fix 1 problem before sending:' : `Please fix ${entries.length} problems before sending:`;
+      const list = document.createElement('ul');
+      for (const [name, message] of entries) {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${field(name)?.id}`;
+        a.textContent = `${FIELD_LABEL[name]}: ${message}`;
+        a.addEventListener('click', (event) => {
+          event.preventDefault();
+          field(name)?.focus();
+        });
+        li.append(a);
+        list.append(li);
+      }
+      summary.replaceChildren(heading, list);
+      summary.hidden = false;
+    }
+
+    // After the first attempt, re-check as the visitor fixes things.
+    const recheck = () => {
+      if (attempted) showErrors(validatePda(values()));
+    };
+    form.addEventListener('input', recheck);
+    form.addEventListener('change', recheck);
+
+    /* ---------- Submit ---------- */
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      attempted = true;
+      sendError.hidden = true;
+
+      const errors = validatePda(values());
+      showErrors(errors);
+      if (Object.keys(errors).length) {
+        summary.focus();
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { Accept: 'application/json' },
+        });
+        const result = response.ok ? await response.json().catch(() => null) : null;
+        if (!result?.ref) throw new Error(`PDA request failed (${response.status})`);
+        clearDraft();
+        window.location.assign(`/request-a-pda/thank-you?ref=${encodeURIComponent(result.ref)}`);
+      } catch {
+        sendError.hidden = false;
+        sendError.focus();
+        // A fresh Turnstile token is needed for the next attempt.
+        (window as unknown as { turnstile?: { reset: () => void } }).turnstile?.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send PDA request';
+      }
+    });
+  }
+</script>
+
+<style>
+  .pda__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 56px 72px;
+    padding-block: 72px 120px;
+  }
+
+  /* ---------- Form ---------- */
+  .form { flex: 999 1 620px; min-width: 0; }
+
+  .summary {
+    margin-bottom: 32px;
+    padding: 20px 24px;
+    border: 2px solid var(--red);
+    border-radius: var(--r-input);
+    background: var(--red-tint);
+  }
+  .summary:focus { outline: 3px solid var(--navy); outline-offset: 3px; }
+  .summary :global(.summary__title) { font-weight: 600; color: var(--ink); }
+  .summary :global(ul) { margin-top: 8px; padding-left: 1.2em; }
+  .summary :global(li) { margin-top: 4px; font-size: var(--fs-small); }
+  .summary :global(a) { color: var(--red-hover); }
+
+  .group { padding-block: 44px; border-bottom: 1px solid var(--line); }
+  .group:first-of-type { padding-top: 0; }
+  .group__legend { display: flex; align-items: baseline; gap: 14px; padding: 0; }
+  .group__num { font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--red); }
+  .group__title {
+    font-family: var(--font-display);
+    font-size: min(var(--fs-h3), 26px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .grid { display: grid; gap: 20px 24px; margin-top: 28px; }
+  .grid--240 { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .grid--200 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+  .fld { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .fld label { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .fld input,
+  .fld select,
+  .fld textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 14px 16px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-input);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+  }
+  .fld input::placeholder,
+  .fld textarea::placeholder { color: var(--label); opacity: 1; }
+  .fld input:focus-visible,
+  .fld select:focus-visible,
+  .fld textarea:focus-visible {
+    outline: 3px solid rgba(11, 42, 82, 0.18);
+    outline-offset: 0;
+    border-color: var(--navy);
+  }
+  .fld--notes { margin-top: 20px; }
+  .hint { font-size: 13px; font-weight: 400; color: var(--label); }
+
+  .fld:global(.fld--error) input,
+  .fld:global(.fld--error) select { border: 2px solid var(--red); padding: 13px 15px; }
+  .fld :global(.fld__error) { font-size: 13.5px; font-weight: 500; line-height: 1.45; color: var(--red-hover); }
+
+  /* Purpose of call */
+  .purpose { margin-top: 28px; }
+  .purpose__label { margin-bottom: 12px; font-size: 14px; font-weight: 500; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip,
+  .chips :global(.chip--btn) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r-pill);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.2;
+    cursor: pointer;
+    transition: background-color 200ms, color 200ms, border-color 200ms;
+  }
+  .chip input { width: 18px; height: 18px; accent-color: var(--navy); }
+  .chips :global(.chip--btn:hover) { border-color: var(--navy); }
+  .chips :global(.chip--btn[aria-pressed='true']) { background: var(--navy); border-color: var(--navy); color: var(--on-dark); }
+  .chips :global(.chip--source) { display: none; }
+
+  /* Honeypot: off-screen, never shown to people */
+  .hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+  .turnstile { margin-top: 32px; min-height: 65px; }
+
+  .form__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding-top: 24px;
+  }
+  .consent { max-width: 420px; color: var(--muted); }
+  .submit {
+    min-height: 56px;
+    padding: 18px 34px;
+    border: 0;
+    border-radius: var(--r-input);
+    background: var(--red);
+    color: var(--on-dark);
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1;
+    transition: background-color 200ms;
+  }
+  .submit:hover { background: var(--red-hover); }
+  .submit:disabled { opacity: 0.7; cursor: progress; }
+
+  .send-error {
+    margin-top: 20px;
+    padding: 16px 20px;
+    border: 1px solid var(--red);
+    border-left-width: 4px;
+    border-radius: var(--r-input);
+    background: var(--red-tint);
+    font-size: var(--fs-small);
+    line-height: 1.6;
+  }
+  .send-error a { color: var(--red-hover); font-weight: 600; }
+
+  /* ---------- Sidebar ---------- */
+  .side { flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
+
+  .next { padding: 32px; border: 1px solid var(--line); border-radius: var(--r-card); }
+  .next__label { color: var(--red); }
+  .next__list { margin-top: 24px; }
+  .next__step { position: relative; display: grid; grid-template-columns: 36px 1fr; gap: 14px; padding-bottom: 22px; }
+  .next__step:last-child { padding-bottom: 0; }
+  .next__step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 17px;
+    top: 36px;
+    bottom: 0;
+    border-left: 1px dashed var(--line-strong);
+  }
+  .next__dot {
+    width: 36px;
+    height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 50%;
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+  }
+  .next__dot--navy { background: var(--navy); border-color: var(--navy); color: var(--on-dark); }
+  .next__dot--red { background: var(--red); border-color: var(--red); color: var(--on-dark); }
+  .next__title { font-family: var(--font-display); font-size: 16.5px; font-weight: 600; line-height: 1.35; }
+  .next__text { margin-top: 4px; font-size: 14.5px; line-height: 1.6; color: var(--muted); }
+
+  .urgent { padding: 32px; border-radius: var(--r-card); }
+  .urgent__label { color: var(--red-soft); }
+  .urgent__title { margin-top: 12px; }
+  .urgent__lines { margin-top: 8px; color: var(--on-dark-soft); }
+  .urgent__lines a { display: flex; align-items: center; min-height: 44px; color: var(--on-dark-soft); text-decoration: none; }
+  .urgent__lines a:hover { color: var(--on-dark); text-decoration: underline; }
+  .urgent__wa {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 20px;
+    padding: 13px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--r-btn);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--on-dark);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background-color 200ms;
+  }
+  .urgent__wa:hover { background: rgba(255, 255, 255, 0.18); color: var(--on-dark); }
+
+  @media (max-width: 599px) {
+    .pda__inner { padding-block: 40px 64px; gap: 40px; }
+    .group { padding-block: 32px; }
+    .grid { margin-top: 20px; gap: 16px; }
+    .form__foot { flex-direction: column; align-items: stretch; }
+    .submit { width: 100%; }
+    .next,
+    .urgent { padding: 24px; }
+  }
+</style>

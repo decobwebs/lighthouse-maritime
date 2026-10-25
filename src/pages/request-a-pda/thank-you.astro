@@ -1,0 +1,85 @@
+---
+// PDA thank-you page (CONTENT.md "Request a PDA", thank-you). The reference comes from ?ref=
+// and is shown only if it matches our format.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Button from '../../components/Button.astro';
+---
+<BaseLayout
+  title="Request received | Lighthouse Maritime Agency"
+  description="Your PDA request has reached our operations desk."
+  noindex
+>
+  <PageHero
+    slot="hero"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Request a PDA', href: '/request-a-pda' }, { label: 'Request received' }]}
+    title="Request a PDA"
+    dim="for your next Nigerian port call."
+  />
+
+  <section class="done" aria-labelledby="done-title">
+    <div class="container done__inner">
+      <span class="done__tick" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12l5 5 9-10" /></svg>
+      </span>
+      <p class="t-eyebrow done__ref">Request received<span data-ref-wrap hidden> · Ref <span data-ref></span></span></p>
+      <h2 class="done__title" id="done-title">Your request has reached our operations desk.</h2>
+      <p class="t-lead done__lead">
+        An officer will contact you shortly, and your PDA will follow within [X hours]. A copy of your request is on its
+        way to your email.
+      </p>
+      <div class="done__actions">
+        <Button href="/" variant="dark">Back to home</Button>
+        <Button href="/request-a-pda" variant="secondary-light">Send another request</Button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const ref = new URLSearchParams(window.location.search).get('ref') ?? '';
+  // Only show references in our own format (LMA-PDA-YYYYMMDD-XXXX); never echo arbitrary text.
+  if (/^LMA-PDA-[A-Z0-9-]{4,32}$/.test(ref)) {
+    const slot = document.querySelector<HTMLElement>('[data-ref]');
+    const wrap = document.querySelector<HTMLElement>('[data-ref-wrap]');
+    if (slot && wrap) {
+      slot.textContent = ref;
+      wrap.hidden = false;
+    }
+  }
+</script>
+
+<style>
+  .done__inner {
+    max-width: calc(760px + var(--gutter) * 2);
+    padding-block: 96px 140px;
+    text-align: center;
+  }
+  .done__tick {
+    width: 72px;
+    height: 72px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--ok-bg);
+    color: var(--ok);
+  }
+  .done__ref { margin-top: 28px; color: var(--ok); }
+  .done__title {
+    margin-top: 16px;
+    font-family: var(--font-display);
+    font-size: clamp(32px, 3.4vw, 44px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .done__lead { margin-top: 20px; color: var(--muted); }
+  .done__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; margin-top: 40px; }
+
+  @media (max-width: 599px) {
+    .done__inner { padding-block: 56px 72px; }
+    .done__actions { flex-direction: column; gap: 10px; }
+    .done__actions :global(.btn) { width: 100%; border-radius: var(--r-input); }
+  }
+</style>
