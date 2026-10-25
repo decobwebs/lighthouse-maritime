@@ -1,6 +1,5 @@
 ---
-# Copy: docs/CONTENT.md "Husbandry and crew changes". Section headings, item descriptions and
-# meta are not supplied yet (see PLACEHOLDERS.md), so the template's plain defaults are used.
+# Copy: docs/CONTENT.md "Husbandry and crew changes".
 title: Husbandry and crew changes
 slug: husbandry-and-crew-changes
 order: 2
@@ -13,19 +12,40 @@ card: Sign-on, sign-off, visas, cash to master, medical.
 heroImage: ../../assets/images/svc-husbandry.jpg
 heroAlt: A ship's officer inspecting anchor chain on the forecastle
 heroPosition: 60% 40%
-needImage: ../../assets/images/svc-clearance.jpg
-needAlt: Calculator and pen on port cost documents
+needImage: ../../assets/images/about-tug.jpg
+needAlt: A harbour tug under way
+needPosition: 48% 50%
+includedHeading:
+  title: Your crew and vessel,
+  dim: looked after in port.
+  body: Husbandry is arranged by the same officer who manages your port call, so nothing falls between two contacts.
 included:
   - title: Crew sign-on and sign-off
-  - title: Visas and immigration formalities
-  - title: Hotels and local transport
+    text: Joining and leaving crew handled with Immigration and the vessel.
+  - title: Visas and immigration
+    text: Arrival formalities and documentation for joining crew.
+  - title: Hotels and transport
+    text: Accommodation and transfers between airport, hotel and vessel.
   - title: Cash to master
+    text: "Cash delivered on board against the owner's instruction."
   - title: Medical attendance
-  - title: Spares, mail and parcel delivery
+    text: Doctor visits, clinic appointments and hospital transfers for crew.
+  - title: Spares, mail and parcels
+    text: Items received, cleared and delivered on board.
+whoForHeading:
+  title: Built for the people
+  dim: who look after crews.
 whoFor:
   - title: Shipowners and managers
+    text: Crew changes and husbandry alongside the port call.
   - title: Crew managers
+    text: Joining and leaving crew moved smoothly through the port.
   - title: Offshore operators
+    text: Support for crews on offshore support vessels.
+weNeedHeading:
+  title: What we need
+  dim: from you.
+  body: Send these as early as possible so travel and clearance can be arranged before the vessel arrives.
 weNeed:
   - Crew list with passport details
   - Joining and leaving crew names and dates
@@ -36,6 +56,6 @@ related:
   - clearance-and-coordination
   - ship-supply-and-procurement
 meta:
-  title: Husbandry and crew changes | Lighthouse Maritime Agency
-  description: Everything your crew and vessel need in port, arranged by the same officer who manages your call.
+  title: Husbandry and crew changes in Nigeria | Lighthouse Maritime Agency
+  description: Crew changes, visas, cash to master, medical attendance and spares delivery for vessels at every Nigerian port, arranged by one accountable officer.
 ---

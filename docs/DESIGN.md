@@ -143,9 +143,11 @@ Fixed to the bottom: Call 24/7 | WhatsApp | Request a PDA (red, wider). White ba
 | about-tug.jpg | Home About, phone About | A harbour tug under way | 48% 50% |
 | svc-port-agency.jpg | Port agency card and service hero | A container vessel approaching port | center (TODO(brand-photo): MSC branding) |
 | svc-husbandry.jpg | Husbandry card | A ship's officer inspecting anchor chain on the forecastle | 60% 40% |
-| svc-clearance.jpg | Clearance card, "What we need" | Calculator and pen on port cost documents | center |
+| svc-clearance.jpg | Clearance card and hero; "What we need" on Port agency, Supply and Logistics | Calculator and pen on port cost documents | center |
 | svc-supply.jpg | Supply card, About hero | A product tanker at sea at dawn | 55% 50% |
 | svc-logistics.jpg | Logistics card | Container terminal cranes lit at night | 50% 45% |
+| about-tug.jpg (again) | Husbandry page "What we need" | A harbour tug under way | 48% 50% |
+| svc-husbandry.jpg (again) | Clearance page "What we need" | A ship's officer inspecting anchor chain on the forecastle | 60% 40% |
 | cta-night.jpg | Home CTA banner | A container ship alongside under quay cranes at night | 50% 40% (TODO(brand-photo): EVERGREEN branding) |
 
 ## 9. SEO and meta

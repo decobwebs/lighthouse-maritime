@@ -4,14 +4,13 @@ import { z } from 'astro/zod';
 
 const item = z.object({
   title: z.string(),
-  // Only Port agency has supplied descriptions; the other services list titles only.
-  text: z.string().optional(),
+  text: z.string(),
 });
 
-/** Optional section heading: bold clause + lighter clause, plus intro paragraph. */
+/** Section heading: bold clause + lighter clause, plus optional intro paragraph. */
 const heading = z.object({
   title: z.string(),
-  dim: z.string().optional(),
+  dim: z.string(),
   body: z.string().optional(),
 });
 
@@ -35,12 +34,13 @@ const services = defineCollection({
       /** Photo beside "What we need from you". */
       needImage: image(),
       needAlt: z.string(),
+      needPosition: z.string().default('center'),
       included: z.array(item).length(6),
-      includedHeading: heading.optional(),
+      includedHeading: heading,
       whoFor: z.array(item).length(3),
-      whoForHeading: heading.optional(),
+      whoForHeading: heading,
       weNeed: z.array(z.string()).min(1),
-      weNeedHeading: heading.optional(),
+      weNeedHeading: heading,
       related: z.array(z.string()).length(3),
       meta: z.object({
         title: z.string(),

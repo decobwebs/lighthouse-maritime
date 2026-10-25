@@ -150,6 +150,16 @@ Template sections: Hero (breadcrumb, eyebrow, H1, lead, Request a PDA + Call the
 - Who: Shipowners and managers · Crew managers · Offshore operators
 - We need: Crew list with passport details · Joining and leaving crew names and dates · Flight details · Items to deliver and their location
 - Photo: svc-husbandry.jpg
+- Meta: Husbandry and crew changes in Nigeria | Lighthouse Maritime Agency. Crew changes, visas, cash to master, medical attendance and spares delivery for vessels at every Nigerian port, arranged by one accountable officer.
+- What's included: H2 "Your crew and vessel, *looked after in port.*" Intro: "Husbandry is arranged by the same officer who manages your port call, so nothing falls between two contacts."
+  - Crew sign-on and sign-off: Joining and leaving crew handled with Immigration and the vessel.
+  - Visas and immigration: Arrival formalities and documentation for joining crew.
+  - Hotels and transport: Accommodation and transfers between airport, hotel and vessel.
+  - Cash to master: Cash delivered on board against the owner's instruction.
+  - Medical attendance: Doctor visits, clinic appointments and hospital transfers for crew.
+  - Spares, mail and parcels: Items received, cleared and delivered on board.
+- Who it's for: H2 "Built for the people *who look after crews.*" 01 Shipowners and managers: Crew changes and husbandry alongside the port call. · 02 Crew managers: Joining and leaving crew moved smoothly through the port. · 03 Offshore operators: Support for crews on offshore support vessels.
+- What we need: H2 "What we need *from you.*" Intro: "Send these as early as possible so travel and clearance can be arranged before the vessel arrives."
 
 ### Clearance and coordination `/services/clearance-and-coordination`
 - H1: Clearance and coordination, *without delays.* Lead: We deal with every authority your vessel meets in port, so it can start work as soon as it berths.
@@ -157,6 +167,16 @@ Template sections: Hero (breadcrumb, eyebrow, H1, lead, Request a PDA + Call the
 - Who: Shipowners and operators · Charterers · Oil and gas operators
 - We need: Ship's certificates · Crew and nil lists · Cargo manifest · Last ports of call and ISPS certificate
 - Photo: svc-clearance.jpg
+- Meta: Vessel clearance in Nigerian ports | Lighthouse Maritime Agency. Coordination with NPA, NIMASA, Customs, Port Health, Immigration and other boarding agencies so your vessel starts work as soon as it berths.
+- What's included: H2 "Every authority, *coordinated for you.*" Intro: "We prepare the documents each agency needs and are present when they board, so clearance does not hold up operations."
+  - Nigerian Ports Authority: Ship Entry Notice, berthing and port charges.
+  - NIMASA: Maritime clearances on arrival and before sailing.
+  - Customs: Manifest submission, rotation number and boarding.
+  - Port Health and Immigration: Health clearance and crew immigration formalities.
+  - NDLEA, NAQS and DSS: Boarding by the other agencies, with the required lists ready.
+  - Sailing clearance: Final clearances and settled charges before departure.
+- Who it's for: H2 "Built for the people *who need vessels working fast.*" 01 Shipowners and operators: Clearance managed as part of the port call. · 02 Charterers: Faster clearance that protects laytime. · 03 Oil and gas operators: Clearance for tankers and offshore vessels at terminals.
+- What we need: H2 "What we need *from you.*" Intro: "Have these ready before arrival and clearance can start the moment the vessel is alongside."
 
 ### Ship supply and procurement `/services/ship-supply-and-procurement`
 - H1: Ship supply and procurement, *alongside or offshore.* Lead: Provisions, stores and technical supplies sourced, cleared and delivered to your vessel.
@@ -164,6 +184,16 @@ Template sections: Hero (breadcrumb, eyebrow, H1, lead, Request a PDA + Call the
 - Who: Shipowners and managers · Offshore operators · Project teams
 - We need: Requisition list with specifications · Delivery port or position · Required date · Any approved suppliers
 - Photo: svc-supply.jpg
+- Meta: Ship supply and procurement in Nigeria | Lighthouse Maritime Agency. Provisions, deck and engine stores, spares sourcing and customs clearance, delivered to your vessel alongside or offshore at Nigerian ports.
+- What's included: H2 "What your vessel needs, *delivered where it is.*" Intro: "We source, clear and deliver supplies to your schedule, alongside or offshore."
+  - Provisions: Fresh and dry provisions for the crew.
+  - Deck and engine stores: Consumables and stores for daily operation.
+  - Spare parts sourcing: Parts found locally or received from abroad.
+  - Spares clearance: Customs clearance of ship's spares in transit.
+  - Delivery alongside or offshore: By road to the quay or by boat to the vessel.
+  - Project supply: Materials and equipment for oil and gas and marine projects.
+- Who it's for: H2 "Built for the people *who keep vessels supplied.*" 01 Shipowners and managers: Supplies delivered during the port call. · 02 Offshore operators: Regular supply runs to vessels and installations. · 03 Project teams: Procurement for marine and oil and gas projects.
+- What we need: H2 "What we need *from you.*" Intro: "A clear requisition lets us source the right items first time."
 
 ### Logistics and project support `/services/logistics-and-project-support`
 - H1: Logistics and project support, *by road and sea.* Lead: Clearing, forwarding and transport for cargo and equipment moving through Nigerian ports.
@@ -171,6 +201,22 @@ Template sections: Hero (breadcrumb, eyebrow, H1, lead, Request a PDA + Call the
 - Who: Cargo owners · Oil and gas operators · Marine contractors
 - We need: Cargo description and dimensions · Origin and destination · Required dates · Shipping documents
 - Photo: svc-logistics.jpg
+- Meta: Maritime logistics and project support in Nigeria | Lighthouse Maritime Agency. Clearing and forwarding, haulage by road and sea, and supply-chain support for cargo and project equipment moving through Nigerian ports.
+- What's included: H2 "Cargo moved *from port to destination.*" Intro: "We coordinate the documents, transport and handling that move cargo and equipment through Nigerian ports."
+  - Clearing and forwarding: Import and export documentation and customs clearance.
+  - Road haulage: Transport from port to site or warehouse.
+  - Coastal and sea transport: Movement of cargo along the Nigerian coast.
+  - Warehousing coordination: Short-term storage arranged near the port.
+  - Project cargo planning: Heavy and out-of-gauge items planned end to end.
+  - Marine project support: Supply-chain support for marine and offshore projects.
+- Who it's for: H2 "Built for the people *who move cargo.*" 01 Cargo owners: Cargo cleared and delivered to its destination. · 02 Oil and gas operators: Equipment moved to terminals and offshore bases. · 03 Marine contractors: Logistics for marine construction projects.
+- What we need: H2 "What we need *from you.*" Intro: "These details let us plan the route, documents and transport."
+
+### Service page decisions (approved)
+- "What we need" photo: Port agency = svc-clearance.jpg · Husbandry = about-tug.jpg · Clearance = svc-husbandry.jpg · Supply = svc-clearance.jpg · Logistics = svc-clearance.jpg
+- Related services: Port agency + two other services on each of the four other pages.
+- /services hero reuses the Home "02 — Services" heading and text.
+- The full header is used on every page (not the mock-ups' simplified inner-page header).
 
 ## Calling at Nigerian ports `/port-call-guide`
 Meta: How a port call works in Nigeria | Lighthouse Maritime Agency. The eight stages of a Nigerian port call: what happens, which documents you need and what your agent reports at each step.
