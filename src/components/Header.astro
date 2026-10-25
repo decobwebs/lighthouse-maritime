@@ -1,0 +1,337 @@
+---
+// Site header (DESIGN.md §6 Header).
+// overlay: transparent, absolutely positioned over a photo hero.
+// solid:   sits inside the page's .bg-rings masthead (see BaseLayout).
+import Logo from './Logo.astro';
+import Button from './Button.astro';
+import Icon from './Icon.astro';
+import { SITE, NAV } from '../data/site';
+
+interface Props {
+  variant?: 'overlay' | 'solid';
+}
+const { variant = 'solid' } = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(`${href}/`);
+// On the PDA page itself, the red button would link to the current page; show the desk number instead.
+const onPdaPage = isActive('/request-a-pda');
+---
+<div class:list={['site-header', `site-header--${variant}`, 'on-dark']}>
+  <div class="utility">
+    <div class="container utility__inner t-micro">
+      <span class="utility__item">
+        <Icon name="pin" size={14} />
+        {SITE.address.short}
+      </span>
+      <span class="utility__group">
+        <a href={`mailto:${SITE.ops.email}`} class="utility__link">{SITE.ops.email}</a>
+        <a href={SITE.ops.tel} class="utility__link utility__link--strong">
+          <span class="live-dot" aria-hidden="true"></span>24/7 Operations · {SITE.ops.phone}
+        </a>
+      </span>
+    </div>
+  </div>
+
+  <header class="bar">
+    <div class="container bar__inner">
+      <Logo />
+
+      <nav class="nav" aria-label="Main">
+        <ul role="list" class="nav__list">
+          {NAV.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class:list={['nav__link', { 'is-active': isActive(item.href) }]}
+                aria-current={isActive(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="bar__actions">
+        {onPdaPage ? (
+          <a href={SITE.ops.tel} class="desk-pill">
+            <span class="live-dot" aria-hidden="true"></span>24/7 · {SITE.ops.phone}
+          </a>
+        ) : (
+          <>
+            <a href={SITE.ops.tel} class="ghost-btn">Call 24/7</a>
+            <Button href="/request-a-pda" size="sm">Request a PDA</Button>
+          </>
+        )}
+      </div>
+
+      <!-- Without JS this link jumps to the footer, which lists every page. -->
+      <a
+        href="#site-footer"
+        class="menu-btn"
+        data-menu-open
+        aria-haspopup="dialog"
+        aria-controls="site-menu"
+        aria-label="Open menu"
+      >
+        <Icon name="menu" size={20} strokeWidth={2} />
+      </a>
+    </div>
+  </header>
+</div>
+
+<dialog id="site-menu" class="menu bg-rings on-dark" aria-label="Menu">
+  <div class="menu__top">
+    <Logo size="sm" />
+    <button type="button" class="menu-btn menu-btn--close" data-menu-close aria-label="Close menu" autofocus>
+      <Icon name="close" size={20} strokeWidth={2} />
+    </button>
+  </div>
+
+  <nav class="menu__nav" aria-label="Main menu">
+    <ul role="list">
+      {NAV.map((item) => (
+        <li>
+          <a
+            href={item.href}
+            class:list={['menu__link', { 'is-active': isActive(item.href) }]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="menu__actions">
+    {!onPdaPage && <Button href="/request-a-pda">Request a PDA</Button>}
+    <Button href={SITE.ops.tel} variant="secondary-dark">Call 24/7 · {SITE.ops.phone}</Button>
+  </div>
+
+  <p class="menu__contact t-small">
+    <a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a><br />
+    {SITE.address.short}
+  </p>
+</dialog>
+
+<script>
+  // Native <dialog> gives the focus trap, Esc to close and an inert background.
+  const menu = document.getElementById('site-menu') as HTMLDialogElement | null;
+  const openers = document.querySelectorAll<HTMLAnchorElement>('[data-menu-open]');
+
+  if (menu && typeof menu.showModal === 'function') {
+    let lastOpener: HTMLElement | null = null;
+
+    openers.forEach((opener) => {
+      opener.setAttribute('role', 'button');
+      opener.setAttribute('aria-expanded', 'false');
+      opener.addEventListener('click', (event) => {
+        event.preventDefault();
+        lastOpener = opener;
+        menu.showModal();
+        opener.setAttribute('aria-expanded', 'true');
+      });
+      opener.addEventListener('keydown', (event) => {
+        if (event.key === ' ') {
+          event.preventDefault();
+          opener.click();
+        }
+      });
+    });
+
+    menu.querySelector('[data-menu-close]')?.addEventListener('click', () => menu.close());
+    // Following a link closes the menu (needed for same-page anchors).
+    menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => menu.close()));
+    // Keep Tab cycling inside the menu rather than escaping to the browser chrome.
+    menu.addEventListener('keydown', (event) => {
+      if (event.key !== 'Tab') return;
+      const focusable = menu.querySelectorAll<HTMLElement>('a[href], button:not([disabled])');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+    // A click on the backdrop area outside the content closes it too.
+    menu.addEventListener('click', (event) => {
+      if (event.target === menu) menu.close();
+    });
+    menu.addEventListener('close', () => {
+      openers.forEach((opener) => opener.setAttribute('aria-expanded', 'false'));
+      lastOpener?.focus();
+    });
+    // Close if the viewport grows past the phone/tablet range while open.
+    window.matchMedia('(min-width: 960px)').addEventListener('change', (mq) => {
+      if (mq.matches && menu.open) menu.close();
+    });
+  }
+</script>
+
+<style>
+  .site-header { position: relative; z-index: 20; color: var(--on-dark); }
+  .site-header--overlay { position: absolute; inset: 0 0 auto 0; }
+
+  /* ---------- Utility bar ---------- */
+  .utility { border-bottom: 1px solid var(--on-dark-line); }
+  .utility__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-block: 11px;
+    color: var(--on-dark-soft);
+  }
+  .utility__item { display: inline-flex; align-items: center; gap: 8px; }
+  .utility__group { display: inline-flex; flex-wrap: wrap; gap: 8px 28px; }
+  .utility__link { color: var(--on-dark-soft); text-decoration: none; }
+  .utility__link:hover { color: var(--on-dark); text-decoration: underline; }
+  .utility__link--strong { color: var(--on-dark); display: inline-flex; align-items: center; gap: 8px; }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ok-dot);
+    flex: none;
+  }
+
+  /* ---------- Main bar ---------- */
+  .site-header--solid .bar { border-bottom: 1px solid var(--on-dark-line); }
+  .bar__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px 32px;
+    padding-block: 22px;
+  }
+  .site-header--solid .bar__inner { padding-block: 20px; }
+
+  .nav__list { display: flex; gap: 8px 36px; }
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--on-dark);
+    font-size: 15px;
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    padding-top: 2px;
+  }
+  .nav__link:hover { color: var(--on-dark); border-bottom-color: rgba(255, 255, 255, 0.5); }
+  .nav__link.is-active,
+  .nav__link.is-active:hover { border-bottom-color: var(--red); }
+
+  .bar__actions { display: flex; gap: 12px; align-items: center; }
+
+  .ghost-btn,
+  .desk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 11px 18px;
+    border-radius: var(--r-btn);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--on-dark);
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 200ms;
+  }
+  .desk-pill { background: transparent; border-color: rgba(255, 255, 255, 0.22); }
+  .ghost-btn:hover,
+  .desk-pill:hover { background: rgba(255, 255, 255, 0.16); color: var(--on-dark); }
+
+  .menu-btn {
+    display: none;
+    width: 44px;
+    height: 44px;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-input);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--on-dark);
+  }
+  .menu-btn:hover { background: rgba(255, 255, 255, 0.16); color: var(--on-dark); }
+
+  /* Compact desktop: the utility bar already carries the desk number. */
+  @media (max-width: 1199px) {
+    .nav__list { gap: 8px 24px; }
+    .bar__inner { gap: 16px 24px; }
+    .ghost-btn { display: none; }
+  }
+
+  /* Tablet and phone: logo + menu button only. */
+  @media (max-width: 959px) {
+    .utility,
+    .nav,
+    .bar__actions { display: none; }
+    .menu-btn { display: inline-flex; }
+    .bar { border-bottom: 1px solid var(--on-dark-line); }
+    .bar__inner,
+    .site-header--solid .bar__inner { padding-block: 14px; }
+  }
+
+  /* ---------- Full-screen menu ---------- */
+  .menu {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 14px var(--gutter) calc(32px + env(safe-area-inset-bottom));
+    border: 0;
+    color: var(--on-dark);
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity 200ms, overlay 200ms allow-discrete, display 200ms allow-discrete;
+  }
+  .menu[open] { display: flex; flex-direction: column; opacity: 1; }
+  @starting-style {
+    .menu[open] { opacity: 0; }
+  }
+  .menu::backdrop { background: var(--deep); }
+
+  .menu__top { display: flex; align-items: center; justify-content: space-between; }
+  .menu-btn--close { display: inline-flex; }
+
+  .menu__nav { margin-top: 40px; }
+  .menu__nav li { border-bottom: 1px solid var(--on-dark-line); }
+  .menu__link {
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    color: var(--on-dark);
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .menu__link:hover { color: var(--on-dark-soft); }
+  .menu__link.is-active { color: var(--red-soft); }
+
+  .menu__actions { display: grid; gap: 12px; margin-top: 32px; }
+  .menu__contact { margin-top: 28px; color: var(--on-dark-muted); }
+  .menu__contact a { color: var(--on-dark-soft); }
+</style>
+
+<style is:global>
+  /* Stop the page behind the open menu from scrolling, without shifting the layout. */
+  html { scrollbar-gutter: stable; }
+  html:has(#site-menu[open]) { overflow: hidden; }
+</style>

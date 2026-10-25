@@ -8,5 +8,10 @@ export default defineConfig({
   site: 'https://lighthousemaritimeltd.com',
   output: 'static',
   adapter: vercel(),
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Temporary Stage 1 test pages stay out of the sitemap.
+      filter: (page) => !page.includes('/test-layout'),
+    }),
+  ],
 });

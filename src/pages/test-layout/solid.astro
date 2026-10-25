@@ -1,0 +1,35 @@
+---
+// TEMPORARY (Stage 1): shows the solid header on .bg-rings, plus the footer. Delete before launch.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Layout test: solid header | Lighthouse Maritime Agency"
+  description="Temporary page for checking the solid header variant."
+  noindex
+>
+  <div slot="hero" class="container demo-hero">
+    <p class="t-micro demo-crumb"><a href="/test-layout">Overlay test</a> / Solid header</p>
+    <h1 class="t-h1">Solid header <span class="dim">on the rings background.</span></h1>
+    <p class="t-lead demo-lead">
+      Inner pages without a photo use this variant. The header and the page hero share one
+      background, so there is no seam between them.
+    </p>
+  </div>
+
+  <section class="section bg-glow">
+    <div class="container">
+      <h2 class="t-h2">Content area <span class="dim">on a light section.</span></h2>
+      <p class="t-body demo-copy">Footer and phone action bar follow below.</p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .demo-hero { padding-block: 72px 80px; }
+  .demo-crumb { color: var(--on-dark-muted); }
+  .demo-crumb a { color: var(--on-dark-muted); text-decoration: none; }
+  .demo-crumb a:hover { color: var(--on-dark); text-decoration: underline; }
+  .demo-hero h1 { margin-top: 20px; max-width: 760px; }
+  .demo-lead { margin-top: 22px; max-width: 640px; color: var(--on-dark-soft); }
+  .demo-copy { margin-top: 20px; max-width: 640px; color: var(--muted); }
+</style>

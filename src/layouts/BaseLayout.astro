@@ -1,0 +1,84 @@
+---
+// Page shell: <head>, fonts, global styles, header, footer and the phone action bar.
+//
+// header="overlay": the header floats over the page's own photo hero (Home).
+// header="solid":   the header and the `hero` slot share one .bg-rings masthead (inner pages).
+import '@fontsource/manrope/500.css';
+import '@fontsource/manrope/600.css';
+import '@fontsource/manrope/700.css';
+import '@fontsource/manrope/800.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '../styles/global.css';
+
+import SeoHead from '../components/SeoHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import MobileActionBar from '../components/MobileActionBar.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  header?: 'overlay' | 'solid';
+  localBusiness?: boolean;
+  noindex?: boolean;
+}
+const { title, description, header = 'solid', localBusiness = false, noindex = false } = Astro.props;
+---
+<!doctype html>
+<html lang="en-NG">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <SeoHead title={title} description={description} localBusiness={localBusiness} noindex={noindex} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    {header === 'overlay' ? (
+      <div class="masthead masthead--overlay">
+        <Header variant="overlay" />
+        <slot name="hero" />
+      </div>
+    ) : (
+      <div class="masthead bg-rings on-dark">
+        <Header variant="solid" />
+        <slot name="hero" />
+      </div>
+    )}
+
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+
+    <Footer />
+    <MobileActionBar />
+  </body>
+</html>
+
+<style>
+  .masthead--overlay { position: relative; }
+
+  .skip-link {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 100;
+    padding: 12px 18px;
+    border-radius: var(--r-btn);
+    background: var(--surface);
+    color: var(--navy);
+    font-weight: 600;
+    text-decoration: none;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus { transform: none; }
+
+  main:focus { outline: none; }
+
+  /* Room for the fixed action bar on phones: 50px buttons + 20px padding + 1px border. */
+  @media (max-width: 599px) {
+    body { padding-bottom: calc(71px + env(safe-area-inset-bottom)); }
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+// Site footer on .bg-rings (DESIGN.md §5, CONTENT.md "Footer").
+import Logo from './Logo.astro';
+import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
+---
+<footer id="site-footer" class="footer bg-rings on-dark">
+  <div class="container footer__main">
+    <div class="footer__brand">
+      <Logo />
+      <p class="t-small footer__tagline">
+        Ship agency and maritime services across Nigerian ports, from our head office in Apapa, Lagos.
+      </p>
+    </div>
+
+    <div class="footer__cols">
+      <nav class="footer__col" aria-labelledby="footer-services">
+        <h2 id="footer-services" class="footer__heading">Services</h2>
+        <ul role="list">
+          {SERVICE_LINKS.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <nav class="footer__col" aria-labelledby="footer-company">
+        <h2 id="footer-company" class="footer__heading">Company</h2>
+        <ul role="list">
+          {COMPANY_LINKS.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="footer__col">
+        <h2 class="footer__heading">Contact</h2>
+        <address>
+          <ul role="list">
+            <li>{SITE.address.street}, {SITE.address.area}</li>
+            <li><a href={SITE.ops.tel}>{SITE.ops.phone}</a></li>
+            <li><a href={SITE.admin.tel}>{SITE.admin.phone}</a></li>
+            <li><a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a></li>
+            <li><a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a></li>
+          </ul>
+        </address>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer__bottom t-micro">
+    <span>© 2026 {SITE.legalName} · {SITE.rc}</span>
+    <span class="footer__legal">
+      <a href="/privacy">Privacy policy</a>
+      <span aria-hidden="true">·</span>
+      <a href="/terms">Terms of use</a>
+    </span>
+  </div>
+</footer>
+
+<style>
+  .footer { color: var(--on-dark-soft); }
+
+  .footer__main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 48px 64px;
+    padding-block: 88px 56px;
+  }
+  .footer__brand { flex: 1 1 280px; max-width: 340px; }
+  .footer__tagline { margin-top: 22px; color: var(--on-dark-muted); }
+
+  .footer__cols {
+    flex: 2 1 560px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 40px;
+  }
+  .footer__heading {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--on-dark);
+  }
+  .footer__col ul { margin-top: 12px; }
+  .footer__col li { font-size: var(--fs-small); line-height: 1.6; }
+  .footer__col a,
+  .footer__col li {
+    display: flex;
+    align-items: center;
+    min-height: 33px;
+  }
+  .footer__col a {
+    color: var(--on-dark-soft);
+    text-decoration: none;
+    overflow-wrap: anywhere;
+  }
+  .footer__col a:hover { color: var(--on-dark); text-decoration: underline; }
+  address { font-style: normal; }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 24px;
+    padding-block: 24px 32px;
+    border-top: 1px solid var(--on-dark-line);
+    color: var(--on-dark-muted);
+  }
+  .footer__legal { display: inline-flex; gap: 8px; align-items: center; }
+  .footer__legal a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--on-dark-muted);
+    text-decoration: none;
+  }
+  .footer__legal a:hover { color: var(--on-dark); text-decoration: underline; }
+
+  @media (max-width: 599px) {
+    .footer__main { padding-block: 64px 40px; gap: 40px; }
+    .footer__cols { gap: 32px; }
+    .footer__col li,
+    .footer__col a { min-height: 44px; }
+  }
+</style>
