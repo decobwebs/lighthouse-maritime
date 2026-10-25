@@ -5,12 +5,13 @@ import { Picture } from 'astro:assets';
 import Button from './Button.astro';
 import QuickPdaPanel from './QuickPdaPanel.astro';
 import heroHarbour from '../assets/images/hero-harbour.jpg';
+import { HERO_WIDTHS } from '../data/hero';
 ---
 <section class="hero on-dark" aria-labelledby="hero-title">
   <Picture
     src={heroHarbour}
     formats={['avif', 'webp']}
-    widths={[640, 960, 1280, 1600, 1920]}
+    widths={HERO_WIDTHS}
     sizes="100vw"
     alt="A cargo vessel entering harbour at dusk past a quayside crane"
     class="hero__img"

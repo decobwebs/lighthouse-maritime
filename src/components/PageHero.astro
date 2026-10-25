@@ -1,0 +1,110 @@
+---
+// Inner-page hero. With `image`: photo + left-to-right overlay under the overlay header
+// (service pages, 04-service-page-port-agency). Without: plain content for the .bg-rings masthead.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+interface Props {
+  crumbs: Crumb[];
+  eyebrow?: string;
+  title: string;
+  dim?: string;
+  lead?: string;
+  image?: ImageMetadata;
+  alt?: string;
+  position?: string;
+}
+const { crumbs, eyebrow, title, dim, lead, image, alt = '', position = 'center' } = Astro.props;
+---
+<section class:list={['ph', 'on-dark', { 'ph--photo': image }]} aria-labelledby="page-title">
+  {image && (
+    <>
+      <Picture
+        src={image}
+        formats={['avif', 'webp']}
+        widths={[640, 800, 1280, 1600, 1920]}
+        sizes="100vw"
+        alt={alt}
+        class="ph__img"
+        pictureAttributes={{ class: 'ph__picture' }}
+        style={`object-position: ${position}`}
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+      <div class="ph__shade" aria-hidden="true"></div>
+    </>
+  )}
+  <div class="container ph__body">
+    <nav aria-label="Breadcrumb">
+      <ol role="list" class="t-micro ph__crumbs">
+        {crumbs.map((c) => (
+          <li>
+            {c.href ? <a href={c.href}>{c.label}</a> : <span aria-current="page">{c.label}</span>}
+          </li>
+        ))}
+      </ol>
+    </nav>
+    {eyebrow && <p class="t-eyebrow ph__eyebrow">{eyebrow}</p>}
+    <h1 class="t-h1 ph__title" id="page-title">
+      {title}{dim && <> <span class="dim">{dim}</span></>}
+    </h1>
+    {lead && <p class="t-lead ph__lead">{lead}</p>}
+    {Astro.slots.has('default') && <div class="ph__actions"><slot /></div>}
+  </div>
+</section>
+
+<style>
+  .ph { position: relative; overflow: hidden; }
+  .ph--photo { background: var(--deep); }
+  .ph__picture,
+  .ph__img { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .ph__img { object-fit: cover; }
+  .ph__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(6, 18, 36, 0.94) 0%, rgba(6, 18, 36, 0.72) 48%, rgba(6, 18, 36, 0.3) 100%);
+  }
+
+  .ph__body { position: relative; padding-block: 72px 80px; }
+  /* Under the overlay header (~128px): 96px gap above the breadcrumb, as designed. */
+  .ph--photo .ph__body { padding-block: 224px 112px; }
+
+  /* Crumb links are 44px tall for touch; the negative margin keeps the visual spacing. */
+  .ph__crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0 10px; margin-block: -12px; color: var(--on-dark-muted); }
+  .ph__crumbs li:not(:last-child)::after { content: '/'; margin-left: 10px; }
+  .ph__crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--on-dark-muted);
+    text-decoration: none;
+  }
+  .ph__crumbs a:hover { color: var(--on-dark); text-decoration: underline; }
+
+  .ph__eyebrow { margin-top: 40px; color: var(--red-soft); }
+  .ph__title { margin-top: 20px; max-width: 760px; }
+  .ph__eyebrow + .ph__title { margin-top: 16px; }
+  .ph__lead { margin-top: 24px; max-width: 600px; color: var(--on-dark-soft); }
+  .ph__actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
+
+  @media (max-width: 959px) {
+    .ph--photo .ph__body { padding-block: 152px 88px; }
+  }
+  @media (max-width: 599px) {
+    .ph__shade {
+      background: linear-gradient(180deg, rgba(6, 18, 36, 0.78) 0%, rgba(6, 18, 36, 0.6) 40%, rgba(6, 18, 36, 0.92) 100%);
+    }
+    .ph__body { padding-block: 48px 56px; }
+    .ph--photo .ph__body { padding-block: 120px 56px; }
+    .ph__eyebrow { margin-top: 28px; }
+    .ph__title { line-height: 1.06; letter-spacing: -0.03em; }
+    .ph__lead { margin-top: 18px; }
+    .ph__actions { flex-direction: column; gap: 10px; margin-top: 28px; }
+    .ph__actions :global(.btn) { width: 100%; border-radius: var(--r-input); }
+  }
+</style>

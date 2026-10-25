@@ -39,6 +39,7 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
     <script is:inline>document.documentElement.classList.add('js');</script>
     <link rel="preload" href={manrope700} as="font" type="font/woff2" crossorigin />
     <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
     <SeoHead title={title} description={description} localBusiness={localBusiness} noindex={noindex} />
   </head>
   <body>

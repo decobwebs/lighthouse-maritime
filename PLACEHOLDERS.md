@@ -17,6 +17,24 @@ Square brackets in `docs/CONTENT.md` around button and badge labels (for example
 | `[Name]` ×3 | Team members: Managing Director, Head of Operations, Client Relations | About, "03 — Our team" (section hidden with `SHOW_TEAM=false` until supplied) | Waiting |
 | `[retention period]` | How long form data is kept | Privacy policy | Waiting |
 
+## Copy not supplied: four service pages
+
+CONTENT.md gives full copy for **Port agency** only. For Husbandry and crew changes, Clearance and coordination, Ship supply and procurement, and Logistics and project support, the pages use the same template, but these parts are missing. Until they arrive, the pages show the plain section name as the heading and leave the rest out (nothing is invented). Add them to the service's file in `src/content/services/` (fields shown in brackets).
+
+| Missing for each of the 4 pages | Port agency example | Status |
+|---|---|---|
+| "What's included" two-tone heading + intro sentence (`includedHeading`) | "Everything a port call needs, *handled for you.*" | Waiting |
+| One-line description under each of the 6 included items (`included[].text`) | "Itemised estimate before arrival; reconciled final account after sailing." | Waiting |
+| "Who it's for" two-tone heading (`whoForHeading`) | "Built for the people *who appoint agents.*" | Waiting |
+| One-line description under each of the 3 audiences (`whoFor[].text`) | "Full agency with costs agreed before the vessel arrives." | Waiting |
+| Intro sentence for "What we need from you" (`weNeedHeading.body`) | "Send these with your nomination and we can file everything before the vessel arrives." | Waiting |
+| Meta title and description (`meta`) | currently "{Service} \| Lighthouse Maritime Agency" + the page lead | Waiting |
+
+Also not separately specified, so chosen from approved material (confirm or change):
+- **Related services** for the four pages: Port agency plus two neighbouring services.
+- **"What we need" photo**: `svc-clearance.jpg` on every service page, as DESIGN.md §8 assigns it; on the Clearance page it repeats the hero photo.
+- **/services overview** hero: reuses the Home "02 — Services" heading and text.
+
 ## Files and assets still needed
 
 | Item | Where it is used | Status |

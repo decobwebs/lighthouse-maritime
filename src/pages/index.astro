@@ -15,6 +15,9 @@ import CertifiedList from '../components/CertifiedList.astro';
 import CtaBanner from '../components/CtaBanner.astro';
 import Button from '../components/Button.astro';
 import { SITE } from '../data/site';
+import { heroPreloadSrcset } from '../data/hero';
+
+const heroSrcset = await heroPreloadSrcset();
 import aboutTug from '../assets/images/about-tug.jpg';
 import ctaNight from '../assets/images/cta-night.jpg';
 
@@ -37,6 +40,15 @@ const promises = [
   header="overlay"
   localBusiness
 >
+  <link
+    slot="head"
+    rel="preload"
+    as="image"
+    type="image/avif"
+    imagesrcset={heroSrcset}
+    imagesizes="100vw"
+    fetchpriority="high"
+  />
   <Hero slot="hero" />
 
   <StatBar stats={stats} />

@@ -1,0 +1,32 @@
+---
+// Services overview: inner-page hero on .bg-rings, the Home bento, then the CTA band.
+// CONTENT.md has no separate copy for this page, so it reuses the approved Home "02 — Services" copy.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ServiceBento from '../../components/ServiceBento.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Button from '../../components/Button.astro';
+---
+<BaseLayout
+  title="Services | Lighthouse Maritime Agency"
+  description="Appoint us for a single task or the whole call. Each service is handled by the same operations desk and reported the same way."
+>
+  <PageHero
+    slot="hero"
+    crumbs={[{ label: 'Home', href: '/' }, { label: 'Services' }]}
+    eyebrow="Services"
+    title="Everything your vessel needs"
+    dim="in a Nigerian port."
+    lead="Appoint us for a single task or the whole call. Each service is handled by the same operations desk and reported the same way."
+  />
+
+  <section class="section" aria-label="All services">
+    <div class="container">
+      <ServiceBento />
+    </div>
+  </section>
+
+  <CtaBand eyebrow="Appoint Lighthouse" title="Get a PDA for your next call." lead="Itemised, explained and with you within [X hours].">
+    <Button href="/request-a-pda">Request a PDA</Button>
+  </CtaBand>
+</BaseLayout>
