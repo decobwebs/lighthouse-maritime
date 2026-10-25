@@ -14,22 +14,22 @@ const { cac = false, tone = 'mist' } = Astro.props;
 ---
 <ul role="list" class:list={['certs', { 'certs--four': cac }]}>
   {AUTHORITIES.map((a) => (
-    <li class:list={['card', `card--${tone}`]} data-reveal>
+    <li class:list={['card', `card--${tone}`]} data-card>
       <div class="card__logo">
         {a.logo ? (
-          <Image src={a.logo} alt={a.logoAlt} format="webp" class="card__img" loading="lazy" />
+          <Image src={a.logo} alt="" format="webp" class="card__img" loading="lazy" />
         ) : (
           <span class="card__logo-text">{a.short}</span>
         )}
       </div>
-      <p class="t-h5 card__name">{a.name}</p>
+      <p class="card__name">{a.name}</p>
       <p class="t-small card__role">{a.role}</p>
       <span class="t-micro card__badge"><span aria-hidden="true">✓</span> Certified</span>
     </li>
   ))}
   {cac && (
-    <li class:list={['card', `card--${tone}`]} data-reveal>
-      <p class="t-h5 card__name card__name--first">Corporate Affairs Commission</p>
+    <li class:list={['card', `card--${tone}`]} data-card>
+      <p class="card__name card__name--first">Corporate Affairs Commission</p>
       <p class="t-small card__role">RC 7964161 · Incorporated 2024</p>
       <span class="t-micro card__badge"><span aria-hidden="true">✓</span> Registered</span>
     </li>
@@ -67,7 +67,8 @@ const { cac = false, tone = 'mist' } = Astro.props;
   .card__img { width: auto; height: 36px; }
   .card__logo-text { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--label); }
 
-  .card__name { margin-top: 18px; }
+  /* The authority's name under its logo (Inter 600, 14px, navy). */
+  .card__name { margin-top: 14px; font-size: 14px; font-weight: 600; line-height: 1.4; color: var(--navy); }
   .card__name--first { margin-top: 0; }
   .card__role { margin-top: 2px; color: var(--muted); }
   .card__badge {

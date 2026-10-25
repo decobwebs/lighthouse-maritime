@@ -3,15 +3,17 @@
 // The WhatsApp button stays hidden until the number is set in src/data/site.ts.
 interface Props {
   title: string;
+  /** Starting href for the send links (the form page itself) until send-flow.ts fills them in. */
+  fallbackHref: string;
 }
-const { title } = Astro.props;
+const { title, fallbackHref } = Astro.props;
 ---
 <section class="send" data-send-panel hidden aria-labelledby="send-title">
   <h2 class="send__title" id="send-title" data-send-title tabindex="-1">{title}</h2>
   <p class="t-micro send__ref">Reference <span data-send-ref></span></p>
   <div class="send__actions">
-    <a class="send__btn send__btn--primary" data-send-email>Send by email</a>
-    <a class="send__btn send__btn--wa" data-send-wa target="_blank" rel="noopener" hidden>Send on WhatsApp</a>
+    <a href={fallbackHref} class="send__btn send__btn--primary" data-send-email>Send by email</a>
+    <a href={fallbackHref} class="send__btn send__btn--wa" data-send-wa target="_blank" rel="noopener" hidden>Send on WhatsApp</a>
     <button type="button" class="send__btn send__btn--line" data-send-copy>Copy details</button>
   </div>
   <p class="send__status" data-send-status role="status" aria-live="polite"></p>

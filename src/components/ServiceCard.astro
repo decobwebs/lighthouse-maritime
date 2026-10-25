@@ -34,7 +34,8 @@ const {
   class: className,
 } = Astro.props;
 ---
-<a href={href} class:list={['svc', { 'svc--feature': feature, 'svc--compact': compact }, className]} data-reveal>
+<a href={href} class:list={['svc', { 'svc--feature': feature, 'svc--compact': compact }, className]} data-card>
+  <div class="svc__media" data-wipe>
   <Picture
     src={image}
     formats={['avif', 'webp']}
@@ -47,6 +48,7 @@ const {
     loading="lazy"
     decoding="async"
   />
+  </div>
   <div class="svc__shade" aria-hidden="true"></div>
   {pill && <span class="t-micro svc__pill">{pill}</span>}
   <div class="svc__body">
@@ -78,6 +80,7 @@ const {
   .svc:hover { color: var(--on-dark); }
   .svc:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
 
+  .svc__media,
   .svc__picture,
   .svc__img {
     position: absolute;

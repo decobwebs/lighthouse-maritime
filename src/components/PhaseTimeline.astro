@@ -1,6 +1,9 @@
 ---
-// Three contained phase panels on .bg-chart-dark (DESIGN.md §6 Phase panels).
-// Stages 01 and 08 have filled red circles; each step ends with a green "You receive" line.
+// How a port call works (Home 03). Two presentations of the same eight stages:
+// - .phases: three contained panels (DESIGN.md §6). Shown without JS and with reduced motion.
+// - .voyage: "The Voyage" (DESIGN.md §7), shown only while motion is on. Desktop: an SVG route with
+//   8 nodes and a vessel, driven by src/scripts/motion/voyage.ts. Mobile: a vertical route list.
+// Stages 01 and 08 are the red ones; each step ends with a green "You receive" line.
 const phases = [
   {
     phase: 'Phase 1',
@@ -33,10 +36,32 @@ const phases = [
   },
 ];
 const filled = new Set(['01', '08']);
+
+/* Voyage geometry (SVG units). Nodes sit on a horizontal line; the route weaves between them. */
+const W = 1160;
+const H = 440;
+const CY = 232;
+const steps = phases.flatMap((p, pi) => p.steps.map((s) => ({ ...s, phase: pi })));
+// Inset from both ends so the last stage's text clears the Home section rail.
+const nodeX = steps.map((_, i) => 96 + (i * (W - 192)) / (steps.length - 1));
+let route = `M 0 ${CY} L ${nodeX[0]} ${CY}`;
+for (let i = 0; i < nodeX.length - 1; i++) {
+  const a = nodeX[i];
+  const b = nodeX[i + 1];
+  const d = b - a;
+  const sway = i % 2 === 0 ? 30 : -30; // gentle, so the route never crosses the stage text
+  route += ` C ${(a + d * 0.35).toFixed(1)} ${CY + sway} ${(b - d * 0.35).toFixed(1)} ${CY + sway} ${b.toFixed(1)} ${CY}`;
+}
+route += ` L ${W} ${CY}`;
+const pct = (v: number, of: number) => `${((v / of) * 100).toFixed(3)}%`;
+const phaseCentre = phases.map((_, pi) => {
+  const xs = nodeX.filter((_, i) => steps[i].phase === pi);
+  return (xs[0] + xs[xs.length - 1]) / 2;
+});
 ---
 <div class="phases">
   {phases.map((p, i) => (
-    <div class="phase" data-reveal>
+    <div class="phase" data-card>
       <div class="phase__meta">
         <p class="t-eyebrow phase__label">{p.phase}</p>
         <p class="t-micro phase__range">{p.range}</p>
@@ -67,6 +92,82 @@ const filled = new Set(['01', '08']);
       )}
     </div>
   ))}
+</div>
+
+<!-- The Voyage: only displayed while motion is on (see global.css / styles below). -->
+<div class="voyage" data-voyage>
+  <!-- Desktop: route across the panel -->
+  <div class="voyage__desk" data-voyage-desk>
+    <div class="voyage__frame" data-voyage-frame>
+    <ol role="list" class="voyage__phases">
+      {phases.map((p, pi) => (
+        <li class="voyage__phase" data-voyage-phase={pi} style={`left: ${pct(phaseCentre[pi], W)}`}>
+          <span class="t-eyebrow voyage__phase-label">{p.phase}</span>
+          <span class="voyage__phase-title">{p.title}</span>
+        </li>
+      ))}
+    </ol>
+    <div class="voyage__stage">
+      <svg class="voyage__svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="voyage-wake" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0.55" />
+          </linearGradient>
+        </defs>
+        <path class="voyage__route-bg" d={route} />
+        <path class="voyage__route" d={route} data-voyage-route />
+        <g class="voyage__vessel" data-voyage-vessel>
+          <rect x="-64" y="-1.5" width="50" height="3" rx="1.5" fill="url(#voyage-wake)" />
+          <path d="M-16 -1 L16 -1 L21 -5 L21 -1 L18 5 L-12 5 Z" fill="#fff" />
+          <path d="M-8 -1 V-8 H3 V-1 Z M-4 -8 V-12 H0 V-8 Z" fill="#fff" />
+        </g>
+      </svg>
+      <ol role="list" class="voyage__nodes">
+        {steps.map((s, i) => (
+          <li
+            class:list={['vnode', i % 2 === 0 ? 'vnode--below' : 'vnode--above', { 'vnode--accent': filled.has(s.n) }]}
+            data-voyage-node={i}
+            data-x={nodeX[i]}
+            style={`left: ${pct(nodeX[i], W)}; top: ${pct(CY, H)}`}
+          >
+            <span class="vnode__dot" aria-hidden="true">{s.n}</span>
+            <div class="vnode__text">
+              <h3 class="vnode__title"><span class="visually-hidden">Stage {s.n}: </span>{s.title}</h3>
+              <p class="vnode__desc">{s.text}</p>
+              <p class="vnode__receive"><span class="step__receive-dot" aria-hidden="true"></span>You receive: {s.receive}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <p class="voyage__note"><strong>Cost and updates, in writing.</strong> Every report goes to you by email and WhatsApp, so nothing depends on a phone call.</p>
+    </div>
+  </div>
+
+  <!-- Mobile: a vertical route on the left; each stage lights up as it reaches the middle of the screen -->
+  <div class="voyage__mob" data-voyage-mob>
+    <span class="vmob__line" aria-hidden="true"><span class="vmob__fill" data-voyage-fill></span></span>
+    {phases.map((p) => (
+      <div class="vmob__phase">
+        <p class="t-eyebrow vmob__phase-label">{p.phase} · {p.range}</p>
+        <h3 class="vmob__phase-title">{p.title}</h3>
+        <ol role="list" class="vmob__steps">
+          {p.steps.map((s) => (
+            <li class:list={['vmob__step', { 'vmob__step--accent': filled.has(s.n) }]} data-voyage-step>
+              <span class="vmob__dot" aria-hidden="true">{s.n}</span>
+              <div>
+                <h4 class="vmob__title"><span class="visually-hidden">Stage {s.n}: </span>{s.title}</h4>
+                <p class="vmob__desc">{s.text}</p>
+                <p class="vmob__receive"><span class="step__receive-dot" aria-hidden="true"></span>You receive: {s.receive}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    ))}
+    <p class="voyage__note"><strong>Cost and updates, in writing.</strong> Every report goes to you by email and WhatsApp, so nothing depends on a phone call.</p>
+  </div>
 </div>
 
 <style>
@@ -142,6 +243,157 @@ const filled = new Set(['01', '08']);
   .phase__note-text { margin-top: 6px; font-size: 14.5px; line-height: 1.6; color: var(--on-dark-muted); }
 
   .phase__summary { display: none; }
+
+  /* ---------- The Voyage (motion only) ---------- */
+  .voyage { display: none; }
+  :global(html.motion-on) .phases { display: none; }
+  :global(html.motion-on) .voyage { display: block; }
+
+  .voyage__desk { display: none; }
+  @media (min-width: 1024px) {
+    /* The frame is laid out at the 1160px design size; voyage.ts scales it to fit the pinned screen. */
+    .voyage__desk { display: block; position: relative; overflow: hidden; }
+    .voyage__frame { width: 1160px; transform-origin: top left; }
+    /* Short desktop screens: vertical voyage instead of the pinned route (set by voyage.ts). */
+    .voyage--stacked .voyage__desk { display: none; }
+    .voyage--stacked .voyage__mob { display: block; max-width: 760px; }
+    .voyage__mob { display: none; }
+  }
+
+  .voyage__phases { position: relative; height: 52px; }
+  .voyage__phase {
+    position: absolute;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  /* Dimmed by colour, not opacity, so inactive text still meets AA contrast. */
+  .voyage__phase-label { font-size: 11px; color: var(--on-dark-label); }
+  .voyage__phase-title {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--on-dark-label);
+    transition: color 400ms ease;
+  }
+  .voyage__phase.is-lit .voyage__phase-title { color: var(--on-dark); }
+
+  /* The stage keeps the SVG's proportions and shrinks on short screens so the pinned panel fits. */
+  .voyage__stage { position: relative; width: 1160px; height: 440px; }
+  .voyage__svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .voyage__route-bg { fill: none; stroke: rgba(255, 255, 255, 0.12); stroke-width: 1.5; stroke-dasharray: 2 7; }
+  .voyage__route { fill: none; stroke: rgba(255, 255, 255, 0.75); stroke-width: 2; stroke-linecap: round; }
+  .voyage__vessel { opacity: 0; }
+
+  .voyage__nodes { position: absolute; inset: 0; }
+  .vnode { position: absolute; width: 0; height: 0; }
+  .vnode__dot {
+    position: absolute;
+    left: -20px;
+    top: -20px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--deep);
+    color: var(--on-dark-label);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    transition: background-color 400ms ease, color 400ms ease, border-color 400ms ease, transform 400ms var(--ease-out);
+  }
+  .vnode.is-on .vnode__dot { background: var(--on-dark); border-color: var(--on-dark); color: var(--navy); transform: scale(1.08); }
+  .vnode--accent.is-on .vnode__dot { background: var(--red); border-color: var(--red); color: var(--on-dark); }
+
+  .vnode__text {
+    position: absolute;
+    left: -90px;
+    width: 180px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 500ms ease, transform 500ms var(--ease-out);
+  }
+  .vnode--below .vnode__text { top: 46px; }
+  .vnode--above .vnode__text { bottom: 46px; }
+  .vnode.is-on .vnode__text { opacity: 1; transform: none; }
+  .vnode__title { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.3; }
+  .vnode__desc { margin-top: 4px; font-size: 13px; line-height: 1.5; color: var(--on-dark-muted); }
+  .vnode__receive {
+    display: block;
+    margin-top: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ok-on-dark);
+    opacity: 0;
+    transition: opacity 400ms ease 250ms;
+  }
+  .vnode.is-on .vnode__receive { opacity: 1; }
+  .vnode__receive .step__receive-dot { display: inline-block; margin-right: 6px; vertical-align: middle; }
+
+  .voyage__note {
+    max-width: 640px;
+    margin: 28px auto 0;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    font-size: 14.5px;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--on-dark-muted);
+  }
+  .voyage__note strong { color: var(--on-dark); font-weight: 600; }
+
+  /* Mobile voyage */
+  .voyage__mob { position: relative; padding-left: 0; }
+  .vmob__line {
+    position: absolute;
+    left: 19px;
+    top: 8px;
+    bottom: 120px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .vmob__fill { position: absolute; inset: 0; background: rgba(255, 255, 255, 0.8); transform: scaleY(0); transform-origin: top; }
+  .vmob__phase { position: relative; padding-left: 56px; }
+  .vmob__phase + .vmob__phase { margin-top: 28px; }
+  .vmob__phase-label { font-size: 11px; color: var(--on-dark-label); }
+  .vmob__phase-title { margin-top: 6px; font-family: var(--font-display); font-size: 24px; font-weight: 700; }
+  .vmob__steps { margin-top: 18px; }
+  .vmob__step { position: relative; padding-bottom: 22px; }
+  /* Inactive stages are dimmed by colour (still AA), lighting up as they reach mid-screen. */
+  .vmob__step .vmob__title { color: var(--on-dark-muted); transition: color 400ms ease; }
+  .vmob__step.is-on .vmob__title { color: var(--on-dark); }
+  .vmob__dot {
+    position: absolute;
+    left: -56px;
+    top: -6px;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--deep);
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    transition: background-color 400ms ease, color 400ms ease;
+  }
+  .vmob__step.is-on .vmob__dot { background: var(--on-dark); color: var(--navy); }
+  .vmob__step--accent.is-on .vmob__dot { background: var(--red); color: var(--on-dark); }
+  .vmob__title { font-family: var(--font-display); font-size: 17px; font-weight: 600; line-height: 1.35; }
+  .vmob__desc { margin-top: 4px; font-size: 14px; line-height: 1.55; color: var(--on-dark-muted); }
+  .vmob__receive { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12.5px; color: var(--ok-on-dark); }
 
   /* Below 960px the panels stack. */
   @media (max-width: 959px) {

@@ -142,10 +142,10 @@ const accent = new Set(['01', '08']);
   </section>
 
   <section class="cta bg-mist" aria-labelledby="guide-cta-title">
-    <div class="container cta__inner" data-reveal>
+    <div class="container cta__inner">
       <div class="cta__copy">
         <p class="t-eyebrow cta__eyebrow">Ready when you are</p>
-        <h2 class="t-h2 cta__title" id="guide-cta-title">Let us take your vessel through all eight stages.</h2>
+        <h2 class="t-h2 cta__title" id="guide-cta-title" data-split>Let us take your vessel through all eight stages.</h2>
       </div>
       <div class="cta__actions">
         <Button href="/request-a-pda">Request a PDA</Button>
@@ -275,7 +275,7 @@ const accent = new Set(['01', '08']);
     gap: 32px 64px;
     padding-block: 96px 40px;
   }
-  .cta__copy { max-width: 640px; }
+  .cta__copy { flex: 1 1 480px; max-width: 640px; }
   .cta__eyebrow { color: var(--red); }
   .cta__title { margin-top: 16px; }
   .cta__actions { display: flex; flex-wrap: wrap; gap: 14px; }

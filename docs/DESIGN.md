@@ -78,7 +78,7 @@ Defined in `tokens.css`:
 - `.bg-chart-light`: white with `public/patterns/chart-light.svg` (navy chart lines at 7%). Used on: Ports (Home and /ports).
 - `.bg-mist`: `--mist`. Used on alternate light sections.
 - `.bg-white`: `--surface`.
-- **Photo heroes:** the photo uses `object-fit: cover`, with three overlays: left-to-right `rgba(6,18,36,.92 → .66 → .28 → .18)`, a top fade of 180px at `.70` (keeps the white nav readable) and, on Home, a bottom fade of 520px into solid `--deep` behind the quick panel and desk board.
+- **Photo heroes:** the photo uses `object-fit: cover`, with three overlays: left-to-right `rgba(6,18,36,.92 → .66 → .28 → .18)`, a top fade of 180px at `.70` (keeps the white nav readable) and, on Home, a bottom fade of 520px into solid `--deep` behind the quick panel and desk board. The Home photo is capped at 92% of the viewport height and fades out at its lower edge (a photo filling the whole viewport is ignored by Chrome as an LCP candidate).
 
 ## 6. Components
 
@@ -156,10 +156,38 @@ A fixed capsule on the right edge, vertically centred: white at 90% with a blur 
 Fixed to the bottom: Call 24/7 | WhatsApp | Request a PDA (red, wider). White background, top border and a soft shadow, plus safe-area padding. Add bottom padding to `<body>` so the bar never covers content.
 
 ## 7. Motion
-- Allowed: button colour transitions (200ms), card image zoom and arrow nudge on hover, mobile menu fade (200ms), the header's solid/shrink/hide transitions (320ms), the section rail's label slide.
-- **Scroll reveal** (all pages): section headings, text and cards fade up 28px over 600ms `--ease-out` when about 15% visible, once only, with an 80ms stagger between siblings (headings, then text, then cards). Driven by IntersectionObserver and a class added only when JS runs, so everything is visible without JS. Never on the hero, the header or form fields.
-- Not allowed: counters, parallax, carousels and auto-playing sliders.
-- All motion is off under `prefers-reduced-motion: reduce` (reveal disabled entirely; header changes instantly).
+Libraries: **GSAP** (with ScrollTrigger, SplitText and, on Home, MotionPathPlugin) and **Lenis**, loaded as a deferred module after first paint. Branches use `gsap.matchMedia()`: desktop (≥ 1024px), mobile (< 1024px), and reduced motion (no motion). No three.js.
+
+**Rules for every effect**
+- `prefers-reduced-motion: reduce` = no motion at all: everything shows in its final state.
+- JavaScript off (or the motion module fails to load within 4s) = all content visible, no hidden states. Hidden start states exist only under `html.motion-on`, which is added in `<head>` when JS runs and motion is allowed.
+- LCP ≤ 2.5s on mobile and CLS < 0.1. The hero photo stays the LCP element.
+- Animate only `transform`, `opacity`, `clip-path` (and `filter` on the hero photo). Never width, height or top.
+- Never scale an image above its natural resolution: images start oversized (scale 1.08) and settle **down** to 1.
+
+**Hero entrance (Home, once on load)**
+1. Photo: scale 1.08 + `brightness(0.8)` → scale 1 + `brightness(1)`, 1.8s `expo.out`. A dim layer starts at 35% and fades out over the same 1.8s.
+2. Headline: SplitText lines slide up from behind a mask (110% → 0), 0.9s `power3.out`, stagger 0.1, starting at 0.3s.
+3. Then, 0.12s apart: the Certified badge, the lead, the buttons, the PDA panel (rises 32px) and the desk board (cells rise 24px, stagger 0.08; the clock and figures tick in once).
+4. End: one soft pulse ring around the hero's Request a PDA button (2 rings, 1.2s, then stop).
+
+**Lighthouse beam (Home hero, above the photo, below the text)**: a soft, warm cone (conic-gradient wedge about 14°, `rgba(255,236,200,.20)` at the centre fading to transparent), origin just off the right edge at about 30% height, `mix-blend-mode: screen`, `pointer-events: none`. First sweep from 1.0s, about 2.4s `power2.inOut`, from the upper right across the headline to the Request a PDA button, which gets one diagonal light shine as the cone crosses it. Then a slow repeat sweep at half opacity every 14s (desktop) or 20s (mobile), without the shine. Paused when the hero is off screen or the tab is hidden.
+
+**Hero ambient drift (desktop)**: after the entrance the photo drifts horizontally between 0% and −1.5% over 30s, `sine.inOut`, yoyo, forever (translate only; the photo box is 2% wider than the hero so no edge shows).
+
+**Hero scroll-out (scrub, all sizes)**: the photo moves at about 60% of scroll speed (translateY), the headline block moves up 80px and fades to 0.2, and the dim layer rises to 25%. Fully reversible.
+
+**Smooth scroll**: Lenis (lerp 0.1) synced with ScrollTrigger; off while the mobile menu or a dialog is open; native scrolling on touch (Lenis `syncTouch` off). Anchor links keep the fixed-header offset.
+
+**Headings (every page except the page-top hero headings, which are left alone to protect LCP)**: SplitText line reveal (mask "lines", 110% → 0, 0.9s `power3.out`, stagger 0.08, trigger "top 80%", once); the eyebrow and lead fade up 28px after the heading. Re-split on resize.
+
+**Images** (Home About photo, service-card photos, the service-page "What we need" photo, the Home CTA banner; never heroes): clip-path wipe `inset(100% 0 0 0)` → `inset(0)`, 1.1s `power3.inOut`, while the image settles from scale 1.08 to 1; then a gentle translateY parallax (the image box is 8% taller than its frame).
+
+**Cards** (bento, ports, audiences, compliance, phase panels, promise tiles): rise 48px, scale 0.96 → 1, opacity 0 → 1, stagger 0.1, once on entering.
+
+**The Voyage (Home 03)**: desktop pins the section for about 250% of the viewport height while an SVG route draws (scrub) through 8 stage nodes and a small white vessel with a fading wake follows it (MotionPathPlugin). Each node activates as the vessel reaches it: the circle fills (red for 01 and 08, white for the others), the title and description fade in, then the green "You receive" line; the phase names brighten as their part of the route passes. On short desktop screens where the pinned route would have to shrink below 75% (e.g. 1280×720, 1024×768), the vertical version is used instead so text stays legible. Mobile: no pin; a vertical route line on the left draws as you scroll and each stage lights up as it reaches the middle of the screen. Without JS or with reduced motion: the three phase panels, unchanged.
+
+Also allowed: button colour transitions (200ms), card image zoom and arrow nudge on hover, mobile menu fade (200ms), the header's solid/shrink/hide transitions (320ms), the section rail's label slide. Not allowed: counters that change real figures, carousels, auto-playing sliders.
 
 ## 8. Images
 | File | Where | Alt text | object-position |

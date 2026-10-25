@@ -62,9 +62,9 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
   <!-- General enquiry -->
   <section class="section enquiry-section bg-white" aria-labelledby="enquiry-title">
     <div class="container enquiry">
-      <div class="enquiry__intro" data-reveal>
+      <div class="enquiry__intro">
         <p class="t-eyebrow eyebrow">General enquiry</p>
-        <h2 class="enquiry__title" id="enquiry-title">Send us a message.</h2>
+        <h2 class="enquiry__title" id="enquiry-title" data-split>Send us a message.</h2>
         <p class="t-body enquiry__text">
           For a port cost estimate, use the PDA form instead. It asks for exactly what we need and goes straight to
           the operations desk.
@@ -112,7 +112,7 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
           </p>
         </noscript>
       </form>
-      <SendPanel title="Send your message" />
+      <SendPanel title="Send your message" fallbackHref="/contact" />
       </div>
     </div>
   </section>

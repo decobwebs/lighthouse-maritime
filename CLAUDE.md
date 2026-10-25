@@ -13,12 +13,13 @@ The design is **finished and approved**. Your job is to implement it faithfully,
 ## Stack (decided, do not change without asking)
 - **Astro** + **TypeScript** (strict). **Fully static output: no server code, no API routes, no adapter.** (Astro 6.4.8, the newest that runs on this machine's Node 22.18; `@astrojs/sitemap` pinned to 3.7.3.)
 - **Plain CSS** with the variables in `src/styles/tokens.css`, plus scoped `<style>` in components. **No Tailwind, no UI kit, no CSS-in-JS.**
-- Fonts: **Manrope** (headings, numbers, 500–800) and **Inter** (body, 400–600), self-hosted with `@fontsource/manrope` and `@fontsource/inter` (no Google Fonts request at runtime).
+- Fonts: **Manrope** (headings, numbers, 500–800) and **Inter** (body, 400–600), self-hosted as variable fonts with `@fontsource-variable/manrope` and `@fontsource-variable/inter` (one Latin file each, both preloaded; no Google Fonts request at runtime).
 - Images: `astro:assets` `<Image>` / `<Picture>` from `src/assets/images/`, AVIF + WebP, explicit width/height, `loading="eager"` + `fetchpriority="high"` for the hero only.
 - Hosting: **Vercel**, serving the static `dist/` folder (no adapter needed).
 - Forms: **no server.** Request a PDA and Contact are checked in the browser (`src/lib/pda-rules.ts`, `src/lib/contact-rules.ts`), confirmed in a "Check your details" dialog, then sent by the visitor from their own email app (`mailto:`) or WhatsApp, or copied (`src/lib/send.ts`, `src/scripts/send-flow.ts`). PDA → operations@ (cc admin@); Contact → admin@ (cc operations@). No Resend, Supabase or Turnstile.
 - Email addresses never appear whole in page HTML or scripts: use `<Email mailbox="…" />` in pages and `emailAddress()` in scripts (the one exception is the no-JS fallback link on Request a PDA).
-- JavaScript: only where needed (header scroll states, mobile menu, Lagos desk clock, Home section rail, scroll reveal, PDA purpose chips, the form check-and-send flow, email links). Everything else must work with JS disabled; without JS the forms show a plain email/phone fallback.
+- JavaScript: header scroll states, mobile menu, Lagos desk clock, Home section rail, PDA purpose chips, the form check-and-send flow, email links, and motion (DESIGN.md §7).
+- Motion: **GSAP** (ScrollTrigger, SplitText; MotionPathPlugin on Home only) + **Lenis**, loaded as a deferred module after first paint (`src/scripts/motion/`). Hidden start states only under `html.motion-on`. Everything must work with JS disabled or with reduced motion; without JS the forms show a plain email/phone fallback.
 
 ## Project structure
 ```
@@ -53,8 +54,8 @@ public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt  patterns/c
 - Domain: **lighthousemaritimeltd.com**. Emails (render with `<Email>`, never as plain text): `operations@lighthousemaritimeltd.com` (24/7 desk, PDA requests) and `admin@lighthousemaritimeltd.com` (general, tenders). Phones: +234 806 118 9106 (operations, 24/7), +234 908 622 3063 (administration).
 - Red (`--red`) is for the primary action only. One red button per view, plus the header button.
 - Sections are separated by **background rhythm only** (white, mist, navy chart; see DESIGN.md §4): no full-width dividers. Rules stay inside components. Shadows only where DESIGN.md specifies them (floating head-office card, port cards, solid header, section rail, dialogs).
-- Accessibility: WCAG 2.2 AA. Real `<button>`/`<a>`/`<label>`, visible focus (3px outline), alt text from `docs/CONTENT.md`, `prefers-reduced-motion` respected, 44px minimum touch targets.
-- Performance budget (mobile, 4G): LCP ≤ 2.5s, CLS ≤ 0.1, total JS ≤ 30 KB gzipped on content pages.
+- Accessibility: WCAG 2.2 AA. Real `<button>`/`<a>`/`<label>`, visible focus (3px outline), alt text from `docs/CONTENT.md`, `prefers-reduced-motion` = no motion at all, 44px minimum touch targets.
+- Performance budget (mobile, 4G): LCP ≤ 2.5s, CLS < 0.1, total JS ≤ **70 KB compressed per page** (including GSAP and Lenis). No long tasks over 200ms while scrolling (Chrome 4× CPU throttle).
 - Two photos show other shipping lines' names (MSC on the Port agency image, EVERGREEN on the night CTA image). Keep them for now, but leave a `TODO(brand-photo)` comment wherever they are used. The client may swap them.
 
 ## Commands

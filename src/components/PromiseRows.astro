@@ -10,7 +10,7 @@ const Heading = headingLevel;
 ---
 <ol role="list" class="tiles">
   {items.map((item, i) => (
-    <li class="tile" data-reveal>
+    <li class="tile" data-card>
       <span class="tile__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
       <div>
         <Heading class="t-h4 tile__title">{item.title}</Heading>

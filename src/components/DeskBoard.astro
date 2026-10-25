@@ -3,25 +3,25 @@
 // The clock shows Lagos time (Africa/Lagos, 24-hour), refreshed every 30 seconds. It is deliberately
 // not a live region, so screen readers don't announce each update. Without JS it reads "Lagos (WAT)".
 ---
-<section class="desk" aria-label="Operations desk">
-  <div class="desk__cell">
+<section class="desk" aria-label="Operations desk" data-desk>
+  <div class="desk__cell" data-desk-cell>
     <h2 class="desk__label">Apapa operations desk</h2>
-    <p class="desk__time"><span data-lagos-time>Lagos (WAT)</span><span class="desk__tz" data-lagos-tz hidden>WAT</span></p>
+    <p class="desk__time"><span class="tick"><span data-tick data-lagos-time>Lagos (WAT)</span></span><span class="desk__tz" data-lagos-tz hidden>WAT</span></p>
     <p class="t-micro desk__meta">06°27′N 003°22′E · Lagos local time</p>
   </div>
-  <div class="desk__cell">
+  <div class="desk__cell" data-desk-cell>
     <h2 class="desk__label">Desk status</h2>
-    <p class="desk__value"><span class="desk__dot" aria-hidden="true"></span>Open now</p>
+    <p class="desk__value"><span class="desk__dot" aria-hidden="true"></span><span class="tick"><span data-tick>Open now</span></span></p>
     <p class="desk__note">Answering 24 hours a day, every day.</p>
   </div>
-  <div class="desk__cell">
+  <div class="desk__cell" data-desk-cell>
     <h2 class="desk__label">Coverage</h2>
-    <p class="desk__value">9 ports + offshore</p>
+    <p class="desk__value"><span class="tick"><span data-tick>9 ports + offshore</span></span></p>
     <p class="desk__note">Lagos, Delta, Rivers and Cross River.</p>
   </div>
-  <div class="desk__cell">
+  <div class="desk__cell" data-desk-cell>
     <h2 class="desk__label">PDA turnaround</h2>
-    <p class="desk__value">Within [X] hours</p>
+    <p class="desk__value"><span class="tick"><span data-tick>Within [X] hours</span></span></p>
     <p class="desk__note">After a complete request.</p>
   </div>
 </section>
@@ -56,6 +56,12 @@
     overflow: hidden;
   }
   .desk__cell { padding: 24px 26px; background: var(--panel); }
+
+  /* Values tick in once from behind a mask (motion only). */
+  .tick { display: inline-block; overflow: hidden; vertical-align: bottom; padding-bottom: 0.08em; }
+  .tick > span { display: inline-block; }
+  :global(html.motion-on) .desk__cell { opacity: 0; transform: translateY(24px); }
+  :global(html.motion-on) [data-tick] { transform: translateY(110%); }
 
   .desk__label {
     font-family: var(--font-body);

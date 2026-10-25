@@ -4,7 +4,7 @@ import { PORT_REGIONS } from '../data/site';
 ---
 <ul role="list" class="ports">
   {PORT_REGIONS.map((r) => (
-    <li class="port-card" data-reveal>
+    <li class="port-card" data-card>
       <div class="port-card__head">
         <h3 class="t-eyebrow port-card__region">{r.region}</h3>
         <p class:list={['t-micro', 'port-card__note', { 'port-card__note--hq': r.note === 'Head office' }]}>{r.note}</p>

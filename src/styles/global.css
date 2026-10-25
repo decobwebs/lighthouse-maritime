@@ -181,16 +181,28 @@ a:hover { color: var(--red); }
 /* Sections are separated by background only: no dividing rules (DESIGN.md §1). */
 .section { padding-block: var(--section-y); }
 
-/* ---------- Scroll reveal (DESIGN.md §7) ----------
-   `reveal-on` is added in <head> only when JS runs and motion is allowed, so without JS
-   (or with reduced motion) everything is simply visible. */
-html.reveal-on [data-reveal] {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
-  transition-delay: var(--reveal-delay, 0ms);
+/* ---------- Motion start states (DESIGN.md §7) ----------
+   `motion-on` is added in <head> only when JS runs and reduced motion is off, and removed again if the
+   motion module hasn't started within 4s. Without it (no JS, reduced motion) everything is visible.
+   GSAP animates from exactly these states, so nothing jumps when it takes over. */
+html.motion-on [data-split] { visibility: hidden; }
+/* SplitText line masks: room below each line so descenders aren't clipped while lines slide in. */
+.split-line-mask { padding-bottom: 0.14em; margin-bottom: -0.14em; }
+html.motion-on [data-reveal] { opacity: 0; transform: translateY(28px); }
+html.motion-on [data-card] { opacity: 0; transform: translateY(48px) scale(0.96); }
+html.motion-on [data-wipe] { clip-path: inset(100% 0 0 0); }
+/* Wipe images start oversized and settle down to 1; the extra 8% height feeds the parallax. */
+html.motion-on [data-wipe] > picture {
+  top: -4% !important;
+  bottom: auto !important;
+  height: 108% !important;
+  transform: scale(1.08);
 }
-html.reveal-on [data-reveal].is-revealed { opacity: 1; transform: none; }
+
+/* Lenis smooth scroll (replaces CSS smooth scrolling while it runs). */
+html.lenis, html.lenis body { height: auto; }
+html.lenis.lenis-smooth { scroll-behavior: auto !important; }
+html.lenis.lenis-stopped { overflow: hidden; }
 
 .on-dark { color: var(--on-dark); }
 
@@ -259,5 +271,4 @@ html:not(.js) [data-js-only] { display: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  html.reveal-on [data-reveal] { opacity: 1; transform: none; transition: none; }
 }

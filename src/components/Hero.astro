@@ -1,19 +1,21 @@
 ---
 // Home photo hero (DESIGN.md §5 Photo heroes, 01-home-desktop-v4): photo + three overlays, badge,
 // display H1, lead, two buttons, the PDA starter and the Operations desk board. Sits under the
-// fixed, transparent header. Never animated.
+// fixed, transparent header. Entrance, lighthouse beam, drift and scroll-out are in
+// src/scripts/motion/hero.ts (DESIGN.md §7); without JS or with reduced motion it is fully static.
 import { Picture } from 'astro:assets';
 import Button from './Button.astro';
 import QuickPdaPanel from './QuickPdaPanel.astro';
 import DeskBoard from './DeskBoard.astro';
 import heroHarbour from '../assets/images/hero-harbour.jpg';
-import { HERO_WIDTHS } from '../data/hero';
+import { HERO_WIDTHS, HERO_QUALITY } from '../data/hero';
 ---
-<section class="hero on-dark" aria-labelledby="hero-title">
+<section class="hero on-dark" aria-labelledby="hero-title" data-hero>
   <Picture
     src={heroHarbour}
     formats={['avif', 'webp']}
     widths={HERO_WIDTHS}
+    quality={HERO_QUALITY}
     sizes="100vw"
     alt="A cargo vessel entering harbour at dusk past a quayside crane"
     class="hero__img"
@@ -25,23 +27,30 @@ import { HERO_WIDTHS } from '../data/hero';
   <div class="hero__shade hero__shade--side" aria-hidden="true"></div>
   <div class="hero__shade hero__shade--top" aria-hidden="true"></div>
   <div class="hero__shade hero__shade--bottom" aria-hidden="true"></div>
+  <div class="hero__dim hero__dim--intro" data-hero-dim aria-hidden="true"></div>
+  <div class="hero__dim hero__dim--scroll" data-hero-dim-scroll aria-hidden="true"></div>
+  <div class="hero__beam" aria-hidden="true"><div class="hero__cone" data-hero-cone></div></div>
 
-  <div class="container hero__body">
-    <p class="t-micro hero__badge"><span class="hero__badge-tag">Certified</span>NPA · NIMASA · NOGIC JQS</p>
-    <h1 class="t-display hero__title" id="hero-title">
+  <div class="container hero__body" data-hero-body>
+    <p class="t-micro hero__badge" data-hero-item><span class="hero__badge-tag">Certified</span>NPA · NIMASA · NOGIC JQS</p>
+    <h1 class="t-display hero__title" id="hero-title" data-hero-title>
       Ship agency you can rely on, <span class="dim">at every Nigerian port.</span>
     </h1>
-    <p class="t-lead hero__lead">
+    <p class="t-lead hero__lead" data-hero-item>
       Port agency, husbandry, clearance and vessel supply, with accurate PDAs, clear updates and one
       accountable contact from arrival to sailing.
     </p>
-    <div class="hero__actions">
-      <Button href="/request-a-pda" arrow>Request a PDA</Button>
+    <div class="hero__actions" data-hero-item>
+      <span class="hero__cta">
+        <span class="hero__ring" aria-hidden="true"></span>
+        <span class="hero__ring" aria-hidden="true"></span>
+        <Button href="/request-a-pda" arrow class="hero__cta-btn" data-hero-cta>Request a PDA</Button>
+      </span>
       <Button href="/services" variant="secondary-dark">Explore services</Button>
     </div>
   </div>
 
-  <div class="container hero__panel">
+  <div class="container hero__panel" data-hero-panel>
     <QuickPdaPanel />
   </div>
 
@@ -63,7 +72,75 @@ import { HERO_WIDTHS } from '../data/hero';
     width: 100%;
     height: 100%;
   }
+  /* 2% wider than the hero so the ambient drift never shows an edge.
+     Capped at 92% of the screen height and faded at its lower edge: the hero's bottom is solid navy
+     anyway, and a photo that fills the whole viewport is ignored by Chrome as an LCP candidate. */
+  .hero__picture {
+    width: 102%;
+    height: min(100%, 92vh);
+    height: min(100%, 92svh);
+    -webkit-mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+            mask-image: linear-gradient(180deg, #000 72%, transparent 100%);
+  }
   .hero__img { object-fit: cover; object-position: 60% 40%; }
+
+  /* Dim layers: the entrance starts darker; the scroll-out darkens slightly. Clear by default. */
+  .hero__dim { position: absolute; inset: 0; background: var(--deep); opacity: 0; pointer-events: none; }
+
+  /* Lighthouse beam: a soft warm cone rotated about a point just off the right edge (sized in JS). */
+  .hero__beam { position: absolute; inset: 0; overflow: hidden; pointer-events: none; mix-blend-mode: screen; }
+  .hero__cone {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    background: conic-gradient(
+      from -7deg at 50% 50%,
+      rgba(255, 236, 200, 0) 0deg,
+      rgba(255, 236, 200, 0.2) 7deg,
+      rgba(255, 236, 200, 0) 14deg,
+      rgba(255, 236, 200, 0) 360deg
+    );
+    /* Fades only far beyond the headline and button. */
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 0%, #000 55%, transparent 90%);
+            mask-image: radial-gradient(circle at 50% 50%, #000 0%, #000 55%, transparent 90%);
+    will-change: transform, opacity;
+  }
+
+  /* Request a PDA: pulse rings (outside the button) and a one-off light shine (inside it). */
+  .hero__cta { position: relative; display: inline-flex; }
+  .hero__ring {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--r-btn);
+    border: 2px solid rgba(240, 138, 128, 0.7);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .hero__cta :global(.hero__cta-btn) { position: relative; overflow: hidden; }
+  .hero__cta :global(.hero__cta-btn)::after {
+    content: '';
+    position: absolute;
+    inset: -20% auto -20% 0;
+    width: 45%;
+    background: linear-gradient(105deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.45) 50%, rgba(255, 255, 255, 0) 100%);
+    transform: translateX(-160%) skewX(-12deg);
+    pointer-events: none;
+  }
+  .hero__cta :global(.hero__cta-btn.is-shining)::after { animation: hero-shine 0.9s var(--ease-out) 1; }
+  @keyframes hero-shine {
+    from { transform: translateX(-160%) skewX(-12deg); }
+    to { transform: translateX(360%) skewX(-12deg); }
+  }
+
+  /* Entrance start states (only while motion is on). */
+  :global(html.motion-on) .hero__img { transform: scale(1.08); filter: brightness(0.8); }
+  :global(html.motion-on) .hero__dim--intro { opacity: 0.35; }
+  :global(html.motion-on) .hero__title { visibility: hidden; }
+  :global(html.motion-on) [data-hero-item] { opacity: 0; transform: translateY(16px); }
+  :global(html.motion-on) .hero__panel :global(.qp) { opacity: 0; transform: translateY(32px); }
 
   .hero__shade { position: absolute; pointer-events: none; }
   .hero__shade--side {
@@ -127,6 +204,7 @@ import { HERO_WIDTHS } from '../data/hero';
     .hero__lead { margin-top: 18px; }
     .hero__actions { flex-direction: column; gap: 10px; margin-top: 28px; }
     .hero__actions :global(.btn) { width: 100%; border-radius: var(--r-input); }
+    .hero__cta { display: flex; width: 100%; }
     .hero__panel { margin-top: 40px; }
     .hero__desk { margin-top: 14px; padding-bottom: 48px; }
   }

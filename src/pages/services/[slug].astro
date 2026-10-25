@@ -51,12 +51,12 @@ const weNeed = s.weNeedHeading;
   <!-- What's included -->
   <section class="section bg-white" aria-labelledby="included-title">
     <div class="container split">
-      <div class="split__intro" data-reveal>
-        <p class="t-eyebrow eyebrow">What's included</p>
-        <h2 class="t-h2 sec-title" id="included-title">
+      <div class="split__intro">
+        <p class="t-eyebrow eyebrow" data-reveal>What's included</p>
+        <h2 class="t-h2 sec-title" id="included-title" data-split>
           {included.title} <span class="dim">{included.dim}</span>
         </h2>
-        {included.body && <p class="t-body sec-body">{included.body}</p>}
+        {included.body && <p class="t-body sec-body" data-reveal>{included.body}</p>}
       </div>
       <ul role="list" class="ticks" data-reveal>
         {s.included.map((item) => (
@@ -75,9 +75,9 @@ const weNeed = s.weNeedHeading;
   <!-- Who it's for -->
   <section class="section bg-mist" aria-labelledby="who-title">
     <div class="container">
-      <div data-reveal>
-      <p class="t-eyebrow eyebrow">Who it's for</p>
-      <h2 class="t-h2 sec-title who__title" id="who-title">
+      <div>
+      <p class="t-eyebrow eyebrow" data-reveal>Who it's for</p>
+      <h2 class="t-h2 sec-title who__title" id="who-title" data-split>
         {whoFor.title} <span class="dim">{whoFor.dim}</span>
       </h2>
       </div>
@@ -96,7 +96,7 @@ const weNeed = s.weNeedHeading;
   <!-- What we need from you -->
   <section class="section bg-white" aria-labelledby="need-title">
     <div class="container need">
-      <div class="need__photo" data-reveal>
+      <div class="need__photo" data-wipe>
         <Picture
           src={s.needImage}
           formats={['avif', 'webp']}
@@ -109,13 +109,13 @@ const weNeed = s.weNeedHeading;
           decoding="async"
         />
       </div>
-      <div class="need__copy" data-reveal>
-        <p class="t-eyebrow eyebrow">To get started</p>
-        <h2 class="t-h2 sec-title" id="need-title">
+      <div class="need__copy">
+        <p class="t-eyebrow eyebrow" data-reveal>To get started</p>
+        <h2 class="t-h2 sec-title" id="need-title" data-split>
           {weNeed.title} <span class="dim">{weNeed.dim}</span>
         </h2>
-        {weNeed.body && <p class="t-body sec-body">{weNeed.body}</p>}
-        <ol role="list" class="need__list">
+        {weNeed.body && <p class="t-body sec-body" data-reveal>{weNeed.body}</p>}
+        <ol role="list" class="need__list" data-reveal>
           {s.weNeed.map((line, i) => (
             <li><span class="need__num" aria-hidden="true">{i + 1}</span><span class="need__text">{line}</span></li>
           ))}
@@ -127,9 +127,9 @@ const weNeed = s.weNeedHeading;
   <!-- Ports covered -->
   <section class="section ports-strip bg-mist" aria-labelledby="ports-title">
     <div class="container ports">
-      <div class="ports__intro" data-reveal>
-        <p class="t-eyebrow eyebrow">Ports covered</p>
-        <h2 class="t-h2 ports__title" id="ports-title">Available at every Nigerian port.</h2>
+      <div class="ports__intro">
+        <p class="t-eyebrow eyebrow" data-reveal>Ports covered</p>
+        <h2 class="t-h2 ports__title" id="ports-title" data-split>Available at every Nigerian port.</h2>
       </div>
       <ul role="list" class="chips" data-reveal>
         {ports.map((port, i) => <li class:list={['chip', { 'chip--on': i === 0 }]}>{port}</li>)}
@@ -140,10 +140,10 @@ const weNeed = s.weNeedHeading;
   <!-- Related services -->
   <section class="section bg-white" aria-labelledby="related-title">
     <div class="container">
-      <div class="related__head" data-reveal>
+      <div class="related__head">
         <div>
-          <p class="t-eyebrow eyebrow">Often booked together</p>
-          <h2 class="t-h2 related__title" id="related-title">Related services</h2>
+          <p class="t-eyebrow eyebrow" data-reveal>Often booked together</p>
+          <h2 class="t-h2 related__title" id="related-title" data-split>Related services</h2>
         </div>
         <a href="/services" class="related__all">All services <span aria-hidden="true">→</span></a>
       </div>
@@ -264,6 +264,7 @@ const weNeed = s.weNeedHeading;
 
   /* ---------- Related ---------- */
   .related__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .related__head > div { flex: 1 1 360px; }
   .related__title { margin-top: 16px; font-size: min(var(--fs-h2), 40px); }
   .related__all {
     display: inline-flex;

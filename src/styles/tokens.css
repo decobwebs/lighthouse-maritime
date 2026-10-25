@@ -36,8 +36,8 @@
   --ok-on-dark:#7FD3B0;  /* "You receive" lines on dark */
 
   /* ---------- Type ---------- */
-  --font-display: 'Manrope', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-display: 'Manrope Variable', 'Manrope', system-ui, sans-serif;
+  --font-body:    'Inter Variable', 'Inter', system-ui, sans-serif;
 
   --fs-display: clamp(44px, 6vw, 80px);   /* lh 1.02, ls -0.035em, 700 */
   --fs-h1:      clamp(42px, 5.4vw, 72px); /* inner page hero, lh 1.03, ls -0.033em, 700 */

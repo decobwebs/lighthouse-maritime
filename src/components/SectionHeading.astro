@@ -18,9 +18,9 @@ const { eyebrow, title, dim, onDark = false, maxWidth = 640, id } = Astro.props;
 const hasSide = Astro.slots.has('default');
 ---
 <div class:list={['sh', { 'sh--dark': onDark, 'sh--split': hasSide }]}>
-  <div class="sh__main" data-reveal>
-    <Eyebrow text={eyebrow} onDark={onDark} />
-    <h2 class="t-h2 sh__title" id={id} style={`max-width: ${maxWidth}px`}>
+  <div class="sh__main">
+    <div data-reveal><Eyebrow text={eyebrow} onDark={onDark} /></div>
+    <h2 class="t-h2 sh__title" id={id} style={`max-width: ${maxWidth}px`} data-split>
       {title}{dim && <> <span class="dim">{dim}</span></>}
     </h2>
   </div>

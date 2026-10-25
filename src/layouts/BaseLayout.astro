@@ -5,18 +5,14 @@
 // header="overlay": transparent over the page's own photo hero until the visitor scrolls.
 // header="solid":   solid from the start; the `hero` slot sits in a .bg-chart-dark masthead
 //                   padded by the header height.
-// Latin subsets only: the copy is English, so the other subsets are never needed.
-import '@fontsource/manrope/latin-500.css';
-import '@fontsource/manrope/latin-600.css';
-import '@fontsource/manrope/latin-700.css';
-import '@fontsource/manrope/latin-800.css';
-import '@fontsource/inter/latin-400.css';
-import '@fontsource/inter/latin-500.css';
-import '@fontsource/inter/latin-600.css';
+// Variable fonts: one file per family covers every weight we use (Manrope 500–800, Inter 400–600),
+// about 73 KB in total instead of seven static files (~165 KB). Browsers fetch only the Latin file.
+import '@fontsource-variable/manrope/wght.css';
+import '@fontsource-variable/inter/wght.css';
 import '../styles/global.css';
-// Preloaded: the faces used above the fold (headings, body).
-import manrope700 from '@fontsource/manrope/files/manrope-latin-700-normal.woff2?url';
-import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
+// Preloaded: both Latin files are needed for the first screen.
+import manropeVar from '@fontsource-variable/manrope/files/manrope-latin-wght-normal.woff2?url';
+import interVar from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
 
 import SeoHead from '../components/SeoHead.astro';
 import Header from '../components/Header.astro';
@@ -37,20 +33,20 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Before first paint: flag JS, and switch scroll-reveal on only when JS runs and motion is allowed.
-         If the reveal script never starts, a timer makes everything visible again. -->
+    <!-- Before first paint: flag JS, and switch motion on only when JS runs and reduced motion is off.
+         If the motion module hasn't started within 4s, a timer removes the flag so everything shows. -->
     <script is:inline>
       (function () {
         var html = document.documentElement;
         html.classList.add('js');
-        if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          html.classList.add('reveal-on');
-          setTimeout(function () { if (!window.__revealReady) html.classList.remove('reveal-on'); }, 3000);
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          html.classList.add('motion-on');
+          setTimeout(function () { if (!window.__motionReady) html.classList.remove('motion-on'); }, 4000);
         }
       })();
     </script>
-    <link rel="preload" href={manrope700} as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={manropeVar} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={interVar} as="font" type="font/woff2" crossorigin />
     <slot name="head" />
     <SeoHead title={title} description={description} localBusiness={localBusiness} noindex={noindex} />
   </head>
@@ -76,23 +72,15 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
     <MobileActionBar />
 
     <script>
-      /* Scroll reveal (DESIGN.md §7): fade [data-reveal] elements up once, as they come into view.
-         Elements revealed together are staggered 80ms apart, in document order. */
-      if (document.documentElement.classList.contains('reveal-on')) {
-        (window as unknown as { __revealReady: boolean }).__revealReady = true;
-        const observer = new IntersectionObserver(
-          (entries) => {
-            const visible = entries.filter((e) => e.isIntersecting);
-            visible.forEach((entry, i) => {
-              const el = entry.target as HTMLElement;
-              el.style.setProperty('--reveal-delay', `${Math.min(i, 5) * 80}ms`);
-              el.classList.add('is-revealed');
-              observer.unobserve(el);
-            });
-          },
-          { threshold: 0.15 },
-        );
-        document.querySelectorAll('[data-reveal]').forEach((el) => observer.observe(el));
+      // Motion (DESIGN.md §7): GSAP + Lenis load as a separate module once the page has loaded and the
+      // browser is idle, so they never compete with first paint or the hero photo (LCP).
+      if (document.documentElement.classList.contains('motion-on')) {
+        const start = () =>
+          import('../scripts/motion/index').catch(() => document.documentElement.classList.remove('motion-on'));
+        const whenIdle = () =>
+          'requestIdleCallback' in window ? requestIdleCallback(start, { timeout: 1200 }) : setTimeout(start, 200);
+        if (document.readyState === 'complete') whenIdle();
+        else addEventListener('load', whenIdle, { once: true });
       }
 
       // Assemble <Email> links in the browser so addresses never sit whole in the HTML.

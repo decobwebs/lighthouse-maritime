@@ -61,8 +61,8 @@ const promises = [
   <!-- 01 — About -->
   <section id="about" class="section about-section bg-white" aria-labelledby="about-title">
     <div class="container about">
-      <div class="about__media" data-reveal>
-        <div class="about__photo">
+      <div class="about__media">
+        <div class="about__photo" data-wipe>
           <Picture
             src={aboutTug}
             formats={['avif', 'webp']}
@@ -74,7 +74,7 @@ const promises = [
             decoding="async"
           />
         </div>
-        <div class="about__card">
+        <div class="about__card" data-reveal>
           <p class="t-eyebrow about__card-kicker">Head office</p>
           <p class="t-h5 about__card-title">5 Bornu Crescent, Apapa, Lagos</p>
           <p class="t-micro about__card-meta">Incorporated 2024</p>
@@ -256,6 +256,11 @@ const promises = [
   /* ---------- 03 Process ---------- */
   .process__timeline { margin-top: 64px; }
   #process :global(.process__guide) { font-size: 15px; padding: 14px 22px; font-weight: 600; }
+  /* The Voyage pins this section on desktop: tighter padding so heading + route fit one screen. */
+  @media (min-width: 1024px) {
+    :global(html.motion-on) #process { padding-block: 88px 56px; }
+    :global(html.motion-on) .process__timeline { margin-top: 36px; }
+  }
 
   /* ---------- 06 Compliance ---------- */
   .compliance {
