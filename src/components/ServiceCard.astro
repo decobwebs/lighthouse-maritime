@@ -1,0 +1,155 @@
+---
+// Photo service card (DESIGN.md §6 Service bento). `feature` = the large Port agency card.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  href: string;
+  code: string;
+  title: string;
+  text: string;
+  image: ImageMetadata;
+  alt: string;
+  position?: string;
+  feature?: boolean;
+  /** Pill shown top-left on the feature card. */
+  pill?: string;
+  sizes?: string;
+  class?: string;
+}
+const {
+  href,
+  code,
+  title,
+  text,
+  image,
+  alt,
+  position = 'center',
+  feature = false,
+  pill,
+  sizes = '(max-width: 959px) 100vw, 400px',
+  class: className,
+} = Astro.props;
+---
+<a href={href} class:list={['svc', { 'svc--feature': feature }, className]}>
+  <Picture
+    src={image}
+    formats={['avif', 'webp']}
+    widths={feature ? [480, 720, 960, 1280] : [400, 640, 800, 1200]}
+    sizes={sizes}
+    alt={alt}
+    class="svc__img"
+    pictureAttributes={{ class: 'svc__picture' }}
+    style={`object-position: ${position}`}
+    loading="lazy"
+    decoding="async"
+  />
+  <div class="svc__shade" aria-hidden="true"></div>
+  {pill && <span class="t-micro svc__pill">{pill}</span>}
+  <div class="svc__body">
+    <div class="svc__copy">
+      <p class="t-eyebrow svc__code">{code}{pill && <span class="svc__code-pill"> · {pill}</span>}</p>
+      <h3 class:list={['svc__title', feature ? 't-h3' : 't-h4']}>{title}</h3>
+      <p class:list={['svc__text', feature ? 't-body' : 't-small']}>{text}</p>
+    </div>
+    <span class="svc__go" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8" /></svg>
+    </span>
+  </div>
+</a>
+
+<style>
+  .svc {
+    position: relative;
+    display: block;
+    min-height: 300px;
+    border-radius: var(--r-card-lg);
+    overflow: hidden;
+    background: var(--navy);
+    color: var(--on-dark);
+    text-decoration: none;
+    isolation: isolate;
+  }
+  .svc:hover { color: var(--on-dark); }
+  .svc:focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
+
+  .svc__picture,
+  .svc__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .svc__img {
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  .svc:hover .svc__img { transform: scale(1.06); }
+
+  .svc__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(6, 18, 36, 0.1) 30%, rgba(6, 18, 36, 0.9) 100%);
+  }
+
+  .svc__pill {
+    position: absolute;
+    top: 28px;
+    left: 32px;
+    padding: 7px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.14);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .svc__body {
+    position: absolute;
+    inset: auto 28px 28px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .svc--feature .svc__body { inset: auto 32px 32px 32px; gap: 24px; }
+  .svc__copy { max-width: 460px; }
+
+  .svc__code { font-size: 12px; color: var(--on-dark-soft); }
+  .svc__title { margin-top: 10px; }
+  .svc--feature .svc__title { margin-top: 12px; }
+  .svc__text { margin-top: 8px; color: var(--on-dark-soft); }
+  .svc--feature .svc__text { margin-top: 12px; }
+
+  .svc__go {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--navy);
+    transition: background-color 250ms, color 250ms, transform 250ms;
+  }
+  .svc__go svg { width: 18px; height: 18px; }
+  .svc--feature .svc__go { width: 52px; height: 52px; }
+  .svc--feature .svc__go svg { width: 20px; height: 20px; }
+  .svc:hover .svc__go { background: var(--red); color: var(--on-dark); transform: translateX(3px); }
+
+  .svc__code-pill { display: none; }
+
+  /* Phone (02-home-phone): pill folds into the eyebrow; small cards show code + title only. */
+  @media (max-width: 599px) {
+    .svc { border-radius: var(--r-card); }
+    .svc__pill { display: none; }
+    .svc__code-pill { display: inline; }
+    .svc__body,
+    .svc--feature .svc__body { inset: auto 20px 18px 20px; gap: 16px; }
+    .svc--feature .svc__body { bottom: 20px; }
+    .svc--feature .svc__text { font-size: var(--fs-small); }
+    .svc:not(.svc--feature) .svc__text { display: none; }
+    .svc__go { display: none; }
+  }
+</style>

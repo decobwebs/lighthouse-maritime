@@ -1,0 +1,47 @@
+---
+// Section header pattern (DESIGN.md §4): eyebrow + two-tone h2 on the left,
+// optional side text or link (default slot) on the right, bottom-aligned.
+interface Props {
+  eyebrow: string;
+  title: string;
+  /** Lighter second clause of the heading. */
+  dim?: string;
+  onDark?: boolean;
+  /** Max width of the heading column, in px. */
+  maxWidth?: number;
+  id?: string;
+}
+const { eyebrow, title, dim, onDark = false, maxWidth = 640, id } = Astro.props;
+const hasSide = Astro.slots.has('default');
+---
+<div class:list={['sh', { 'sh--dark': onDark, 'sh--split': hasSide }]}>
+  <div class="sh__main">
+    <p class="t-eyebrow sh__eyebrow">{eyebrow}</p>
+    <h2 class="t-h2 sh__title" id={id} style={`max-width: ${maxWidth}px`}>
+      {title}{dim && <> <span class="dim">{dim}</span></>}
+    </h2>
+  </div>
+  {hasSide && <div class="sh__side"><slot /></div>}
+</div>
+
+<style>
+  .sh--split {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px 64px;
+  }
+  .sh__main { flex: 1 1 520px; min-width: 0; }
+  .sh__eyebrow { color: var(--red); }
+  .sh--dark .sh__eyebrow { color: var(--red-soft); }
+  .sh__title { margin-top: 18px; }
+  .sh__side { flex: 0 1 400px; max-width: 400px; color: var(--muted); }
+  .sh--dark .sh__side { color: var(--on-dark-soft); }
+
+  @media (max-width: 599px) {
+    .sh__title { margin-top: 14px; }
+    .sh__main { flex-basis: 100%; }
+    .sh__side { flex-basis: 100%; }
+  }
+</style>

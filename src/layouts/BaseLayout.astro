@@ -3,14 +3,18 @@
 //
 // header="overlay": the header floats over the page's own photo hero (Home).
 // header="solid":   the header and the `hero` slot share one .bg-rings masthead (inner pages).
-import '@fontsource/manrope/500.css';
-import '@fontsource/manrope/600.css';
-import '@fontsource/manrope/700.css';
-import '@fontsource/manrope/800.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
+// Latin subsets only: the copy is English, so the other subsets are never needed.
+import '@fontsource/manrope/latin-500.css';
+import '@fontsource/manrope/latin-600.css';
+import '@fontsource/manrope/latin-700.css';
+import '@fontsource/manrope/latin-800.css';
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
 import '../styles/global.css';
+// Preloaded: the faces used above the fold (headings, body).
+import manrope700 from '@fontsource/manrope/files/manrope-latin-700-normal.woff2?url';
+import inter400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
 
 import SeoHead from '../components/SeoHead.astro';
 import Header from '../components/Header.astro';
@@ -31,6 +35,10 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Flags JS before first paint so JS-only UI (hero tabs) appears without a layout shift. -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <link rel="preload" href={manrope700} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={inter400} as="font" type="font/woff2" crossorigin />
     <SeoHead title={title} description={description} localBusiness={localBusiness} noindex={noindex} />
   </head>
   <body>

@@ -1,0 +1,123 @@
+---
+// Service bento (DESIGN.md §6): 12-column grid.
+// Row 1–2: Port agency (7 cols × 2 rows) | Husbandry, Clearance (5 cols each, stacked).
+// Row 3: Supply | Logistics | dark "Something else?" card (4 cols each). One column below 960px.
+import ServiceCard from './ServiceCard.astro';
+import Button from './Button.astro';
+import portAgency from '../assets/images/svc-port-agency.jpg';
+import husbandry from '../assets/images/svc-husbandry.jpg';
+import clearance from '../assets/images/svc-clearance.jpg';
+import supply from '../assets/images/svc-supply.jpg';
+import logistics from '../assets/images/svc-logistics.jpg';
+---
+<div class="bento">
+  <!-- TODO(brand-photo): svc-port-agency.jpg shows MSC branding; the client may replace it. -->
+  <ServiceCard
+    class="bento__feature"
+    feature
+    pill="Core service"
+    href="/services/port-agency"
+    code="S—01"
+    title="Port agency"
+    text="Documentation, berthing, pilotage and clearance for every vessel type, with a PDA before arrival and a reconciled FDA after sailing."
+    image={portAgency}
+    alt="A container vessel approaching port"
+    sizes="(max-width: 959px) 100vw, 700px"
+  />
+  <ServiceCard
+    class="bento__half"
+    href="/services/husbandry-and-crew-changes"
+    code="S—02"
+    title="Husbandry and crew changes"
+    text="Sign-on, sign-off, visas, cash to master, medical."
+    image={husbandry}
+    alt="A ship's officer inspecting anchor chain on the forecastle"
+    position="60% 40%"
+    sizes="(max-width: 959px) 100vw, 500px"
+  />
+  <ServiceCard
+    class="bento__half"
+    href="/services/clearance-and-coordination"
+    code="S—03"
+    title="Clearance and coordination"
+    text="NPA, NIMASA, Customs, Port Health and Immigration."
+    image={clearance}
+    alt="Calculator and pen on port cost documents"
+    sizes="(max-width: 959px) 100vw, 500px"
+  />
+  <ServiceCard
+    class="bento__third"
+    href="/services/ship-supply-and-procurement"
+    code="S—04"
+    title="Ship supply and procurement"
+    text="Provisions, stores and spares, alongside or offshore."
+    image={supply}
+    alt="A product tanker at sea at dawn"
+    position="55% 50%"
+  />
+  <ServiceCard
+    class="bento__third"
+    href="/services/logistics-and-project-support"
+    code="S—05"
+    title="Logistics and project support"
+    text="Clearing, forwarding and haulage by road and sea."
+    image={logistics}
+    alt="Container terminal cranes lit at night"
+    position="50% 45%"
+  />
+  <div class="bento__third bento__else bg-rings on-dark">
+    <div>
+      <p class="t-eyebrow bento__else-kicker">Something else?</p>
+      <h3 class="t-h3 bento__else-title">Tell us what your vessel needs.</h3>
+      <p class="t-small bento__else-text">Our operations team will come back with a plan and a cost.</p>
+    </div>
+    <Button href="/contact" class="bento__else-btn">Talk to operations</Button>
+  </div>
+</div>
+
+<style>
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .bento > :global(.bento__feature) { grid-column: span 7; grid-row: span 2; min-height: 620px; }
+  .bento > :global(.bento__half) { grid-column: span 5; min-height: 300px; }
+  .bento > :global(.bento__third) { grid-column: span 4; min-height: 380px; }
+
+  .bento__else {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 36px;
+    border-radius: var(--r-card-lg);
+    overflow: hidden;
+  }
+  .bento__else-kicker { font-size: 12px; color: var(--red-soft); }
+  .bento__else-title { margin-top: 16px; font-size: min(var(--fs-h3), 30px); }
+  .bento__else-text { margin-top: 14px; color: var(--on-dark-muted); }
+  .bento__else :global(.bento__else-btn) {
+    align-self: flex-start;
+    min-height: 48px;
+    padding: 14px 22px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 959px) {
+    .bento { gap: 14px; }
+    .bento > :global(.bento__feature),
+    .bento > :global(.bento__half),
+    .bento > :global(.bento__third) { grid-column: span 12; grid-row: auto; }
+    .bento > :global(.bento__feature) { min-height: 460px; }
+    .bento > :global(.bento__half),
+    .bento > :global(.bento__third) { min-height: 280px; }
+    .bento__else { min-height: 0 !important; }
+  }
+  @media (max-width: 599px) {
+    .bento > :global(.bento__feature) { min-height: 380px; }
+    .bento > :global(.bento__half),
+    .bento > :global(.bento__third) { min-height: 200px; }
+    .bento__else { padding: 28px 22px; border-radius: var(--r-card); }
+  }
+</style>

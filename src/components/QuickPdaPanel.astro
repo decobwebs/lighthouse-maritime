@@ -1,0 +1,367 @@
+---
+// Glass quick-action panel in the Home hero (DESIGN.md §6 Quick PDA panel).
+// Tabs need JS; without it the tab row is hidden and the PDA form shows on its own.
+// The form is a plain GET to /request-a-pda, so vessel, port and eta arrive as query params.
+import Icon from './Icon.astro';
+import { SITE, PORT_OPTIONS, PORT_REGIONS } from '../data/site';
+
+const tabs = [
+  { id: 'pda', title: 'Request a PDA', sub: 'Port cost estimate' },
+  { id: 'ports', title: 'Port coverage', sub: 'All Nigerian ports' },
+  { id: 'desk', title: '24/7 desk', sub: 'Live operations support' },
+] as const;
+
+const tabIcons: Record<(typeof tabs)[number]['id'], string> = {
+  pda: '<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>',
+  ports: '<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  desk: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+};
+---
+<div class="qp on-dark" id="quick-pda" data-quick-panel>
+  <div class="qp__main">
+    <p class="qp__mobile-title">Quick PDA request</p>
+
+    <div class="qp__tabs" role="tablist" aria-label="Quick actions">
+      {tabs.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          class="qp__tab"
+          id={`qp-tab-${tab.id}`}
+          aria-controls={`qp-panel-${tab.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          tabindex={i === 0 ? 0 : -1}
+        >
+          <span class="qp__tab-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" set:html={tabIcons[tab.id]} />
+          </span>
+          <span>
+            <span class="qp__tab-title">{tab.title}</span>
+            <span class="qp__tab-sub t-micro">{tab.sub}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <div class="qp__panel" id="qp-panel-pda" role="tabpanel" aria-labelledby="qp-tab-pda">
+      <form class="qp__form" action="/request-a-pda" method="get">
+        <label class="qp__field qp__field--vessel t-micro">
+          Vessel name or IMO
+          <input type="text" name="vessel" placeholder="e.g. MV Atlantic Dawn / 9876543" autocomplete="off" />
+        </label>
+        <label class="qp__field qp__field--port t-micro">
+          Port
+          <select name="port">
+            {PORT_OPTIONS.map((port) => <option value={port}>{port}</option>)}
+          </select>
+        </label>
+        <label class="qp__field qp__field--eta t-micro">
+          ETA
+          <input type="date" name="eta" />
+        </label>
+        <button type="submit" class="qp__submit">Get PDA</button>
+      </form>
+    </div>
+
+    <div class="qp__panel qp__panel--ports" id="qp-panel-ports" role="tabpanel" aria-labelledby="qp-tab-ports" hidden>
+      <ul role="list" class="qp__regions">
+        {PORT_REGIONS.map((r) => (
+          <li>
+            <span class="t-micro qp__region">{r.region}</span>
+            <span class="qp__ports">{r.ports.join(' · ')}</span>
+          </li>
+        ))}
+      </ul>
+      <a href="/ports" class="qp__more t-small">See port coverage <Icon name="arrow" size={16} strokeWidth={2} /></a>
+    </div>
+
+    <div class="qp__panel" id="qp-panel-desk" role="tabpanel" aria-labelledby="qp-tab-desk" hidden>
+      <dl class="qp__desk">
+        <div>
+          <dt class="t-micro">Operations desk · 24/7</dt>
+          <dd><a href={SITE.ops.tel}>{SITE.ops.phone}</a></dd>
+          <dd class="t-small"><a href={`mailto:${SITE.ops.email}`}>{SITE.ops.email}</a></dd>
+        </div>
+        <div>
+          <dt class="t-micro">Administration</dt>
+          <dd><a href={SITE.admin.tel}>{SITE.admin.phone}</a></dd>
+          <dd class="t-small"><a href={`mailto:${SITE.admin.email}`}>{SITE.admin.email}</a></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+
+  <div class="qp__side">
+    <p class="t-micro qp__side-kicker">Vessel arriving soon?</p>
+    <p class="qp__side-title">Speak to our operations desk, day or night.</p>
+    <a href={SITE.ops.tel} class="qp__call">{SITE.ops.phone}</a>
+    <svg class="qp__ship" width="150" height="80" viewBox="0 0 150 80" aria-hidden="true">
+      <g fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M6 52 L144 52 L132 72 L18 72 Z" />
+        <path d="M24 52 V36 H56 V52 M56 44 H120 V52" />
+        <path d="M30 36 V22 H48 V36 M36 22 V12" />
+        <path d="M62 44 V38 H76 V44 M80 44 V38 H94 V44 M98 44 V38 H112 V44" />
+      </g>
+    </svg>
+  </div>
+</div>
+
+<script>
+  // Tabs (WAI-ARIA pattern): click or arrow keys switch panels; Home/End jump.
+  document.querySelectorAll<HTMLElement>('[data-quick-panel]').forEach((panel) => {
+    const tabs = [...panel.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+
+    const select = (next: HTMLButtonElement, focus = true) => {
+      tabs.forEach((tab) => {
+        const on = tab === next;
+        tab.setAttribute('aria-selected', String(on));
+        tab.tabIndex = on ? 0 : -1;
+        const target = document.getElementById(tab.getAttribute('aria-controls') ?? '');
+        if (target) target.hidden = !on;
+      });
+      if (focus) next.focus();
+    };
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab, false));
+      tab.addEventListener('keydown', (event) => {
+        const keys: Record<string, number> = {
+          ArrowRight: (i + 1) % tabs.length,
+          ArrowLeft: (i - 1 + tabs.length) % tabs.length,
+          Home: 0,
+          End: tabs.length - 1,
+        };
+        if (event.key in keys) {
+          event.preventDefault();
+          select(tabs[keys[event.key]]);
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .qp {
+    display: flex;
+    flex-wrap: wrap;
+    background: rgba(10, 26, 50, 0.58);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--on-dark-line);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .qp__main { flex: 999 1 640px; min-width: 0; padding: 28px 32px 32px; }
+
+  .qp__mobile-title { display: none; }
+
+  /* ---------- Tabs (shown only when JS is running) ---------- */
+  .qp__tabs {
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px 40px;
+    border-bottom: 1px solid var(--on-dark-line);
+  }
+  :global(.js) .qp__tabs { display: flex; }
+  :global(.js) .qp__tabs + .qp__panel { margin-top: 24px; }
+  .qp__panel[hidden] { display: none; }
+
+  .qp__tab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    margin-bottom: -1px;
+    padding: 0 0 16px;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    background: none;
+    color: var(--on-dark);
+    text-align: left;
+  }
+  .qp__tab[aria-selected='true'] { border-bottom-color: var(--on-dark); }
+  .qp__tab:focus-visible { outline-color: var(--on-dark); }
+  .qp__tab-icon {
+    width: 38px;
+    height: 38px;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--r-input);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--on-dark);
+    transition: background-color 200ms;
+  }
+  .qp__tab[aria-selected='true'] .qp__tab-icon { background: var(--on-dark); color: var(--navy); }
+  .qp__tab:hover .qp__tab-icon { background: rgba(255, 255, 255, 0.18); }
+  .qp__tab[aria-selected='true']:hover .qp__tab-icon { background: var(--on-dark); }
+  .qp__tab-title {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .qp__tab-sub { display: block; margin-top: 2px; color: var(--on-dark-muted); }
+
+  /* ---------- PDA form ---------- */
+  .qp__form { display: flex; flex-wrap: wrap; gap: 12px; }
+  .qp__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--on-dark-muted);
+  }
+  .qp__field--vessel { flex: 2 1 200px; }
+  .qp__field--port { flex: 1 1 150px; }
+  .qp__field--eta { flex: 1 1 140px; }
+  .qp__field input,
+  .qp__field select {
+    min-height: 50px;
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: var(--r-btn);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--on-dark);
+    font-size: 15.5px;
+    letter-spacing: 0;
+    color-scheme: dark;
+  }
+  .qp__field select { padding-inline: 12px; }
+  .qp__field select option { color: var(--ink); background: var(--surface); }
+  .qp__field input::placeholder { color: var(--on-dark-muted); opacity: 1; }
+  .qp__field input:focus-visible,
+  .qp__field select:focus-visible {
+    outline: 3px solid var(--on-dark);
+    outline-offset: 2px;
+    border-color: var(--on-dark);
+  }
+  .qp__submit {
+    flex: 1 1 140px;
+    align-self: flex-end;
+    min-height: 50px;
+    padding: 15px 20px;
+    border: 0;
+    border-radius: var(--r-btn);
+    background: var(--red);
+    color: var(--on-dark);
+    font-size: 15.5px;
+    font-weight: 600;
+    transition: background-color 200ms;
+  }
+  .qp__submit:hover { background: var(--red-hover); }
+  .qp__submit:focus-visible { outline-color: var(--on-dark); }
+
+  /* ---------- Port coverage + desk panels ---------- */
+  .qp__regions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px 32px;
+  }
+  .qp__regions li { display: flex; flex-direction: column; gap: 2px; }
+  .qp__region { color: var(--on-dark-muted); }
+  .qp__ports { font-size: 15px; font-weight: 500; line-height: 1.5; }
+  .qp__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 8px;
+    color: var(--on-dark);
+    font-weight: 600;
+  }
+  .qp__more:hover { color: var(--on-dark-soft); }
+
+  .qp__desk {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px 32px;
+  }
+  .qp__desk dt { color: var(--on-dark-muted); }
+  .qp__desk dd { margin-top: 4px; }
+  .qp__desk dd:first-of-type a {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .qp__desk a { color: var(--on-dark); text-decoration: none; }
+  .qp__desk dd.t-small a { color: var(--on-dark-soft); }
+  .qp__desk a:hover { text-decoration: underline; }
+
+  /* ---------- Side column ---------- */
+  .qp__side {
+    position: relative;
+    flex: 1 1 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 28px 32px;
+    border-left: 1px solid var(--on-dark-line);
+  }
+  .qp__side-kicker { color: var(--on-dark-muted); }
+  .qp__side-title {
+    max-width: 230px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .qp__call {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 4px;
+    padding: 11px 18px;
+    border-radius: var(--r-btn);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--on-dark);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 200ms;
+  }
+  .qp__call:hover { background: rgba(255, 255, 255, 0.16); color: var(--on-dark); }
+  .qp__ship { position: absolute; right: 20px; bottom: 18px; opacity: 0.3; color: var(--on-dark); }
+
+  /* When the panel wraps, the side column sits below with a top rule instead. */
+  @media (max-width: 959px) {
+    .qp__side { border-left: 0; border-top: 1px solid var(--on-dark-line); }
+  }
+
+  /* ---------- Phone: the PDA form only, as in the phone design ---------- */
+  @media (max-width: 599px) {
+    .qp { background: rgba(10, 26, 50, 0.62); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+    .qp__main { padding: 20px; }
+    .qp__mobile-title {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+    :global(.js) .qp__tabs { display: none; }
+    .qp__panel { margin-top: 16px; }
+    :global(.js) .qp__tabs + .qp__panel { margin-top: 16px; }
+    /* Other tabs can't be reached on phones, so keep the PDA form visible. */
+    #qp-panel-pda[hidden] { display: block; }
+    .qp__panel--ports,
+    #qp-panel-desk { display: none; }
+    .qp__form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 10px; }
+    .qp__field--vessel,
+    .qp__submit { grid-column: 1 / -1; }
+    .qp__field { gap: 6px; }
+    .qp__field input,
+    .qp__field select { font-size: 16px; padding: 13px 12px; border-radius: var(--r-input); }
+    .qp__submit { font-size: 16px; border-radius: var(--r-input); margin-top: 2px; }
+    .qp__side { display: none; }
+  }
+</style>

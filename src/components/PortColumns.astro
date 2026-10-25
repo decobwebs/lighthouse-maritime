@@ -1,0 +1,76 @@
+---
+// Ports by region (DESIGN.md §6 Port columns): 2px navy top rule, four columns with vertical rules.
+// On phones each region becomes one row: region on the left, ports on the right.
+import { PORT_REGIONS } from '../data/site';
+---
+<div class="ports">
+  {PORT_REGIONS.map((r) => (
+    <section class="ports__col" aria-label={r.region}>
+      <div class="ports__head">
+        <h3 class="t-eyebrow ports__region">{r.region}</h3>
+        <p class:list={['t-micro', 'ports__note', { 'ports__note--hq': r.note === 'Head office' }]}>{r.note}</p>
+      </div>
+      <ul role="list" class="ports__list">
+        {r.ports.map((port) => <li class="t-h5">{port}</li>)}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .ports {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 2px solid var(--navy);
+  }
+  .ports__col { padding: 32px 28px 8px; border-right: 1px solid var(--line); }
+  .ports__col:first-child { padding-left: 0; }
+  .ports__col:last-child { padding-right: 0; border-right: 0; }
+
+  .ports__region { font-size: 12px; color: var(--label); }
+  .ports__note { margin-top: 6px; color: var(--muted); }
+  .ports__note--hq { color: var(--red); }
+
+  .ports__list { margin-top: 24px; }
+  .ports__list li { padding-block: 14px; }
+  .ports__list li:not(:last-child) { border-bottom: 1px solid var(--line); }
+
+  @media (max-width: 959px) {
+    .ports { grid-template-columns: 1fr 1fr; }
+    .ports__col,
+    .ports__col:first-child,
+    .ports__col:last-child { padding: 28px 24px 8px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+    .ports__col:nth-child(even) { padding-left: 24px; border-left: 1px solid var(--line); }
+  }
+
+  @media (max-width: 599px) {
+    .ports { grid-template-columns: 1fr; }
+    .ports__col,
+    .ports__col:first-child,
+    .ports__col:last-child,
+    .ports__col:nth-child(even) {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 16px;
+      padding: 18px 0;
+      border-left: 0;
+    }
+    .ports__col:last-child { border-bottom: 0; }
+    .ports__head { flex: 0 0 36%; }
+    .ports__region { font-size: 11px; }
+    .ports__list { flex: 1; }
+    .ports__note { display: none; }
+    .ports__list { margin-top: 0; text-align: right; }
+    .ports__list li {
+      display: inline;
+      padding: 0;
+      border: 0 !important;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.55;
+    }
+    .ports__list li:not(:last-child)::after { content: ' · '; }
+  }
+</style>

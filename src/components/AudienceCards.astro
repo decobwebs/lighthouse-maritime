@@ -1,0 +1,85 @@
+---
+// "Who we work with" cards (DESIGN.md §6 Audience cards). Oil and gas carries the red accent.
+const cards = [
+  {
+    title: 'Shipowners and operators',
+    text: 'Full port agency and husbandry, with costs agreed before arrival.',
+    icon: '<path d="M3 15h18l-2 5H5z"/><path d="M6 15V9h6v6M12 11h5v4M8 9V5h2"/>',
+  },
+  {
+    title: 'Charterers and cargo owners',
+    text: 'Protecting agency and cargo documents that keep laytime in view.',
+    icon: '<rect x="3" y="7" width="18" height="12" rx="1"/><path d="M7 7V4h10v3M3 12h18"/>',
+  },
+  {
+    title: 'Oil and gas operators',
+    text: 'NOGIC JQS-certified support for offshore vessels and terminals.',
+    icon: '<path d="M12 3c3 4 5 7 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10z"/>',
+    accent: true,
+  },
+  {
+    title: 'Procurement teams',
+    text: 'Company profile on request and one contact for tenders.',
+    icon: '<path d="M8 3h8l3 3v15H5V3z"/><path d="M9 12l2 2 4-4"/>',
+  },
+];
+---
+<ul role="list" class="aud">
+  {cards.map((c) => (
+    <li class:list={['aud__card', { 'aud__card--accent': c.accent }]}>
+      <span class="aud__icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true" set:html={c.icon} />
+      </span>
+      <h3 class="t-h4 aud__title">{c.title}</h3>
+      <p class="t-small aud__text">{c.text}</p>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .aud {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .aud__card {
+    padding: 32px 28px 36px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--navy);
+    border-radius: 4px 4px 14px 14px;
+  }
+  .aud__card--accent { border-top-color: var(--red); }
+
+  .aud__icon {
+    width: 52px;
+    height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--navy) 7%, var(--surface));
+    color: var(--navy);
+  }
+  .aud__card--accent .aud__icon { background: var(--red-tint); color: var(--red); }
+  .aud__title { margin-top: 28px; }
+  .aud__text { margin-top: 12px; color: var(--muted); }
+
+  @media (max-width: 1199px) {
+    .aud { grid-template-columns: repeat(2, 1fr); }
+  }
+  /* Phone: icon beside the title to keep the cards short. */
+  @media (max-width: 599px) {
+    .aud { grid-template-columns: 1fr; gap: 12px; }
+    .aud__card {
+      display: grid;
+      grid-template-columns: 44px 1fr;
+      column-gap: 14px;
+      align-items: center;
+      padding: 20px 20px 22px;
+    }
+    .aud__icon { width: 44px; height: 44px; border-radius: 10px; }
+    .aud__title { margin-top: 0; }
+    .aud__text { grid-column: 1 / -1; margin-top: 12px; }
+  }
+</style>

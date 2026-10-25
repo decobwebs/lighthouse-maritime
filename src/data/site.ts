@@ -34,6 +34,28 @@ export function whatsappHref(): string {
   return digits ? `https://wa.me/${digits}` : '/contact';
 }
 
+/** Port coverage by region (CONTENT.md "04 — Port coverage"). */
+export const PORT_REGIONS = [
+  { region: 'Lagos', note: 'Head office', ports: ['Apapa', 'Tin Can Island', 'Lekki Deep Sea Port'] },
+  { region: 'Delta', note: 'Western ports', ports: ['Warri', 'Escravos'] },
+  { region: 'Rivers', note: 'Eastern ports', ports: ['Port Harcourt', 'Onne', 'Bonny'] },
+  { region: 'Cross River & offshore', note: 'South-east and at sea', ports: ['Calabar', 'Offshore terminals and FPSOs'] },
+] as const;
+
+/** Port choices for the PDA forms: every named port, plus offshore. */
+export const PORT_OPTIONS = [
+  'Apapa',
+  'Tin Can Island',
+  'Lekki Deep Sea Port',
+  'Warri',
+  'Escravos',
+  'Port Harcourt',
+  'Onne',
+  'Bonny',
+  'Calabar',
+  'Offshore terminal',
+] as const;
+
 export const NAV = [
   { label: 'Services', href: '/services' },
   { label: 'How we work', href: '/port-call-guide' },

@@ -68,7 +68,8 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
   .footer__cols {
     flex: 2 1 560px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    /* The Contact column is sized to its longest email so addresses never break. */
+    grid-template-columns: minmax(140px, 1fr) minmax(140px, 1fr) max-content;
     gap: 40px;
   }
   .footer__heading {
@@ -89,7 +90,6 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
   .footer__col a {
     color: var(--on-dark-soft);
     text-decoration: none;
-    overflow-wrap: anywhere;
   }
   .footer__col a:hover { color: var(--on-dark); text-decoration: underline; }
   address { font-style: normal; }
@@ -115,7 +115,9 @@ import { SITE, SERVICE_LINKS, COMPANY_LINKS } from '../data/site';
 
   @media (max-width: 599px) {
     .footer__main { padding-block: 64px 40px; gap: 40px; }
-    .footer__cols { gap: 32px; }
+    .footer__cols { grid-template-columns: 1fr 1fr; gap: 32px; }
+    .footer__col:last-child { grid-column: 1 / -1; }
+    .footer__col a { overflow-wrap: anywhere; }
     .footer__col li,
     .footer__col a { min-height: 44px; }
   }

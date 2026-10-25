@@ -1,0 +1,46 @@
+---
+// "Certified by" strip: authority names as text only, no logos (DESIGN.md §6).
+const names = ['Nigerian Ports Authority', 'NIMASA', 'NCDMB · NOGIC JQS', 'CAC · RC 7964161'];
+---
+<section class="cert" aria-labelledby="cert-label">
+  <div class="container cert__inner">
+    <p class="t-eyebrow cert__label" id="cert-label">Certified by</p>
+    <ul role="list" class="cert__names">
+      {names.map((n) => <li>{n}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .cert { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .cert__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 48px;
+    padding-block: 36px;
+  }
+  .cert__label { color: var(--label); }
+  .cert__names {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px 56px;
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--label);
+  }
+
+  @media (max-width: 1199px) {
+    .cert__names { gap: 12px 36px; font-size: 19px; }
+  }
+  @media (max-width: 599px) {
+    .cert__inner { display: block; padding-block: 28px; }
+    .cert__names { display: block; margin-top: 12px; font-size: 17px; line-height: 1.7; }
+    .cert__names li { display: inline; }
+    .cert__names li:not(:last-child)::after { content: ' · '; }
+  }
+</style>

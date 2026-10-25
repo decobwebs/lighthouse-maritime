@@ -1,0 +1,46 @@
+---
+// Numbered rows: 56px | 1fr, red number, h4 title, small muted text, 1px rule below (DESIGN.md §6).
+interface Props {
+  items: { title: string; text: string }[];
+  /** Heading level for the row titles. */
+  headingLevel?: 'h3' | 'h4';
+}
+const { items, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
+---
+<ol role="list" class="rows">
+  {items.map((item, i) => (
+    <li class="rows__item">
+      <span class="rows__num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+      <div>
+        <Heading class="t-h4">{item.title}</Heading>
+        <p class="t-small rows__text">{item.text}</p>
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .rows { border-top: 1px solid var(--line); }
+  .rows__item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    padding-block: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .rows__num {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.9;
+    color: var(--red);
+  }
+  .rows__text { margin-top: 6px; color: var(--muted); }
+
+  @media (max-width: 599px) {
+    .rows__item { grid-template-columns: 36px 1fr; gap: 12px; padding-block: 18px; }
+    .rows__num { font-size: 14px; }
+    .rows__text { margin-top: 4px; }
+  }
+</style>

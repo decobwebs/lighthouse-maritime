@@ -1,0 +1,160 @@
+---
+// Three phase columns on .bg-rings (DESIGN.md §6 Phase timeline).
+// Stages 01 and 08 have filled red circles; each step ends with a green "You receive" line.
+const phases = [
+  {
+    phase: 'Phase 1',
+    range: 'Stages 01–03',
+    title: 'Before arrival',
+    steps: [
+      { n: '01', title: 'Nomination and PDA', text: 'You appoint us; we send a detailed port cost estimate.', receive: 'the PDA' },
+      { n: '02', title: 'Pre-arrival', text: 'Ship Entry Notice filed; Customs rotation number obtained.', receive: 'arrival checklist' },
+      { n: '03', title: 'Berthing', text: 'Vessel declared at the berthing meeting; berth approved.', receive: 'berth confirmation' },
+    ],
+  },
+  {
+    phase: 'Phase 2',
+    range: 'Stages 04–06',
+    title: 'In port',
+    steps: [
+      { n: '04', title: 'Arrival', text: 'Pilotage, towage and safe berthing alongside.', receive: 'all-fast report' },
+      { n: '05', title: 'Clearance', text: 'Port Health, Immigration, Customs and other agencies cleared on board.', receive: 'clearance confirmed' },
+      { n: '06', title: 'Operations', text: 'Cargo, crew changes and supplies handled alongside.', receive: 'daily status report' },
+    ],
+  },
+  {
+    phase: 'Phase 3',
+    range: 'Stages 07–08',
+    title: 'Departure',
+    steps: [
+      { n: '07', title: 'Sailing', text: 'NIMASA clearance and pilotage out of port.', receive: 'sailing report' },
+      { n: '08', title: 'Final account', text: 'FDA reconciled against the PDA, with receipts.', receive: 'the FDA' },
+    ],
+  },
+];
+const filled = new Set(['01', '08']);
+---
+<div class="phases">
+  {phases.map((p, i) => (
+    <div class="phase">
+      <div class="phase__meta">
+        <p class="t-eyebrow phase__label">{p.phase}</p>
+        <p class="t-micro phase__range">{p.range}</p>
+      </div>
+      <h3 class="t-h3 phase__title">{p.title}</h3>
+      <!-- Phone summary (02-home-phone): same copy, condensed. -->
+      <div class="phase__summary">
+        <p class="t-small phase__summary-steps">{p.steps.map((s) => s.title).join(' · ')}</p>
+        <p class="t-micro phase__summary-receive">You receive: {p.steps.map((s) => s.receive).join(', ')}</p>
+      </div>
+      <ol role="list" class="steps">
+        {p.steps.map((s) => (
+          <li class="step">
+            <span class:list={['step__dot', { 'step__dot--filled': filled.has(s.n) }]} aria-hidden="true">{s.n}</span>
+            <div>
+              <h4 class="t-h5"><span class="visually-hidden">Stage {s.n}: </span>{s.title}</h4>
+              <p class="t-small step__text">{s.text}</p>
+              <p class="t-micro step__receive"><span class="step__receive-dot" aria-hidden="true"></span>You receive: {s.receive}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+      {i === phases.length - 1 && (
+        <div class="phase__note">
+          <p class="phase__note-title">Cost and updates, in writing</p>
+          <p class="phase__note-text">Every report goes to you by email and WhatsApp, so nothing depends on a phone call.</p>
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
+<style>
+  .phases {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--on-dark-line);
+  }
+  .phase { padding: 36px 36px 8px; border-right: 1px solid var(--on-dark-line); }
+  .phase:first-child { padding-left: 0; }
+  .phase:last-child { padding-right: 0; border-right: 0; }
+
+  .phase__meta { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+  .phase__label { font-size: 12px; color: var(--on-dark-grey); }
+  .phase__range { color: var(--on-dark-grey); }
+  .phase__title { margin-top: 12px; font-size: min(var(--fs-h3), 28px); }
+
+  .steps { margin-top: 32px; }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 16px;
+    padding-bottom: 28px;
+  }
+  /* Dashed connector between circles. */
+  .step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 21px;
+    top: 44px;
+    bottom: 0;
+    border-left: 1px dashed rgba(255, 255, 255, 0.25);
+  }
+  .step__dot {
+    width: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .step__dot--filled { background: var(--red); border-color: var(--red); }
+  .step__text { margin-top: 6px; color: var(--on-dark-muted); }
+  .step__receive {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    color: var(--ok-on-dark);
+  }
+  .step__receive-dot { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--ok-dot); }
+
+  .phase__note {
+    margin-top: 12px;
+    margin-bottom: 28px;
+    padding: 20px 22px;
+    border: 1px solid var(--on-dark-line);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .phase__note-title { font-family: var(--font-display); font-size: 16px; font-weight: 600; line-height: 1.35; }
+  .phase__note-text { margin-top: 6px; font-size: 14.5px; line-height: 1.6; color: var(--on-dark-muted); }
+
+  /* Below 960px the columns stack and the vertical rules become horizontal ones. */
+  @media (max-width: 959px) {
+    .phases { grid-template-columns: 1fr; }
+    .phase,
+    .phase:first-child,
+    .phase:last-child { padding: 28px 0 4px; border-right: 0; }
+    .phase:not(:last-child) { border-bottom: 1px solid var(--on-dark-line); }
+  }
+  .phase__summary { display: none; }
+
+  @media (max-width: 599px) {
+    .phase,
+    .phase:first-child,
+    .phase:last-child { padding: 24px 0; }
+    .phase__label { font-size: 11px; }
+    .phase__title { margin-top: 8px; }
+    .phase__summary { display: block; }
+    .phase__summary-steps { margin-top: 10px; color: var(--on-dark-muted); }
+    .phase__summary-receive { margin-top: 10px; color: var(--ok-on-dark); }
+    .steps,
+    .phase__note { display: none; }
+  }
+</style>
