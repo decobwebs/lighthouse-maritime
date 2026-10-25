@@ -10,7 +10,7 @@ import { AUTHORITIES } from '../data/authorities';
     <ul role="list" class="cert__logos">
       {AUTHORITIES.map((a) => (
         <li class="cert__slot" data-card>
-          {a.logo && <Image src={a.logo} alt="" format="webp" class="cert__logo" loading="lazy" />}
+          {a.logo && <Image src={a.logo} alt="" format="webp" height={48} densities={[1, 2]} class="cert__logo" loading="lazy" />}
           <span class="cert__name">{a.short}</span>
         </li>
       ))}

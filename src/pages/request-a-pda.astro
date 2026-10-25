@@ -335,6 +335,7 @@ import { VESSEL_TYPES, PURPOSES, UNITS, ROLES, PORTS } from '../lib/pda-rules';
   .fld input::placeholder,
   .fld textarea::placeholder { color: var(--label); opacity: 1; }
   .fld input:focus-visible,
+  .fld input[type='date']:focus-within,
   .fld select:focus-visible,
   .fld textarea:focus-visible {
     outline: 3px solid rgba(11, 42, 82, 0.18);

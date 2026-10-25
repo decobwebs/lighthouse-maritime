@@ -81,6 +81,7 @@ import { SITE, PORT_OPTIONS } from '../data/site';
   .qp__field select option { color: var(--ink); background: var(--surface); }
   .qp__field input::placeholder { color: var(--on-dark-muted); opacity: 1; }
   .qp__field input:focus-visible,
+  .qp__field input[type='date']:focus-within,
   .qp__field select:focus-visible {
     outline: 3px solid var(--on-dark);
     outline-offset: 2px;

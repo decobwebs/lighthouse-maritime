@@ -3,7 +3,6 @@
 
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { SplitText } from 'gsap/SplitText';
 
 export function initHero(hero: HTMLElement, isDesktop: boolean) {
   const q = <T extends Element = HTMLElement>(sel: string) => hero.querySelector<T>(sel as never) as T | null;
@@ -33,15 +32,12 @@ export function initHero(hero: HTMLElement, isDesktop: boolean) {
     // Split only once the web fonts are in, so the masked lines match the final line breaks (no shift).
     intro.pause();
     document.fonts.ready.then(() => {
-      const split = SplitText.create(title, { type: 'lines', mask: 'lines', linesClass: 'split-line', aria: 'none' });
+      const split = splitWordsByLine(title);
       gsap.set(title, { visibility: 'visible' });
-      intro.from(split.lines, {
-        yPercent: 110,
-        duration: 0.9,
-        ease: 'power3.out',
-        stagger: 0.1,
-        onComplete: () => split.revert(), // plain text again once in place
-      }, 0.3);
+      split.lines.forEach((words, i) => {
+        intro.from(words, { yPercent: 110, duration: 0.9, ease: 'power3.out' }, 0.3 + i * 0.1);
+      });
+      intro.call(split.revert, [], 0.3 + (split.lines.length - 1) * 0.1 + 0.9); // plain text again once in place
       intro.play(0);
     });
   }
@@ -149,4 +145,47 @@ export function initHero(hero: HTMLElement, isDesktop: boolean) {
     ScrollTrigger.removeEventListener('refresh', onRefresh);
     cta?.classList.remove('is-shining');
   };
+}
+
+/** Lightweight line reveal for the hero headline (instead of loading SplitText before first paint):
+ *  each word sits in its own clipping mask, and words are grouped by the line they fall on, so whole
+ *  lines rise together exactly like masked lines. `revert` restores the original markup. */
+function splitWordsByLine(el: HTMLElement) {
+  const original = el.innerHTML;
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const texts: Text[] = [];
+  while (walker.nextNode()) texts.push(walker.currentNode as Text);
+
+  const words: HTMLElement[] = [];
+  for (const text of texts) {
+    const frag = document.createDocumentFragment();
+    for (const part of text.data.split(/(\s+)/)) {
+      if (!part) continue;
+      if (/^\s+$/.test(part)) {
+        frag.append(' ');
+        continue;
+      }
+      const mask = document.createElement('span');
+      mask.className = 'word-mask';
+      const word = document.createElement('span');
+      word.className = 'word-mask__word';
+      word.textContent = part;
+      mask.append(word);
+      frag.append(mask);
+      words.push(word);
+    }
+    text.replaceWith(frag);
+  }
+
+  const lines: HTMLElement[][] = [];
+  let lineTop = -Infinity;
+  for (const word of words) {
+    const top = word.parentElement!.getBoundingClientRect().top;
+    if (top > lineTop + 2) {
+      lines.push([]);
+      lineTop = top;
+    }
+    lines[lines.length - 1].push(word);
+  }
+  return { lines, revert: () => void (el.innerHTML = original) };
 }

@@ -17,3 +17,9 @@ Things that must be done before the site goes live. Tick each one off when it is
 - [ ] On the live site, send one PDA request and one contact message **by email** from a desktop mail app and from a phone; check they arrive at the right inbox (PDA → operations@ cc admin@, Contact → admin@ cc operations@) with the right subject and reference
 - [ ] Send one of each **by WhatsApp** once the number is set, and test **Copy details** once
 - [ ] Confirm no test WhatsApp number is left in `src/data/site.ts`
+
+## Quality (added in Stage 7)
+- [ ] Run PageSpeed Insights (mobile) on the live Home page and on one inner page; target performance 90+, LCP ≤ 2.5 s, CLS < 0.1. The build machine is too slow for reliable local scores (Lighthouse CPU benchmark 620–880), so the live run is the one that counts
+- [ ] Decide on the large decorative numbers (service pages "who" columns, port call guide stages, colour #C9D3DF): axe flags their contrast. They are `aria-hidden` decoration, which WCAG exempts; darken them only if the client wants a clean automated report
+- [ ] On a real phone (iOS Safari and Android Chrome): open the menu, use the skip link, and send one PDA by email and by WhatsApp using only the keyboard / screen reader
+- [ ] After deleting `/test-layout`, run axe once more on every page (it should then report only the decorative numbers above)

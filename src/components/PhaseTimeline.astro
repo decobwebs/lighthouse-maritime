@@ -248,6 +248,9 @@ const phaseCentre = phases.map((_, pi) => {
   .voyage { display: none; }
   :global(html.motion-on) .phases { display: none; }
   :global(html.motion-on) .voyage { display: block; }
+  /* If the Voyage code fails to load (src/scripts/motion/index.ts), fall back to the static phases. */
+  :global(html.motion-on) :global(.voyage-failed) .phases { display: grid; }
+  :global(html.motion-on) :global(.voyage-failed) .voyage { display: none; }
 
   .voyage__desk { display: none; }
   @media (min-width: 1024px) {

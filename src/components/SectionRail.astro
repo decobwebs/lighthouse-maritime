@@ -53,7 +53,7 @@ const { items } = Astro.props;
       },
       { passive: true },
     );
-    update();
+    requestAnimationFrame(update); // measure after first paint, not during start-up
   }
 </script>
 

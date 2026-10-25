@@ -53,6 +53,8 @@ a:hover { color: var(--red); }
 }
 .on-dark :focus-visible,
 .bg-chart-dark :focus-visible { outline-color: var(--on-dark); }
+/* Sections and headings that receive focus from in-page links or scripts aren't controls: no ring. */
+:not(a, button, input, select, textarea, summary)[tabindex="-1"]:focus { outline: none; }
 
 ::selection { background: var(--navy); color: var(--on-dark); }
 
@@ -188,6 +190,9 @@ a:hover { color: var(--red); }
 html.motion-on [data-split] { visibility: hidden; }
 /* SplitText line masks: room below each line so descenders aren't clipped while lines slide in. */
 .split-line-mask { padding-bottom: 0.14em; margin-bottom: -0.14em; }
+/* Hero headline word masks (src/scripts/motion/hero.ts): top-aligned so the line box is unchanged. */
+.word-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.word-mask__word { display: inline-block; }
 html.motion-on [data-reveal] { opacity: 0; transform: translateY(28px); }
 html.motion-on [data-card] { opacity: 0; transform: translateY(48px) scale(0.96); }
 html.motion-on [data-wipe] { clip-path: inset(100% 0 0 0); }

@@ -9,10 +9,18 @@ import husbandry from '../assets/images/svc-husbandry.jpg';
 import clearance from '../assets/images/svc-clearance.jpg';
 import supply from '../assets/images/svc-supply.jpg';
 import logistics from '../assets/images/svc-logistics.jpg';
+
+interface Props {
+  /** Card heading level: 3 under a section h2 (Home), 2 directly under the page h1 (/services). */
+  headingLevel?: 2 | 3;
+}
+const { headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 <div class="bento">
   <!-- TODO(brand-photo): svc-port-agency.jpg shows MSC branding; the client may replace it. -->
   <ServiceCard
+    headingLevel={headingLevel}
     class="bento__feature"
     feature
     pill="Core service"
@@ -25,6 +33,7 @@ import logistics from '../assets/images/svc-logistics.jpg';
     sizes="(max-width: 959px) 100vw, 700px"
   />
   <ServiceCard
+    headingLevel={headingLevel}
     class="bento__half"
     href="/services/husbandry-and-crew-changes"
     code="S—02"
@@ -36,6 +45,7 @@ import logistics from '../assets/images/svc-logistics.jpg';
     sizes="(max-width: 959px) 100vw, 500px"
   />
   <ServiceCard
+    headingLevel={headingLevel}
     class="bento__half"
     href="/services/clearance-and-coordination"
     code="S—03"
@@ -46,6 +56,7 @@ import logistics from '../assets/images/svc-logistics.jpg';
     sizes="(max-width: 959px) 100vw, 500px"
   />
   <ServiceCard
+    headingLevel={headingLevel}
     class="bento__third"
     href="/services/ship-supply-and-procurement"
     code="S—04"
@@ -56,6 +67,7 @@ import logistics from '../assets/images/svc-logistics.jpg';
     position="55% 50%"
   />
   <ServiceCard
+    headingLevel={headingLevel}
     class="bento__third"
     href="/services/logistics-and-project-support"
     code="S—05"
@@ -68,7 +80,7 @@ import logistics from '../assets/images/svc-logistics.jpg';
   <div class="bento__third bento__else bg-chart-dark on-dark" data-card>
     <div>
       <p class="t-eyebrow bento__else-kicker">Something else?</p>
-      <h3 class="t-h3 bento__else-title">Tell us what your vessel needs.</h3>
+      <Heading class="t-h3 bento__else-title">Tell us what your vessel needs.</Heading>
       <p class="t-small bento__else-text">Our operations team will come back with a plan and a cost.</p>
     </div>
     <Button href="/contact" class="bento__else-btn">Talk to operations</Button>

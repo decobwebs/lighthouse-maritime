@@ -1,12 +1,19 @@
 ---
 // Port cards (DESIGN.md §6, on .bg-chart-light): four white cards; Apapa (head office) has a red marker.
 import { PORT_REGIONS } from '../data/site';
+
+interface Props {
+  /** Region heading level: 3 under a section h2 (Home), 2 directly under the page h1 (/ports). */
+  headingLevel?: 2 | 3;
+}
+const { headingLevel = 3 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 <ul role="list" class="ports">
   {PORT_REGIONS.map((r) => (
     <li class="port-card" data-card>
       <div class="port-card__head">
-        <h3 class="t-eyebrow port-card__region">{r.region}</h3>
+        <Heading class="t-eyebrow port-card__region">{r.region}</Heading>
         <p class:list={['t-micro', 'port-card__note', { 'port-card__note--hq': r.note === 'Head office' }]}>{r.note}</p>
       </div>
       <ul role="list" class="port-card__list">

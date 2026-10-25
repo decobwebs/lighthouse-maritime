@@ -17,6 +17,8 @@ interface Props {
   /** Pill shown top-left on the feature card. */
   pill?: string;
   sizes?: string;
+  /** h3 under a section h2 (Home, service pages); h2 where the cards sit right under the page h1. */
+  headingLevel?: 2 | 3;
   class?: string;
 }
 const {
@@ -31,8 +33,10 @@ const {
   compact = false,
   pill,
   sizes = '(max-width: 959px) 100vw, 400px',
+  headingLevel = 3,
   class: className,
 } = Astro.props;
+const Heading = `h${headingLevel}` as 'h2' | 'h3';
 ---
 <a href={href} class:list={['svc', { 'svc--feature': feature, 'svc--compact': compact }, className]} data-card>
   <div class="svc__media" data-wipe>
@@ -54,7 +58,7 @@ const {
   <div class="svc__body">
     <div class="svc__copy">
       <p class="t-eyebrow svc__code">{code}{pill && <span class="svc__code-pill"> · {pill}</span>}</p>
-      <h3 class:list={['svc__title', feature ? 't-h3' : 't-h4']}>{title}</h3>
+      <Heading class:list={['svc__title', feature ? 't-h3' : 't-h4']}>{title}</Heading>
       {text && <p class:list={['svc__text', feature ? 't-body' : 't-small']}>{text}</p>}
     </div>
     {!compact && (

@@ -152,7 +152,8 @@ const onPdaPage = isActive('/request-a-pda');
       hidden = false;
       header.classList.remove('is-hidden');
     });
-    update();
+    // First check in the next frame, not while the page is still being parsed (avoids a forced layout).
+    requestAnimationFrame(update);
   }
 
   /* ---------- Phone menu: native <dialog> gives the focus trap, Esc and an inert page ---------- */

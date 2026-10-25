@@ -17,7 +17,7 @@ const { cac = false, tone = 'mist' } = Astro.props;
     <li class:list={['card', `card--${tone}`]} data-card>
       <div class="card__logo">
         {a.logo ? (
-          <Image src={a.logo} alt="" format="webp" class="card__img" loading="lazy" />
+          <Image src={a.logo} alt="" format="webp" height={36} densities={[1, 2]} class="card__img" loading="lazy" />
         ) : (
           <span class="card__logo-text">{a.short}</span>
         )}

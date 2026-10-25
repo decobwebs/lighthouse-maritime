@@ -39,6 +39,8 @@ const { title, description, header = 'solid', localBusiness = false, noindex = f
       (function () {
         var html = document.documentElement;
         html.classList.add('js');
+        // With JS, Lenis smooths scrolling; native smooth scroll would let it interrupt the jump to a #fragment on load.
+        html.style.scrollBehavior = 'auto';
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
           html.classList.add('motion-on');
           setTimeout(function () { if (!window.__motionReady) html.classList.remove('motion-on'); }, 4000);

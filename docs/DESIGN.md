@@ -165,7 +165,7 @@ A fixed capsule on the right edge, vertically centred: white at 90% with a blur 
 Fixed to the bottom: Call 24/7 | WhatsApp | Request a PDA (red, wider). White background, top border and a soft shadow, plus safe-area padding. Add bottom padding to `<body>` so the bar never covers content.
 
 ## 7. Motion
-Libraries: **GSAP** (with ScrollTrigger, SplitText and, on Home, MotionPathPlugin) and **Lenis**, loaded as a deferred module after first paint. Branches use `gsap.matchMedia()`: desktop (≥ 1024px), mobile (< 1024px), and reduced motion (no motion). No three.js.
+Libraries: **GSAP** (with ScrollTrigger, SplitText and, on Home, MotionPathPlugin) and **Lenis**, loaded as a deferred module after the `load` event plus `requestIdleCallback`. SplitText loads only when the first section heading nears the screen, and the Voyage code (with MotionPathPlugin) only when Home section 03 is within one screen; set-up steps run in separate short tasks. Anything that takes keyboard focus before its reveal is shown at once. Branches use `gsap.matchMedia()`: desktop (≥ 1024px), mobile (< 1024px), and reduced motion (no motion). No three.js.
 
 **Rules for every effect**
 - `prefers-reduced-motion: reduce` = no motion at all: everything shows in its final state.
@@ -176,7 +176,7 @@ Libraries: **GSAP** (with ScrollTrigger, SplitText and, on Home, MotionPathPlugi
 
 **Hero entrance (Home, once on load)**
 1. Photo: scale 1.08 + `brightness(0.8)` → scale 1 + `brightness(1)`, 1.8s `expo.out`. A dim layer starts at 35% and fades out over the same 1.8s.
-2. Headline: SplitText lines slide up from behind a mask (110% → 0), 0.9s `power3.out`, stagger 0.1, starting at 0.3s.
+2. Headline: lines slide up from behind a mask (a lightweight per-word mask grouped by line, not SplitText) (110% → 0), 0.9s `power3.out`, stagger 0.1, starting at 0.3s.
 3. Then, 0.12s apart: the Certified badge, the lead, the buttons, the PDA panel (rises 32px) and the desk board (cells rise 24px, stagger 0.08; the clock and figures tick in once).
 4. End: one soft pulse ring around the hero's Request a PDA button (2 rings, 1.2s, then stop).
 
