@@ -8,8 +8,9 @@ Use this copy word for word. Text in `[square brackets]` is a placeholder the cl
 - Certified by: Nigerian Ports Authority (shipping agent) · NIMASA (maritime services) · NCDMB NOGIC JQS (oil and gas vendor). **Do not show registration numbers.**
 - Head office: 5 Bornu Crescent, Apapa, Lagos, Nigeria
 - Operations desk (24/7): +234 806 118 9106 · operations@lighthousemaritimeltd.com
-- Administration: +234 908 622 3063 · admin@lighthousemaritimeltd.com
-- WhatsApp: [WhatsApp number]
+- Administration: admin@lighthousemaritimeltd.com (phone: the single number above)
+- **One phone number for everything:** +234 806 118 9106 (calls and WhatsApp)
+- WhatsApp: +234 806 118 9106 (same number; wa.me/2348061189106)
 - Domain: https://lighthousemaritimeltd.com
 - PDA turnaround promise: [X hours]
 - Ports: Apapa, Tin Can Island, Lekki Deep Sea Port (Lagos) · Warri, Escravos (Delta) · Port Harcourt, Onne, Bonny (Rivers) · Calabar (Cross River) · Offshore terminals and FPSOs
@@ -272,12 +273,12 @@ Meta: Contact | Lighthouse Maritime Agency. 24/7 operations desk +234 806 118 91
 
 - H1: Talk to us, *day or night.* Lead: Our operations desk is open 24 hours a day. For anything else, our administration team replies within one business day.
 - Operations desk (● Open now · 24/7): Vessel calls, PDAs, urgent requests. +234 806 118 9106 · operations@lighthousemaritimeltd.com
-- Administration (Mon–Fri · Business hours): Tenders, vendor registration, accounts. +234 908 622 3063 · admin@lighthousemaritimeltd.com
+- Administration (Mon–Fri · Business hours): Tenders, vendor registration, accounts. +234 806 118 9106 · admin@lighthousemaritimeltd.com
 - Visit us (Head office): By appointment. 5 Bornu Crescent, Apapa, Lagos, Nigeria
 - General enquiry: H2 "Send us a message." Body: "For a port cost estimate, use the PDA form instead. It asks for exactly what we need and goes straight to the operations desk." Link: Go to the PDA form →
 - Form: Full name (required) · Company · Work email (optional) · Phone (optional) · Enquiry type (General question, Tender or vendor registration, Partnership, Request company profile, Careers) · Message (required) · "Need to send documents? Attach them in your email app before sending." · [Send message] → check dialog → Send your message (to admin@, cc operations@)
-- No-JS fallback: To send a message, please email admin@lighthousemaritimeltd.com or call +234 908 622 3063.
-- Thank-you page: as Request a PDA, with "…opened with your message…", call +234 908 622 3063, [Start a new message]
+- No-JS fallback: To send a message, please email admin@lighthousemaritimeltd.com or call +234 806 118 9106.
+- Thank-you page: as Request a PDA, with "…opened with your message…", call +234 806 118 9106, [Start a new message]
 - Map: Google Maps embed of 5 Bornu Crescent, Apapa (lazy-loaded behind a "Show map" click to avoid third-party cookies until consent), with "Loading the map shares data with Google." beside the button + [Get directions]
 
 ## Legal

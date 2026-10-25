@@ -46,7 +46,7 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
         <h2 class="t-h3 desk__title" id="desk-admin">Administration</h2>
         <p class="t-small desk__note">Tenders, vendor registration, accounts.</p>
         <p class="t-body desk__lines">
-          <a href={SITE.admin.tel}>{SITE.admin.phone}</a><br />
+          <a href={SITE.ops.tel}>{SITE.ops.phone}</a><br />
           <Email mailbox={SITE.admin.mailbox} />
         </p>
       </section>
@@ -108,7 +108,7 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${q}`;
         <noscript>
           <p class="nojs fld--wide">
             To send a message, please email <Email mailbox={SITE.admin.mailbox} /> or call
-            <a href={SITE.admin.tel}>{SITE.admin.phone}</a>.
+            <a href={SITE.ops.tel}>{SITE.ops.phone}</a>.
           </p>
         </noscript>
       </form>

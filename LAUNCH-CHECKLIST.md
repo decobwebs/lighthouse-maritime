@@ -12,7 +12,7 @@ Things that must be done before the site goes live. Tick each one off when it is
 - [ ] Team names and photos supplied, then build with `SHOW_TEAM=true` (About "03 — Our team")
 
 ## Forms (sent from the visitor's email app or WhatsApp; there is no server)
-- [ ] WhatsApp number set in `src/data/site.ts` (until then "Send on WhatsApp" is hidden and WhatsApp buttons go to /contact)
+- [x] WhatsApp number set in `src/data/site.ts` (2348061189106, the single desk number) (until then "Send on WhatsApp" is hidden and WhatsApp buttons go to /contact)
 - [ ] operations@ and admin@lighthousemaritimeltd.com both receive mail, and someone watches each inbox
 - [ ] On the live site, send one PDA request and one contact message **by email** from a desktop mail app and from a phone; check they arrive at the right inbox (PDA → operations@ cc admin@, Contact → admin@ cc operations@) with the right subject and reference
 - [ ] Send one of each **by WhatsApp** once the number is set, and test **Copy details** once

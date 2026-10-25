@@ -29,13 +29,12 @@ export const SITE = {
     tel: 'tel:+2348061189106',
     mailbox: 'operations',
   },
+  // Administration has its own mailbox; there is one phone number for everything (the 24/7 desk).
   admin: {
-    phone: '+234 908 622 3063',
-    tel: 'tel:+2349086223063',
     mailbox: 'admin',
   },
-  // Placeholder until the client supplies it (see PLACEHOLDERS.md).
-  whatsapp: '[WhatsApp number]',
+  // WhatsApp uses the same number as the operations desk (wa.me format: digits only).
+  whatsapp: '2348061189106',
 } as const;
 
 /** Port call checklist PDF (in /public). null until the client supplies it: the download buttons render disabled. */

@@ -51,7 +51,7 @@ public/  favicon.svg  logo-mark.svg  logo-mark-white.svg  robots.txt  patterns/c
 ## Non-negotiable rules
 - **Never invent facts.** No client names, testimonials, vessel counts, years of experience, certifications or statistics beyond what `docs/CONTENT.md` contains. Placeholders are written in square brackets, e.g. `[X hours]`. Keep them visible and list them in `PLACEHOLDERS.md` at the project root; never fill them with guesses.
 - **Registration numbers are confidential.** Show "Certified" for NPA, NIMASA and NCDMB NOGIC JQS. Only the CAC RC number (7964161) is shown.
-- Domain: **lighthousemaritimeltd.com**. Emails (render with `<Email>`, never as plain text): `operations@lighthousemaritimeltd.com` (24/7 desk, PDA requests) and `admin@lighthousemaritimeltd.com` (general, tenders). Phones: +234 806 118 9106 (operations, 24/7), +234 908 622 3063 (administration).
+- Domain: **lighthousemaritimeltd.com**. Emails (render with `<Email>`, never as plain text): `operations@lighthousemaritimeltd.com` (24/7 desk, PDA requests) and `admin@lighthousemaritimeltd.com` (general, tenders). Phone: **+234 806 118 9106** is the only number (24/7 desk, calls and WhatsApp: wa.me/2348061189106).
 - Red (`--red`) is for the primary action only. One red button per view, plus the header button.
 - Sections are separated by **background rhythm only** (white, mist, navy chart; see DESIGN.md §4): no full-width dividers. Rules stay inside components. Shadows only where DESIGN.md specifies them (floating head-office card, port cards, solid header, section rail, dialogs).
 - Accessibility: WCAG 2.2 AA. Real `<button>`/`<a>`/`<label>`, visible focus (3px outline), alt text from `docs/CONTENT.md`, `prefers-reduced-motion` = no motion at all, 44px minimum touch targets.
